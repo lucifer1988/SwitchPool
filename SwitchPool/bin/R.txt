@@ -235,6 +235,14 @@ int drawable abc_textfield_searchview_holo_light 0x7f020054
 int drawable abc_textfield_searchview_right_holo_dark 0x7f020055
 int drawable abc_textfield_searchview_right_holo_light 0x7f020056
 int drawable ic_launcher 0x7f020057
+int drawable login_bg 0x7f020058
+int drawable login_field_bg 0x7f020059
+int drawable login_login_highlight 0x7f02005a
+int drawable login_login_normal 0x7f02005b
+int drawable login_more_highlight 0x7f02005c
+int drawable login_more_normal 0x7f02005d
+int drawable login_password 0x7f02005e
+int drawable login_username 0x7f02005f
 int id action_bar 0x7f05001c
 int id action_bar_activity_content 0x7f050015
 int id action_bar_container 0x7f05001b
@@ -321,7 +329,7 @@ int layout abc_popup_menu_item_layout 0x7f030014
 int layout abc_search_dropdown_item_icons_2line 0x7f030015
 int layout abc_search_view 0x7f030016
 int layout abc_simple_decor 0x7f030017
-int layout activity_home 0x7f030018
+int layout login 0x7f030018
 int layout support_simple_spinner_dropdown_item 0x7f030019
 int menu home 0x7f0c0000
 int string abc_action_bar_home_description 0x7f0a0001

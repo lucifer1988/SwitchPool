@@ -1078,6 +1078,14 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_dark=0x7f020055;
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int ic_launcher=0x7f020057;
+        public static final int login_bg=0x7f020058;
+        public static final int login_field_bg=0x7f020059;
+        public static final int login_login_highlight=0x7f02005a;
+        public static final int login_login_normal=0x7f02005b;
+        public static final int login_more_highlight=0x7f02005c;
+        public static final int login_more_normal=0x7f02005d;
+        public static final int login_password=0x7f02005e;
+        public static final int login_username=0x7f02005f;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1192,7 +1200,7 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int abc_simple_decor=0x7f030017;
-        public static final int activity_home=0x7f030018;
+        public static final int login=0x7f030018;
         public static final int support_simple_spinner_dropdown_item=0x7f030019;
     }
     public static final class menu {
