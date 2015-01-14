@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SwitchPool</string>
+    <string name="action_settings">Settings</string>
+    <!--login-->
+    <string name="login_username_hint">please type username</string>
+    <string name="login_password_hint">please type password</string>
+    <string name="login_login_btn">Login</string>
+    <string name="Username_will_not_be_nil">Username will not be nil</string>
+    <string name="Password_will_not_be_nil">Password will not be nil</string>
+    <string name="Login_failed">Login failed</string>
+    <string name="Login_succeeded">Login succeeded</string>
+    <!-- utility-->
+    <string name="OK">OK</string>
+</resources>

@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">SwitchPool</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <!-- login-->
+    <string name="login_username_hint">请输入手机号/用户名</string>
+    <string name="login_password_hint">请输入密码</string>
+    <string name="login_login_btn">登录</string>
+    <string name="Username_will_not_be_nil">用户名不能为空</string>
+    <string name="Password_will_not_be_nil">密码不能为空</string>
+    <string name="Login_failed">登录失败</string>
+    <string name="Login_succeeded">登录成功</string>
+    <!-- utility-->
+    <string name="OK">好的</string>
 </resources>
