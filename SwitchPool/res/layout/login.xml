@@ -38,9 +38,10 @@
                 android:background="@null"
                 android:ems="10"
                 android:hint="@string/login_username_hint"
-                android:inputType="phone" >
+                android:inputType="phone"
+                android:focusable="true"
+                android:focusableInTouchMode="true" >
 
-                <requestFocus />
             </EditText>
         </LinearLayout>
 
@@ -69,9 +70,10 @@
                 android:background="@null"
                 android:ems="10"
                 android:hint="@string/login_password_hint"
-                android:inputType="textVisiblePassword" >
+                android:inputType="textVisiblePassword"
+                android:focusable="true"
+                android:focusableInTouchMode="true" >
 
-                <requestFocus />
             </EditText>
         </LinearLayout>
     </LinearLayout>
@@ -91,8 +93,10 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="50dp"
+            android:background="@drawable/login_login_selecter"
             android:text="@string/login_login_btn"
-            android:background="@drawable/login_login_selecter" />
+            android:textColor="@color/white"
+            android:onClick="login" />
 
         <Button
             android:id="@+id/Button01"
@@ -101,7 +105,8 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/login_more_selecter" />
+            android:background="@drawable/login_more_selecter"
+            android:onClick="more" />
 
     </LinearLayout>
 
