@@ -1524,6 +1524,15 @@ containing a value of this type.
         public static final int login_more_selecter=0x7f02005f;
         public static final int login_password=0x7f020060;
         public static final int login_username=0x7f020061;
+        public static final int tabbar_bg=0x7f020062;
+        public static final int tabbar_home_highlight=0x7f020063;
+        public static final int tabbar_home_normal=0x7f020064;
+        public static final int tabbar_more_highlight=0x7f020065;
+        public static final int tabbar_more_normal=0x7f020066;
+        public static final int tabbar_news_highlight=0x7f020067;
+        public static final int tabbar_news_normal=0x7f020068;
+        public static final int tabbar_setting_highlight=0x7f020069;
+        public static final int tabbar_setting_normal=0x7f02006a;
     }
     public static final class id {
         public static final int Button01=0x7f050043;
@@ -1538,7 +1547,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050044;
+        public static final int action_settings=0x7f050049;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1573,6 +1582,11 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
+        public static final int radio0=0x7f050045;
+        public static final int radio1=0x7f050046;
+        public static final int radio2=0x7f050047;
+        public static final int radio3=0x7f050048;
+        public static final int radioGroup1=0x7f050044;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1646,8 +1660,10 @@ containing a value of this type.
         public static final int abc_search_dropdown_item_icons_2line=0x7f030015;
         public static final int abc_search_view=0x7f030016;
         public static final int abc_simple_decor=0x7f030017;
-        public static final int login=0x7f030018;
-        public static final int support_simple_spinner_dropdown_item=0x7f030019;
+        public static final int home=0x7f030018;
+        public static final int login=0x7f030019;
+        public static final int main=0x7f03001a;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
     }
     public static final class menu {
         public static final int home=0x7f0c0000;
@@ -1658,7 +1674,7 @@ containing a value of this type.
         /**  utility
  utility
          */
-        public static final int OK=0x7f0a0016;
+        public static final int OK=0x7f0a001a;
         public static final int Password_will_not_be_nil=0x7f0a0013;
         public static final int Username_will_not_be_nil=0x7f0a0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1703,12 +1719,22 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000e;
         public static final int app_name=0x7f0a000d;
+        /**  network
+         */
+        public static final int host=0x7f0a001b;
         public static final int login_login_btn=0x7f0a0011;
         public static final int login_password_hint=0x7f0a0010;
         /**  login
 login
          */
         public static final int login_username_hint=0x7f0a000f;
+        /**  tab 
+ tab 
+         */
+        public static final int tabbar_item_home=0x7f0a0016;
+        public static final int tabbar_item_more=0x7f0a0019;
+        public static final int tabbar_item_news=0x7f0a0017;
+        public static final int tabbar_item_setting=0x7f0a0018;
     }
     public static final class style {
         /** 

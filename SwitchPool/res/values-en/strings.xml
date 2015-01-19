@@ -10,6 +10,11 @@
     <string name="Password_will_not_be_nil">Password will not be nil</string>
     <string name="Login_failed">Login failed</string>
     <string name="Login_succeeded">Login succeeded</string>
+    <!-- tab -->
+    <string name="tabbar_item_home">Home</string>
+    <string name="tabbar_item_news">News</string>
+    <string name="tabbar_item_setting">Setting</string>
+    <string name="tabbar_item_more">More</string>
     <!-- utility-->
     <string name="OK">OK</string>
 </resources>

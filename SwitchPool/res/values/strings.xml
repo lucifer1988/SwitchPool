@@ -10,6 +10,13 @@
     <string name="Password_will_not_be_nil">密码不能为空</string>
     <string name="Login_failed">登录失败</string>
     <string name="Login_succeeded">登录成功</string>
+    <!-- tab -->
+    <string name="tabbar_item_home">资源中心</string>
+    <string name="tabbar_item_news">动态</string>
+    <string name="tabbar_item_setting">管理中心</string>
+    <string name="tabbar_item_more">更多</string>
     <!-- utility-->
     <string name="OK">好的</string>
+    <!-- network-->
+    <string name="host">http://115.29.146.245/resourceManager/</string>
 </resources>
