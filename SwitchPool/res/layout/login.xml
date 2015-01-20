@@ -89,7 +89,7 @@
         android:orientation="vertical" >
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/button_login_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -101,7 +101,7 @@
             android:onClick="login" />
 
         <Button
-            android:id="@+id/Button01"
+            android:id="@+id/button_login_more"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"

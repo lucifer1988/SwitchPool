@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">SwitchPool</string>
     <string name="action_settings">Settings</string>
+    
     <!-- login-->
     <string name="login_username_hint">请输入手机号/用户名</string>
     <string name="login_password_hint">请输入密码</string>
@@ -10,15 +11,28 @@
     <string name="Password_will_not_be_nil">密码不能为空</string>
     <string name="Login_failed">登录失败</string>
     <string name="Login_succeeded">登录成功</string>
+    
     <!-- tab -->
     <string name="tabbar_item_home">资源中心</string>
     <string name="tabbar_item_news">动态</string>
     <string name="tabbar_item_setting">管理中心</string>
     <string name="tabbar_item_more">更多</string>
+    
+    <!-- home -->
+    <string name="home_item_grid1">概览区</string>
+    <string name="home_item_grid2">综合区</string>
+    <string name="home_item_grid3">特色区</string>
+    <string name="home_item_grid4">定制区</string>
+    <string name="home_item_grid5">第一频道</string>
+    <string name="home_item_grid6">搜一搜</string>
+    <string name="home_item_grid7">听一听</string>
+    <string name="home_item_grid8">第二频道</string>
+    
     <!-- utility-->
     <string name="OK">好的</string>
     
     <!-- key-->
     <string name="host">http://115.29.146.245/resourceManager/</string>
     <string name="ser_user">ser_user.dat</string>
+    
 </resources>
