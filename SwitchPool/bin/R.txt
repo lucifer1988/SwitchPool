@@ -528,6 +528,7 @@ int string host 0x7f0a001b
 int string login_login_btn 0x7f0a0011
 int string login_password_hint 0x7f0a0010
 int string login_username_hint 0x7f0a000f
+int string ser_user 0x7f0a001c
 int string tabbar_item_home 0x7f0a0016
 int string tabbar_item_more 0x7f0a0019
 int string tabbar_item_news 0x7f0a0017

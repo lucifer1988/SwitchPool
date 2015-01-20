@@ -1719,7 +1719,7 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000e;
         public static final int app_name=0x7f0a000d;
-        /**  network
+        /**  key
          */
         public static final int host=0x7f0a001b;
         public static final int login_login_btn=0x7f0a0011;
@@ -1728,6 +1728,7 @@ containing a value of this type.
 login
          */
         public static final int login_username_hint=0x7f0a000f;
+        public static final int ser_user=0x7f0a001c;
         /**  tab 
  tab 
          */

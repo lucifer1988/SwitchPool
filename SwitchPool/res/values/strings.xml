@@ -17,6 +17,8 @@
     <string name="tabbar_item_more">更多</string>
     <!-- utility-->
     <string name="OK">好的</string>
-    <!-- network-->
+    
+    <!-- key-->
     <string name="host">http://115.29.146.245/resourceManager/</string>
+    <string name="ser_user">ser_user.dat</string>
 </resources>

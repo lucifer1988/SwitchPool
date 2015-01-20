@@ -2,10 +2,13 @@ package com.switchpool.login;
 
 import com.xiaoshuye.switchpool.R;
 import com.switchpool.model.User;
+import com.switchpool.utility.Utility;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.provider.Settings.System;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -17,12 +20,12 @@ import org.apache.http.Header;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler; 
-import com.loopj.android.http.AsyncHttpResponseHandler; 
 import com.loopj.android.http.RequestParams; 
 
 public class LoginActivity extends Activity {
 	
 	private EditText et_name, et_pass;
+	private String cache_user_filenameString;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +34,12 @@ public class LoginActivity extends Activity {
 		
 		et_name = (EditText) findViewById(R.id.editText_login_username);
 		et_pass = (EditText) findViewById(R.id.editText_login_password);
+		cache_user_filenameString = this.getString(R.string.ser_user);
 	}
 	
 	public void login(View sourceView) {
-//        String userName = et_name.getText().toString();// 用户名  
-//        String userPass = et_pass.getText().toString();// 用户密码  
-      String userName = "13501279170";// 用户名  
-      String userPass = "3001000";// 用户密码 
+        String userName = et_name.getText().toString();// 用户名  
+        String userPass = et_pass.getText().toString();// 用户密码  
 		
         //判断用户名和密码是否为空  
         if (TextUtils.isEmpty(userName.trim())  
@@ -50,12 +52,17 @@ public class LoginActivity extends Activity {
         }  
 	}
 	
+	public void more(View sourceView) {
+		User loginUser = (User)Utility.shareInstance().getObject(cache_user_filenameString);
+		Toast.makeText(this, "用户名"+loginUser.getCellphone(), Toast.LENGTH_LONG).show();
+	}
+	
 	public void loginPost(String userName, String userPass) { 
 		AsyncHttpClient client = new AsyncHttpClient();
 		String url = new String(this.getString(R.string.host) + "login/index");
-		Log.v("switchpool", "loginURL" + url);
+		Log.v("sp", "" + url);
 		
-		User user = new User();
+		final User user = new User();
 		user.setCellphone(userName);
 		user.setPassword(userPass);
 		user.setBrand(null);
@@ -96,32 +103,35 @@ public class LoginActivity extends Activity {
 		params.put("topic", user.getTopic());
 		params.put("token", user.getToken());
 		
-		Log.v("sp", "params" + params);
+		Log.v("sp", "" + params);
 		
-		client.post(url, params, new AsyncHttpResponseHandler() {  
-            /** 
-             * 成功处理的方法 
-             * statusCode:响应的状态码; headers:相应的头信息 比如 响应的时间，响应的服务器 ; 
-             * responseBody:响应内容的字节 
-             */  
-            @Override  
-            public void onSuccess(int statusCode, Header[] headers,  
-                    byte[] responseBody) {  
-                if (statusCode == 200) {
-                	Log.v("sp", "loginresult" + responseBody); 
+		
+		try {  
+			client.post(url, params, new JsonHttpResponseHandler() {  
+
+                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+                	Log.v("sp", "" + jsonObject); 
+                	if (statusCode == 200) {
+                		try {
+							user.setUid(jsonObject.getString("uid"));
+							user.setToken(jsonObject.getString("token"));
+							user.setBuglog(jsonObject.getBoolean("buglog"));
+							user.setChannel(jsonObject.getBoolean("channel"));
+							user.setInreg(jsonObject.getBoolean("inreg"));
+							user.setTopic(jsonObject.getBoolean("topic"));  
+							
+							Utility.shareInstance().saveObject(cache_user_filenameString, user); 
+						} catch (JSONException e) {
+							Log.e("sp", "" + Log.getStackTraceString(e));
+						}
+					}
                 }  
-            }  
-  
-            /** 
-             * 失败处理的方法 
-             * error：响应失败的错误信息封装到这个异常对象中 
-             */  
-            @Override  
-            public void onFailure(int statusCode, Header[] headers,  
-                    byte[] responseBody, Throwable error) {  
-                error.printStackTrace();// 把错误信息打印出轨迹来
-                Log.e("sp", "Exception: " + Log.getStackTraceString(error));
-            }  
-        });
-    }  
+                  
+            });  
+		} catch (Exception e) {
+			Log.e("sp", "" + Log.getStackTraceString(e));
+			Toast.makeText(this, "用户名或者密码不能为空", Toast.LENGTH_LONG).show(); 
+		}
+    }
+	
 }

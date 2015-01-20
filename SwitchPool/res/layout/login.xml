@@ -37,10 +37,11 @@
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:ems="10"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="@string/login_username_hint"
                 android:inputType="phone"
-                android:focusable="true"
-                android:focusableInTouchMode="true" >
+                android:text="13501279170" >
 
             </EditText>
         </LinearLayout>
@@ -69,10 +70,11 @@
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:ems="10"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="@string/login_password_hint"
                 android:inputType="textVisiblePassword"
-                android:focusable="true"
-                android:focusableInTouchMode="true" >
+                android:text="3001000" >
 
             </EditText>
         </LinearLayout>

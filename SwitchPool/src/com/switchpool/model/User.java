@@ -1,6 +1,10 @@
 package com.switchpool.model;
 
-public class User {
+import java.io.Serializable; 
+
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 6598144297210617472L;
 
 	public User() {
 		// TODO Auto-generated constructor stub
