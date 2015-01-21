@@ -19,6 +19,7 @@
     <string name="tabbar_item_more">More</string>
     
     <!-- home -->
+    <string name="hoem_nav_title">去哪儿玩</string>
     <string name="home_item_grid1">概览区</string>
     <string name="home_item_grid2">综合区</string>
     <string name="home_item_grid3">特色区</string>

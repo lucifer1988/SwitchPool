@@ -1,13 +1,12 @@
 package com.switchpool.login;
 
 import com.xiaoshuye.switchpool.R;
+import com.switchpool.home.MainActivity;
 import com.switchpool.model.User;
 import com.switchpool.utility.Utility;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,11 +25,14 @@ public class LoginActivity extends Activity {
 	
 	private EditText et_name, et_pass;
 	private String cache_user_filenameString;
+	private LoginActivity ctx;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		
+		ctx = this;
 		
 		et_name = (EditText) findViewById(R.id.editText_login_username);
 		et_pass = (EditText) findViewById(R.id.editText_login_password);
@@ -53,8 +55,10 @@ public class LoginActivity extends Activity {
 	}
 	
 	public void more(View sourceView) {
-		User loginUser = (User)Utility.shareInstance().getObject(cache_user_filenameString);
-		Toast.makeText(this, "用户名"+loginUser.getCellphone(), Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(this, MainActivity.class);    	
+		this.startActivity(intent);
+//		User loginUser = (User)Utility.shareInstance().getObject(cache_user_filenameString);
+//		Toast.makeText(this, "用户名"+loginUser.getCellphone(), Toast.LENGTH_LONG).show();
 	}
 	
 	public void loginPost(String userName, String userPass) { 
@@ -120,7 +124,10 @@ public class LoginActivity extends Activity {
 							user.setInreg(jsonObject.getBoolean("inreg"));
 							user.setTopic(jsonObject.getBoolean("topic"));  
 							
-							Utility.shareInstance().saveObject(cache_user_filenameString, user); 
+							Utility.shareInstance().saveObject(cache_user_filenameString, user);
+							
+							Intent intent = new Intent(ctx, MainActivity.class);    	
+							ctx.startActivity(intent);
 						} catch (JSONException e) {
 							Log.e("sp", "" + Log.getStackTraceString(e));
 						}

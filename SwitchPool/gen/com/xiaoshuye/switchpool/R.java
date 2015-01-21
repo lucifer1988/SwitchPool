@@ -858,7 +858,7 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070096;
+        public static final int abc_search_url_text_holo=0x7f070098;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
@@ -1270,6 +1270,10 @@ containing a value of this type.
         /** 暗灰蓝色 
          */
         public static final int steelblue=0x7f07007a;
+        public static final int tab_highlight_color=0x7f070097;
+        /** 黑色 
+         */
+        public static final int tab_normal_color=0x7f070096;
         /** 亮灰色 
          */
         public static final int tan=0x7f070042;
@@ -1568,7 +1572,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050051;
+        public static final int action_settings=0x7f050054;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1593,8 +1597,8 @@ containing a value of this type.
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
         public static final int imageButton_home_header=0x7f05003f;
-        public static final int imageView1=0x7f050043;
         public static final int imageView_home_gridcell=0x7f050041;
+        public static final int imageView_home_nav=0x7f050043;
         public static final int imageView_login_password=0x7f050047;
         public static final int imageView_login_username=0x7f050045;
         public static final int linearLayout_login_button=0x7f050049;
@@ -1608,12 +1612,14 @@ containing a value of this type.
         public static final int progress_circular=0x7f050018;
         public static final int progress_horizontal=0x7f050019;
         public static final int radio=0x7f05002f;
-        public static final int radio0=0x7f05004d;
-        public static final int radio1=0x7f05004e;
-        public static final int radio2=0x7f05004f;
-        public static final int radio3=0x7f050050;
-        public static final int radioGroup1=0x7f05004c;
+        public static final int radioGroup_home_tab=0x7f05004e;
+        public static final int radio_home_home=0x7f05004f;
+        public static final int radio_home_more=0x7f050052;
+        public static final int radio_home_news=0x7f050050;
+        public static final int radio_home_setting=0x7f050051;
         public static final int relativeLayout1=0x7f05003c;
+        public static final int relativeLayout_home_container=0x7f050053;
+        public static final int relativeLayout_home_nav=0x7f05004c;
         public static final int scrollView_home_header=0x7f05003d;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
@@ -1634,6 +1640,7 @@ containing a value of this type.
         public static final int tabMode=0x7f050002;
         public static final int textView_home_gridcell=0x7f050042;
         public static final int textView_home_header=0x7f05003e;
+        public static final int textView_home_nav=0x7f05004d;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
@@ -1705,7 +1712,7 @@ containing a value of this type.
         /**  utility
  utility
          */
-        public static final int OK=0x7f0a0022;
+        public static final int OK=0x7f0a0023;
         public static final int Password_will_not_be_nil=0x7f0a0013;
         public static final int Username_will_not_be_nil=0x7f0a0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1753,24 +1760,25 @@ containing a value of this type.
         /**  home 
  home 
          */
-        public static final int home_item_grid1=0x7f0a001a;
-        public static final int home_item_grid2=0x7f0a001b;
-        public static final int home_item_grid3=0x7f0a001c;
-        public static final int home_item_grid4=0x7f0a001d;
-        public static final int home_item_grid5=0x7f0a001e;
-        public static final int home_item_grid6=0x7f0a001f;
-        public static final int home_item_grid7=0x7f0a0020;
-        public static final int home_item_grid8=0x7f0a0021;
+        public static final int hoem_nav_title=0x7f0a001a;
+        public static final int home_item_grid1=0x7f0a001b;
+        public static final int home_item_grid2=0x7f0a001c;
+        public static final int home_item_grid3=0x7f0a001d;
+        public static final int home_item_grid4=0x7f0a001e;
+        public static final int home_item_grid5=0x7f0a001f;
+        public static final int home_item_grid6=0x7f0a0020;
+        public static final int home_item_grid7=0x7f0a0021;
+        public static final int home_item_grid8=0x7f0a0022;
         /**  key
          */
-        public static final int host=0x7f0a0023;
+        public static final int host=0x7f0a0024;
         public static final int login_login_btn=0x7f0a0011;
         public static final int login_password_hint=0x7f0a0010;
         /**  login
 login
          */
         public static final int login_username_hint=0x7f0a000f;
-        public static final int ser_user=0x7f0a0024;
+        public static final int ser_user=0x7f0a0025;
         /**  tab 
  tab 
          */
@@ -1803,7 +1811,6 @@ login
          */
         public static final int AppBaseTheme=0x7f0b008b;
         /**  Application theme. 
- All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f0b008c;
         /**  Mimic text appearance in select_dialog_item.xml 

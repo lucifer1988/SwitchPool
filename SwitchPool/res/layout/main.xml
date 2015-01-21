@@ -3,17 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:src="@drawable/nav_bg" />
+    <RelativeLayout
+        android:id="@+id/relativeLayout_home_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/imageView_home_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav_bg" />
+
+        <TextView
+            android:id="@+id/textView_home_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="0dp"
+            android:text="@string/hoem_nav_title"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
 
     <RadioGroup
-        android:id="@+id/radioGroup1"
+        android:id="@+id/radioGroup_home_tab"
         android:layout_width="match_parent"
         android:layout_height="49dp"
         android:layout_alignParentBottom="true"
@@ -21,21 +37,23 @@
         android:orientation="horizontal" >
 
         <RadioButton
-            android:id="@+id/radio0"
+            android:id="@+id/radio_home_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             android:layout_weight="1"
             android:background="@drawable/tabbar_bg"
             android:button="@android:color/transparent"
             android:drawableTop="@drawable/tabbar_home_normal"
             android:gravity="center"
+            android:maxLines="1"
             android:paddingTop="10dp"
             android:text="@string/tabbar_item_home"
-            android:textColor="@color/gray"
+            android:textColor="@color/tab_normal_color"
             android:textSize="12sp" />
 
         <RadioButton
-            android:id="@+id/radio1"
+            android:id="@+id/radio_home_news"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -45,11 +63,11 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:text="@string/tabbar_item_news"
-            android:textColor="@color/gray"
+            android:textColor="@color/tab_normal_color"
             android:textSize="12sp" />
 
         <RadioButton
-            android:id="@+id/radio2"
+            android:id="@+id/radio_home_setting"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -59,11 +77,11 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:text="@string/tabbar_item_setting"
-            android:textColor="@color/gray"
+            android:textColor="@color/tab_normal_color"
             android:textSize="12sp" />
-        
+
         <RadioButton
-            android:id="@+id/radio3"
+            android:id="@+id/radio_home_more"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -73,9 +91,17 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:text="@string/tabbar_item_more"
-            android:textColor="@color/gray"
+            android:textColor="@color/tab_normal_color"
             android:textSize="12sp" />
-
     </RadioGroup>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_home_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/radioGroup_home_tab"
+        android:layout_below="@id/relativeLayout_home_nav" >
+
+    </RelativeLayout>
 
 </RelativeLayout>
