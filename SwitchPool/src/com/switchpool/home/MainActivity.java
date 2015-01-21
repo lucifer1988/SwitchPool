@@ -3,8 +3,6 @@ package com.switchpool.home;
 import com.xiaoshuye.switchpool.R;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -57,8 +55,18 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         newsButton.setOnClickListener(this);
         settingButton.setOnClickListener(this);
         moreButton.setOnClickListener(this);
+        
+        initialize();
     }
 	 
+	private void initialize() {
+    	Drawable highlight_drawable0 = this.getResources().getDrawable(highlightTabItemIds[0]); 
+        homeButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable0, null, null);  
+        homeButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
+        homeFragment = new HomeFragment(); 
+        fManager.beginTransaction().add(R.id.relativeLayout_home_container, homeFragment).commit();  
+	}
+	
 	@Override
 	public void onClick(View view) {
 		 switch (view.getId()) {
@@ -91,7 +99,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         case 0:
         	Drawable highlight_drawable0 = this.getResources().getDrawable(highlightTabItemIds[0]); 
             homeButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable0, null, null);  
-            homeButton.setTextColor(R.color.tab_highlight_color);
+            homeButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
             if (homeFragment == null) {  
                 // 如果homeFragment为空，则创建一个并添加到界面上  
                 homeFragment = new HomeFragment();  
@@ -105,7 +113,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         case 1:
         	Drawable highlight_drawable1 = this.getResources().getDrawable(highlightTabItemIds[1]); 
             newsButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable1, null, null);  
-            newsButton.setTextColor(R.color.tab_highlight_color);
+            newsButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
             if (newsFragment == null) {   
             	newsFragment = new HomeFragment();  
                 transaction.add(R.id.relativeLayout_home_container, newsFragment);  
@@ -117,7 +125,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
          case 2:
          	Drawable highlight_drawable2 = this.getResources().getDrawable(highlightTabItemIds[2]); 
             settingButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable2, null, null);  
-            settingButton.setTextColor(R.color.tab_highlight_color);
+            settingButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
             if (settingFragment == null) {   
             	settingFragment = new HomeFragment();  
                 transaction.add(R.id.relativeLayout_home_container, settingFragment);  
@@ -129,7 +137,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
          case 3:
           	Drawable highlight_drawable3 = this.getResources().getDrawable(highlightTabItemIds[3]); 
              moreButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable3, null, null);  
-             moreButton.setTextColor(R.color.tab_highlight_color);
+             moreButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
              if (moreFragment == null) {   
             	 moreFragment = new HomeFragment();  
                  transaction.add(R.id.relativeLayout_home_container, moreFragment);  

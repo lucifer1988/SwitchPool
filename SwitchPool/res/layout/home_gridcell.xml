@@ -16,9 +16,10 @@
         android:id="@+id/textView_home_gridcell"
         android:layout_width="60dp"
         android:layout_height="20dp"
-        android:layout_below="@+id/imageView_home_nav"
+        android:layout_below="@id/imageView_home_gridcell"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
+        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

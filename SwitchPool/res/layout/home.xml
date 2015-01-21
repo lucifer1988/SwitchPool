@@ -48,6 +48,7 @@
 
     <GridView
         android:id="@+id/gridView_home"
+        android:listSelector="@color/translucent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"

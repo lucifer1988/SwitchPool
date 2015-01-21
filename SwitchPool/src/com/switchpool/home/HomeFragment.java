@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
 		{
 			Map<String, Object> listItem = new HashMap<String, Object>();
 			listItem.put("image", normalImageIds[i]);
-			listItem.put("title", itemNameIds[i]);
+			listItem.put("title", getActivity().getString(itemNameIds[i]));
 			listItems.add(listItem);
 		}
 		// 创建一个SimpleAdapter
