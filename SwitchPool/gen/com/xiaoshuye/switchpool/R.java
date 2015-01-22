@@ -1539,26 +1539,27 @@ containing a value of this type.
         public static final int home_grid08_highlight=0x7f020067;
         public static final int home_grid08_normal=0x7f020068;
         public static final int ic_launcher=0x7f020069;
-        public static final int login_bg=0x7f02006a;
-        public static final int login_field_bg=0x7f02006b;
-        public static final int login_login_highlight=0x7f02006c;
-        public static final int login_login_normal=0x7f02006d;
-        public static final int login_login_selecter=0x7f02006e;
-        public static final int login_more_highlight=0x7f02006f;
-        public static final int login_more_normal=0x7f020070;
-        public static final int login_more_selecter=0x7f020071;
-        public static final int login_password=0x7f020072;
-        public static final int login_username=0x7f020073;
-        public static final int nav_bg=0x7f020074;
-        public static final int tabbar_bg=0x7f020075;
-        public static final int tabbar_home_highlight=0x7f020076;
-        public static final int tabbar_home_normal=0x7f020077;
-        public static final int tabbar_more_highlight=0x7f020078;
-        public static final int tabbar_more_normal=0x7f020079;
-        public static final int tabbar_news_highlight=0x7f02007a;
-        public static final int tabbar_news_normal=0x7f02007b;
-        public static final int tabbar_setting_highlight=0x7f02007c;
-        public static final int tabbar_setting_normal=0x7f02007d;
+        public static final int loading_bg=0x7f02006a;
+        public static final int login_bg=0x7f02006b;
+        public static final int login_field_bg=0x7f02006c;
+        public static final int login_login_highlight=0x7f02006d;
+        public static final int login_login_normal=0x7f02006e;
+        public static final int login_login_selecter=0x7f02006f;
+        public static final int login_more_highlight=0x7f020070;
+        public static final int login_more_normal=0x7f020071;
+        public static final int login_more_selecter=0x7f020072;
+        public static final int login_password=0x7f020073;
+        public static final int login_username=0x7f020074;
+        public static final int nav_bg=0x7f020075;
+        public static final int tabbar_bg=0x7f020076;
+        public static final int tabbar_home_highlight=0x7f020077;
+        public static final int tabbar_home_normal=0x7f020078;
+        public static final int tabbar_more_highlight=0x7f020079;
+        public static final int tabbar_more_normal=0x7f02007a;
+        public static final int tabbar_news_highlight=0x7f02007b;
+        public static final int tabbar_news_normal=0x7f02007c;
+        public static final int tabbar_setting_highlight=0x7f02007d;
+        public static final int tabbar_setting_normal=0x7f02007e;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1699,9 +1700,10 @@ containing a value of this type.
         public static final int abc_simple_decor=0x7f030017;
         public static final int home=0x7f030018;
         public static final int home_gridcell=0x7f030019;
-        public static final int login=0x7f03001a;
-        public static final int main=0x7f03001b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001c;
+        public static final int loading=0x7f03001a;
+        public static final int login=0x7f03001b;
+        public static final int main=0x7f03001c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001d;
     }
     public static final class menu {
         public static final int home=0x7f0c0000;
