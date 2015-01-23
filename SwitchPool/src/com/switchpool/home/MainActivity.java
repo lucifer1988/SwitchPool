@@ -1,17 +1,30 @@
 package com.switchpool.home;
 
+import org.apache.http.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.switchpool.model.User;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
+import android.R.bool;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 @SuppressLint("ResourceAsColor")
 public class MainActivity extends FragmentActivity implements OnClickListener {
@@ -65,6 +78,68 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         homeButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
         homeFragment = new HomeFragment(); 
         fManager.beginTransaction().add(R.id.relativeLayout_home_container, homeFragment).commit();  
+        
+        Intent intent = getIntent();
+        if (intent.getStringExtra("isFromLoadingActivity") == "true") {
+    		AsyncHttpClient client = new AsyncHttpClient();
+    		String url = new String(this.getString(R.string.host) + "login/index");
+    		Log.v("sp", "" + url);
+    		
+    		final User user = (User) Utility.shareInstance().getObject(Utility.shareInstance().getCache_user_filenameString());
+    		
+    		RequestParams params = new RequestParams();  
+    		params.put("cellphone", user.cellphone);  
+    		params.put("passwd", user.password); 
+    		params.put("ver", user.getVer());
+    		params.put("prefix", user.getPrefix());
+    		params.put("uetype", user.getUetype());
+    		params.put("ueid", user.getUeid());
+    		params.put("uename", user.getUename());
+    		params.put("os", user.getOs());
+    		params.put("osver", user.getOsver());
+    		params.put("vender", user.getVender());
+    		params.put("brand", user.getBrand());
+    		params.put("ip", user.getIp());
+    		params.put("mod", user.getMod());
+    		params.put("buglog", user.getBuglog());
+    		params.put("channel", user.getChannel());
+    		params.put("inreg", user.getInreg());
+    		params.put("topic", user.getTopic());
+    		params.put("token", user.getToken());
+    		
+    		Log.v("sp", "" + params);
+    		
+    		
+    		try {  
+    			client.post(url, params, new JsonHttpResponseHandler() {  
+
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+                    	Log.v("sp", "" + jsonObject); 
+                    	if (statusCode == 200) {
+                    		try {
+    							user.setUid(jsonObject.getString("uid"));
+    							user.setToken(jsonObject.getString("token"));
+    							user.setBuglog(jsonObject.getBoolean("buglog"));
+    							user.setChannel(jsonObject.getBoolean("channel"));
+    							user.setInreg(jsonObject.getBoolean("inreg"));
+    							user.setTopic(jsonObject.getBoolean("topic"));  
+    							
+    							Utility.shareInstance().saveObject(Utility.shareInstance().getCache_user_filenameString(), user);
+    							
+    						} catch (JSONException e) {
+    							Log.e("sp", "" + Log.getStackTraceString(e));
+    						}
+    					}
+                    }  
+                      
+                });  
+    		} catch (Exception e) {
+    			Log.e("sp", "" + Log.getStackTraceString(e));
+    			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+    		}
+        
+		}
+        
 	}
 	
 	@Override

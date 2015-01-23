@@ -137,7 +137,7 @@ public class LoginActivity extends Activity {
             });  
 		} catch (Exception e) {
 			Log.e("sp", "" + Log.getStackTraceString(e));
-			Toast.makeText(this, "用户名或者密码不能为空", Toast.LENGTH_LONG).show(); 
+			Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show(); 
 		}
     }
 	

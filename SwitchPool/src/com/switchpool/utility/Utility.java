@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import com.xiaoshuye.switchpool.R;
+
 import android.app.Activity;
 
 public class Utility extends Activity {
@@ -25,6 +27,15 @@ public class Utility extends Activity {
     	return singleton; 
 	}
 	
+	public String cache_user_filenameString;
+	
+	public String getCache_user_filenameString() {
+		if (cache_user_filenameString == null) {
+			cache_user_filenameString = this.getString(R.string.ser_user);
+		}
+		return cache_user_filenameString;
+	}
+
 	public void saveObject(String name, Object object){  
         FileOutputStream fos = null;  
         ObjectOutputStream oos = null;  
