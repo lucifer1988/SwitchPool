@@ -1,5 +1,6 @@
 package com.switchpool.utility;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.io.ObjectOutputStream;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Activity;
+import android.os.Environment;
 
 public class Utility extends Activity {
 	
@@ -39,8 +41,25 @@ public class Utility extends Activity {
 	public void saveObject(String name, Object object){  
         FileOutputStream fos = null;  
         ObjectOutputStream oos = null;  
+        
+        File file = new File(Environment.getExternalStorageDirectory().toString()
+	             + File.separator +"SwitchPoolCache"+File.separator +"ikuser"+ File.separator + name);
+		if (!file.getParentFile().exists()) {
+			file.getParentFile().mkdirs();
+		}
+		
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+
         try {  
-            fos = this.openFileOutput(name, MODE_PRIVATE);  
+//            fos = this.openFileOutput(name, MODE_PRIVATE); 
+        	fos = new FileOutputStream(file.toString());
             oos = new ObjectOutputStream(fos);  
             oos.writeObject(object);  
         } catch (Exception e) {  
@@ -69,8 +88,11 @@ public class Utility extends Activity {
 	public Object getObject(String name){  
 	        FileInputStream fis = null;  
 	        ObjectInputStream ois = null;  
+	        File file = new File(Environment.getExternalStorageDirectory().toString()
+		             + File.separator +"SwitchPoolCache"+File.separator +"ikuser"+ File.separator + name);
+	        
 	        try {  
-	            fis = this.openFileInput(name);  
+	            fis = new FileInputStream(file.toString());  
 	            ois = new ObjectInputStream(fis);  
 	            return ois.readObject();  
 	        } catch (Exception e) {  

@@ -70,16 +70,12 @@ public class LoginActivity extends Activity {
 		user.setCellphone(userName);
 		user.setPassword(userPass);
 		user.setBrand(null);
-		user.setBuglog(true);
-		user.setChannel(true);
-		user.setInreg(true);
 		user.setIp(null);
 		user.setMod(null);
 		user.setOs(null);
 		user.setOsver(null);
 		user.setPrefix(null);
 		user.setToken(null);
-		user.setTopic(true);
 		user.setUeid(null);
 		user.setUename(null);
 		user.setUetype(null);
@@ -101,10 +97,6 @@ public class LoginActivity extends Activity {
 		params.put("brand", user.getBrand());
 		params.put("ip", user.getIp());
 		params.put("mod", user.getMod());
-		params.put("buglog", user.getBuglog());
-		params.put("channel", user.getChannel());
-		params.put("inreg", user.getInreg());
-		params.put("topic", user.getTopic());
 		params.put("token", user.getToken());
 		
 		Log.v("sp", "" + params);
@@ -119,10 +111,10 @@ public class LoginActivity extends Activity {
                 		try {
 							user.setUid(jsonObject.getString("uid"));
 							user.setToken(jsonObject.getString("token"));
-							user.setBuglog(jsonObject.getBoolean("buglog"));
-							user.setChannel(jsonObject.getBoolean("channel"));
-							user.setInreg(jsonObject.getBoolean("inreg"));
-							user.setTopic(jsonObject.getBoolean("topic"));  
+							user.setBuglog(jsonObject.getInt("buglog"));
+							user.setChannel(jsonObject.getInt("channel"));
+							user.setInreg(jsonObject.getInt("inreg"));
+							user.setTopic(jsonObject.getInt("topic"));  
 							
 							Utility.shareInstance().saveObject(cache_user_filenameString, user);
 							

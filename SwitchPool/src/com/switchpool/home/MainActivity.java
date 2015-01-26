@@ -119,10 +119,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
                     		try {
     							user.setUid(jsonObject.getString("uid"));
     							user.setToken(jsonObject.getString("token"));
-    							user.setBuglog(jsonObject.getBoolean("buglog"));
-    							user.setChannel(jsonObject.getBoolean("channel"));
-    							user.setInreg(jsonObject.getBoolean("inreg"));
-    							user.setTopic(jsonObject.getBoolean("topic"));  
+    							user.setBuglog(jsonObject.getInt("buglog"));
+    							user.setChannel(jsonObject.getInt("channel"));
+    							user.setInreg(jsonObject.getInt("inreg"));
+    							user.setTopic(jsonObject.getInt("topic"));  
     							
     							Utility.shareInstance().saveObject(Utility.shareInstance().getCache_user_filenameString(), user);
     							

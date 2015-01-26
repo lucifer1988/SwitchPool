@@ -2,6 +2,8 @@ package com.switchpool.model;
 
 import java.io.Serializable; 
 
+import android.R.integer;
+
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 6598144297210617472L;
@@ -26,10 +28,10 @@ public class User implements Serializable {
 	public String brand;
 	public String ip;
 	
-	public Boolean buglog;
-	public Boolean channel;
-	public Boolean inreg;
-	public Boolean topic;
+	public int buglog;
+	public int channel;
+	public int inreg;
+	public int topic;
 	public String token;
 	
 	public String getCellphone() {
@@ -74,16 +76,16 @@ public class User implements Serializable {
 	public String getIp() {
 		return ip;
 	}
-	public Boolean getBuglog() {
+	public int getBuglog() {
 		return buglog;
 	}
-	public Boolean getChannel() {
+	public int getChannel() {
 		return channel;
 	}
-	public Boolean getInreg() {
+	public int getInreg() {
 		return inreg;
 	}
-	public Boolean getTopic() {
+	public int getTopic() {
 		return topic;
 	}
 	public String getToken() {
@@ -131,16 +133,16 @@ public class User implements Serializable {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-	public void setBuglog(Boolean buglog) {
+	public void setBuglog(int buglog) {
 		this.buglog = buglog;
 	}
-	public void setChannel(Boolean channel) {
+	public void setChannel(int channel) {
 		this.channel = channel;
 	}
-	public void setInreg(Boolean inreg) {
+	public void setInreg(int inreg) {
 		this.inreg = inreg;
 	}
-	public void setTopic(Boolean topic) {
+	public void setTopic(int topic) {
 		this.topic = topic;
 	}
 	public void setToken(String token) {
