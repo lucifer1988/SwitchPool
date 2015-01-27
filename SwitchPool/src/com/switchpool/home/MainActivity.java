@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.login.LoginActivity;
 import com.switchpool.model.Subject;
 import com.switchpool.model.User;
 import com.switchpool.utility.Utility;
@@ -32,6 +33,8 @@ import android.widget.Toast;
 
 @SuppressLint("ResourceAsColor")
 public class MainActivity extends FragmentActivity implements OnClickListener {
+	
+	private MainActivity ctx;
 	
 	private HomeFragment homeFragment;
 	private HomeFragment newsFragment;
@@ -63,6 +66,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         setContentView(R.layout.main);
         fManager = getSupportFragmentManager();
         
+        ctx = this;
+        
         homeButton = (RadioButton)findViewById(R.id.radio_home_home);
         newsButton = (RadioButton)findViewById(R.id.radio_home_news);
         settingButton = (RadioButton)findViewById(R.id.radio_home_setting);
@@ -76,13 +81,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         initialize();
     }
 	 
-	private void initialize() {
-    	Drawable highlight_drawable0 = this.getResources().getDrawable(highlightTabItemIds[0]); 
-        homeButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable0, null, null);  
-        homeButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
-        homeFragment = new HomeFragment(); 
-        fManager.beginTransaction().add(R.id.relativeLayout_home_container, homeFragment).commit();  
-        
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		
         Intent intent = getIntent();
         if (intent.getStringExtra("isFromLoadingActivity") == "true") {
     		AsyncHttpClient client = new AsyncHttpClient();
@@ -142,8 +145,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     			                        subject.setBgImage(R.drawable.home_bg_header);
     			                        subjectArr.add(subject); 
     			                    }
+    							 Log.v("sp", "" + Utility.shareInstance().resSubjectListFile());
     							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
-    							 
+    							 ctx.homeFragment.refreshHeader();
     						} catch (JSONException e) {
     							Log.e("sp", "" + Log.getStackTraceString(e));
     						}
@@ -157,7 +161,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     		}
         
 		}
-        
+        else {
+        	ctx.homeFragment.refreshHeader();
+		}
+	}
+	
+	private void initialize() {
+    	Drawable highlight_drawable0 = this.getResources().getDrawable(highlightTabItemIds[0]); 
+        homeButton.setCompoundDrawablesWithIntrinsicBounds(null, highlight_drawable0, null, null);  
+        homeButton.setTextColor(this.getResources().getColor(R.color.tab_highlight_color));
+        homeFragment = new HomeFragment(); 
+        fManager.beginTransaction().add(R.id.relativeLayout_home_container, homeFragment).commit(); 
 	}
 	
 	@Override

@@ -11,6 +11,7 @@ import com.switchpool.utility.Utility;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,12 +31,18 @@ public class LoginActivity extends Activity {
 	private EditText et_name, et_pass;
 	private LoginActivity ctx;
 	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		
 		ctx = this;
+		
+		preferences = getSharedPreferences("switchpool", MODE_WORLD_READABLE);
+		editor = preferences.edit();
 		
 		et_name = (EditText) findViewById(R.id.editText_login_username);
 		et_pass = (EditText) findViewById(R.id.editText_login_password);
@@ -138,10 +145,11 @@ public class LoginActivity extends Activity {
 							 for (int i=0; i<subjectArr.size(); i++) {
 								 Subject subject = subjectArr.get(i);
 								 for (int j = 1; j < 9; j++) {
-									 String poolID = subject.getSubjectid() + "x" + j;
-									 Utility.shareInstance().SPEditor().putString(poolID, "0");
+									 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
+									 editor.putString(poolID, "0");
 								}
 							}
+							 editor.commit();
 							
 							Intent intent = new Intent(ctx, MainActivity.class);    	
 							ctx.startActivity(intent);

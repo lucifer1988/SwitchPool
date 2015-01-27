@@ -30,20 +30,6 @@ public class Utility extends Activity {
     	}
     	return singleton; 
 	}
-	
-	public SharedPreferences preferences;
-	public SharedPreferences.Editor editor;
-	
-	public SharedPreferences.Editor SPEditor() {
-		preferences = getSharedPreferences("crazyit", MODE_WORLD_READABLE);
-		editor = preferences.edit();
-		return editor;
-	}
-	
-	public SharedPreferences SPPreferences() {
-		preferences = getSharedPreferences("crazyit", MODE_WORLD_READABLE);
-		return preferences;
-	}
 
 	public void saveObject(String name, Object object){  
         FileOutputStream fos = null;  

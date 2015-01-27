@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 public class LoadingActivity extends Activity {
 
@@ -25,6 +26,7 @@ public class LoadingActivity extends Activity {
             public void run() {
                 /* Create an Intent that will start the Main WordPress Activity. */
             	Intent loadingIntent=new Intent();
+            	Log.v("sp", ""+Utility.shareInstance().userInfoFile());
             	if(Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile()) == null) {
             		loadingIntent.setClass(LoadingActivity.this, LoginActivity.class);
             	}

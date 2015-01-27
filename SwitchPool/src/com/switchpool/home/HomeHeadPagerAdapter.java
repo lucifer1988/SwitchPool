@@ -18,11 +18,9 @@ import android.widget.ImageView.ScaleType;
 public class HomeHeadPagerAdapter extends PagerAdapter {
 	private ArrayList<View> mPageViewList;
 	private List<Subject> mImageList;
-	private Context mContext;
 	private LayoutInflater mInflater;
 	
 	public HomeHeadPagerAdapter(Context context, List<Subject> imageList) {
-		mContext = context;
 		mImageList = imageList;
 		mPageViewList = new ArrayList<View>();
 		if (mInflater == null) {
@@ -59,7 +57,7 @@ public class HomeHeadPagerAdapter extends PagerAdapter {
 	public Object instantiateItem(View arg0, final int arg1) {
 		((ViewPager) arg0).addView(mPageViewList.get(arg1));
 		final ImageView ImageV = (ImageView) mPageViewList.get(arg1)
-				.findViewById(R.id.image);
+				.findViewById(R.id.imageView_home_head);
 		ImageV.setImageResource(mImageList.get(arg1).getBgImage());
 		ImageV.setScaleType(ScaleType.FIT_XY);
 //		ImageV.setOnClickListener(new OnClickListener() {

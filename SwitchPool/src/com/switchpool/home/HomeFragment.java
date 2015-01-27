@@ -9,9 +9,11 @@ import com.switchpool.model.Subject;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,7 @@ import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements OnPageChangeListener {
 	
 	GridView grid;
 	int[] normalImageIds = new int[]
@@ -43,6 +45,7 @@ public class HomeFragment extends Fragment {
 		, R.string.home_item_grid7 , R.string.home_item_grid8
 	};
 	
+	private Context homeContext = this.getActivity();
 	private ViewPager homeHeadViewPager;
 	private HomeHeadPagerAdapter homeHeaderAdapter;
 	
@@ -55,9 +58,11 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.home, container,false);
         
         homeHeadViewPager = (ViewPager) view.findViewById(R.id.viewpager_home_header);
-        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(Utility.shareInstance().resSubjectListFile());
-        homeHeaderAdapter = new HomeHeadPagerAdapter(getActivity(), subjectArr);
-        homeHeadViewPager.setAdapter(homeHeaderAdapter);
+        
+//		String subjectPathString = Utility.shareInstance().resSubjectListFile();
+//        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
+//        homeHeaderAdapter = new HomeHeadPagerAdapter(this.getActivity(), subjectArr);
+//        homeHeadViewPager.setAdapter(homeHeaderAdapter);
 		
 		// 创建一个List对象，List对象的元素是Map
 		List<Map<String, Object>> listItems = 
@@ -104,4 +109,30 @@ public class HomeFragment extends Fragment {
         
         return view;
     }
+	
+	public void refreshHeader() {
+		String subjectPathString = Utility.shareInstance().resSubjectListFile();
+        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
+        homeHeaderAdapter = new HomeHeadPagerAdapter(this.getActivity(), subjectArr);
+        homeHeadViewPager.setAdapter(homeHeaderAdapter);
+        homeHeadViewPager.setOnPageChangeListener(this);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 }
