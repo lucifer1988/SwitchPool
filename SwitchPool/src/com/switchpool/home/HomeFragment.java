@@ -5,10 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.switchpool.model.Subject;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +43,9 @@ public class HomeFragment extends Fragment {
 		, R.string.home_item_grid7 , R.string.home_item_grid8
 	};
 	
+	private ViewPager homeHeadViewPager;
+	private HomeHeadPagerAdapter homeHeaderAdapter;
+	
 	public HomeFragment() {
 	}
 	
@@ -48,6 +54,11 @@ public class HomeFragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home, container,false);
         
+        homeHeadViewPager = (ViewPager) view.findViewById(R.id.viewpager_home_header);
+        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(Utility.shareInstance().resSubjectListFile());
+        homeHeaderAdapter = new HomeHeadPagerAdapter(getActivity(), subjectArr);
+        homeHeadViewPager.setAdapter(homeHeaderAdapter);
+		
 		// 创建一个List对象，List对象的元素是Map
 		List<Map<String, Object>> listItems = 
 				new ArrayList<Map<String, Object>>();

@@ -1,8 +1,6 @@
 package com.switchpool.model;
 
-import java.io.Serializable; 
-
-import android.R.integer;
+import java.io.Serializable;
 
 public class User implements Serializable {
 

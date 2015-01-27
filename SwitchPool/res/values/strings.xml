@@ -34,6 +34,5 @@
     
     <!-- key-->
     <string name="host">http://115.29.146.245/resourceManager/</string>
-    <string name="ser_user">ser_user.dat</string>
     
 </resources>

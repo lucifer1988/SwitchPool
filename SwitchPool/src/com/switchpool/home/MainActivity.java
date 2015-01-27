@@ -1,17 +1,21 @@
 package com.switchpool.home;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.model.Subject;
 import com.switchpool.model.User;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
-import android.R.bool;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -85,7 +89,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     		String url = new String(this.getString(R.string.host) + "login/index");
     		Log.v("sp", "" + url);
     		
-    		final User user = (User) Utility.shareInstance().getObject(Utility.shareInstance().getCache_user_filenameString());
+    		final User user = (User) Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile());
     		
     		RequestParams params = new RequestParams();  
     		params.put("cellphone", user.cellphone);  
@@ -123,9 +127,23 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
     							user.setChannel(jsonObject.getInt("channel"));
     							user.setInreg(jsonObject.getInt("inreg"));
     							user.setTopic(jsonObject.getInt("topic"));  
+    							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
     							
-    							Utility.shareInstance().saveObject(Utility.shareInstance().getCache_user_filenameString(), user);
-    							
+    							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
+    							List<Subject> subjectArr = new ArrayList<Subject>();
+    							 for(int i=0; i<resultSubjectList.length(); i++){ 
+    			                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
+    			                        Subject subject = new Subject(); 
+    			                        subject.setTitle(subjectJsonObject.getString("title"));
+    			                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
+    			                        subject.setDesc(subjectJsonObject.getString("desc"));
+    			                        subject.setSeq(subjectJsonObject.getString("seq"));
+    			                        subject.setType(subjectJsonObject.getString("type"));
+    			                        subject.setBgImage(R.drawable.home_bg_header);
+    			                        subjectArr.add(subject); 
+    			                    }
+    							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
+    							 
     						} catch (JSONException e) {
     							Log.e("sp", "" + Log.getStackTraceString(e));
     						}

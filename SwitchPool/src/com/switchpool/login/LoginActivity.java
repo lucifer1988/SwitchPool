@@ -1,7 +1,11 @@
 package com.switchpool.login;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.xiaoshuye.switchpool.R;
 import com.switchpool.home.MainActivity;
+import com.switchpool.model.Subject;
 import com.switchpool.model.User;
 import com.switchpool.utility.Utility;
 
@@ -24,7 +28,6 @@ import com.loopj.android.http.RequestParams;
 public class LoginActivity extends Activity {
 	
 	private EditText et_name, et_pass;
-	private String cache_user_filenameString;
 	private LoginActivity ctx;
 	
 	@Override
@@ -36,7 +39,6 @@ public class LoginActivity extends Activity {
 		
 		et_name = (EditText) findViewById(R.id.editText_login_username);
 		et_pass = (EditText) findViewById(R.id.editText_login_password);
-		cache_user_filenameString = this.getString(R.string.ser_user);
 	}
 	
 	public void login(View sourceView) {
@@ -116,7 +118,30 @@ public class LoginActivity extends Activity {
 							user.setInreg(jsonObject.getInt("inreg"));
 							user.setTopic(jsonObject.getInt("topic"));  
 							
-							Utility.shareInstance().saveObject(cache_user_filenameString, user);
+							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
+							
+							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
+							List<Subject> subjectArr = new ArrayList<Subject>();
+							 for(int i=0; i<resultSubjectList.length(); i++){ 
+			                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
+			                        Subject subject = new Subject(); 
+			                        subject.setTitle(subjectJsonObject.getString("title"));
+			                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
+			                        subject.setDesc(subjectJsonObject.getString("desc"));
+			                        subject.setSeq(subjectJsonObject.getString("seq"));
+			                        subject.setType(subjectJsonObject.getString("type"));
+			                        subject.setBgImage(R.drawable.home_bg_header);
+			                        subjectArr.add(subject); 
+			                    }
+							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
+							 
+							 for (int i=0; i<subjectArr.size(); i++) {
+								 Subject subject = subjectArr.get(i);
+								 for (int j = 1; j < 9; j++) {
+									 String poolID = subject.getSubjectid() + "x" + j;
+									 Utility.shareInstance().SPEditor().putString(poolID, "0");
+								}
+							}
 							
 							Intent intent = new Intent(ctx, MainActivity.class);    	
 							ctx.startActivity(intent);

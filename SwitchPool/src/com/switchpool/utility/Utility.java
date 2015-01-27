@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 public class Utility extends Activity {
@@ -23,27 +24,32 @@ public class Utility extends Activity {
         	synchronized(Utility.class){
         	    if(singleton==null){
         	    singleton=new Utility();
+        		// 获取只能被本应用程序读、写的SharedPreferences对象
         	    }
     	    }
     	}
     	return singleton; 
 	}
 	
-	public String cache_user_filenameString;
+	public SharedPreferences preferences;
+	public SharedPreferences.Editor editor;
 	
-	public String getCache_user_filenameString() {
-		if (cache_user_filenameString == null) {
-			cache_user_filenameString = this.getString(R.string.ser_user);
-		}
-		return cache_user_filenameString;
+	public SharedPreferences.Editor SPEditor() {
+		preferences = getSharedPreferences("crazyit", MODE_WORLD_READABLE);
+		editor = preferences.edit();
+		return editor;
+	}
+	
+	public SharedPreferences SPPreferences() {
+		preferences = getSharedPreferences("crazyit", MODE_WORLD_READABLE);
+		return preferences;
 	}
 
 	public void saveObject(String name, Object object){  
         FileOutputStream fos = null;  
         ObjectOutputStream oos = null;  
         
-        File file = new File(Environment.getExternalStorageDirectory().toString()
-	             + File.separator +"SwitchPoolCache"+File.separator +"ikuser"+ File.separator + name);
+        File file = new File(name);
 		if (!file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
@@ -57,8 +63,7 @@ public class Utility extends Activity {
 		}
 		
 
-        try {  
-//            fos = this.openFileOutput(name, MODE_PRIVATE); 
+        try {   
         	fos = new FileOutputStream(file.toString());
             oos = new ObjectOutputStream(fos);  
             oos.writeObject(object);  
@@ -88,8 +93,7 @@ public class Utility extends Activity {
 	public Object getObject(String name){  
 	        FileInputStream fis = null;  
 	        ObjectInputStream ois = null;  
-	        File file = new File(Environment.getExternalStorageDirectory().toString()
-		             + File.separator +"SwitchPoolCache"+File.separator +"ikuser"+ File.separator + name);
+	        File file = new File(name);
 	        
 	        try {  
 	            fis = new FileInputStream(file.toString());  
@@ -118,6 +122,32 @@ public class Utility extends Activity {
 	        }  
 	        //读取产生异常，返回null  
 	        return null;  
-	    }  
-	 
+	    }
+	
+	//bulid Directory
+	public String rootDir() {
+		return Environment.getExternalStorageDirectory().toString()
+	             + File.separator +"SwitchPoolCache"+File.separator;
+	}
+	
+	public String userRootDir() {
+		return this.rootDir() + "ikuser"+ File.separator;
+	}
+	
+	public String sysRootDir() {
+		return this.rootDir() + "iksys"+ File.separator;
+	}
+	
+	public String resRootDir() {
+		return this.sysRootDir() + "ikres"+ File.separator;
+	}
+	
+	public String userInfoFile() {
+		return this.userRootDir() + "sp_user.dat";
+	}
+	
+	public String resSubjectListFile() {
+		return this.resRootDir() + "sp_subjectlist.dat";
+	}
+	
 }

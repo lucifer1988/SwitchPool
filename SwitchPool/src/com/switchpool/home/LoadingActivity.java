@@ -12,7 +12,6 @@ import android.os.Handler;
 
 public class LoadingActivity extends Activity {
 
-	private String cache_user_filenameString;
 	public LoadingActivity() {
 		// TODO Auto-generated constructor stub
 	}
@@ -21,13 +20,12 @@ public class LoadingActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		cache_user_filenameString = this.getString(R.string.ser_user);
 		
 		new Handler().postDelayed(new Runnable() {
             public void run() {
                 /* Create an Intent that will start the Main WordPress Activity. */
             	Intent loadingIntent=new Intent();
-            	if(Utility.shareInstance().getObject(cache_user_filenameString) == null) {
+            	if(Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile()) == null) {
             		loadingIntent.setClass(LoadingActivity.this, LoginActivity.class);
             	}
             	else {
