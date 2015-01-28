@@ -9,7 +9,6 @@ import com.switchpool.model.Subject;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -20,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
@@ -44,10 +44,12 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		, R.string.home_item_grid4 , R.string.home_item_grid5 , R.string.home_item_grid6
 		, R.string.home_item_grid7 , R.string.home_item_grid8
 	};
+	List<Subject> subjectArr ;
 	
-	private Context homeContext = this.getActivity();
 	private ViewPager homeHeadViewPager;
 	private HomeHeadPagerAdapter homeHeaderAdapter;
+	private TextView homeHeadTextView;
+	private Subject curSubject;
 	
 	public HomeFragment() {
 	}
@@ -58,6 +60,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
         View view = inflater.inflate(R.layout.home, container,false);
         
         homeHeadViewPager = (ViewPager) view.findViewById(R.id.viewpager_home_header);
+        homeHeadTextView = (TextView)view.findViewById(R.id.textView_home_header);
         
 //		String subjectPathString = Utility.shareInstance().resSubjectListFile();
 //        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
@@ -112,16 +115,19 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	
 	public void refreshHeader() {
 		String subjectPathString = Utility.shareInstance().resSubjectListFile();
-        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
+        subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
         homeHeaderAdapter = new HomeHeadPagerAdapter(this.getActivity(), subjectArr);
         homeHeadViewPager.setAdapter(homeHeaderAdapter);
         homeHeadViewPager.setOnPageChangeListener(this);
+        curSubject = subjectArr.get(0);
+        homeHeadTextView.setText(curSubject.title);
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 		// TODO Auto-generated method stub
-		
+        curSubject = subjectArr.get(arg0);
+        homeHeadTextView.setText(curSubject.title);
 	}
 
 	@Override
