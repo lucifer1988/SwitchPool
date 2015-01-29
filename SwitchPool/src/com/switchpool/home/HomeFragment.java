@@ -9,10 +9,12 @@ import com.switchpool.model.Subject;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +109,12 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id)
 			{
+				Log.v("sp", ""+position);
+				Intent onItemClickIntent=new Intent();
+				onItemClickIntent.putExtra("poolId", curSubject.subjectid+"X"+getString(position));
+				onItemClickIntent.setClass(getActivity(), TopListActivity.class);
+				getActivity().startActivity(onItemClickIntent);
+				getActivity().finish();
 			}
 		});
         
@@ -126,8 +134,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
 		// TODO Auto-generated method stub
-        curSubject = subjectArr.get(arg0);
-        homeHeadTextView.setText(curSubject.title);
+		
 	}
 
 	@Override
@@ -139,6 +146,8 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	@Override
 	public void onPageSelected(int arg0) {
 		// TODO Auto-generated method stub
-		
+		Log.v("sp", ""+arg0);
+        curSubject = subjectArr.get(arg0);
+        homeHeadTextView.setText(curSubject.title);
 	}
 }

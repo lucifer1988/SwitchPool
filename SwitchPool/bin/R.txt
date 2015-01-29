@@ -541,6 +541,7 @@ int layout loading 0x7f03001b
 int layout login 0x7f03001c
 int layout main 0x7f03001d
 int layout support_simple_spinner_dropdown_item 0x7f03001e
+int layout toplist 0x7f03001f
 int menu home 0x7f0c0000
 int string Login_failed 0x7f0a0014
 int string Login_succeeded 0x7f0a0015
