@@ -22,6 +22,15 @@ import android.content.SharedPreferences;
 import com.switchpool.model.Item;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class TopListActivity extends Activity {
@@ -30,14 +39,19 @@ public class TopListActivity extends Activity {
 		// TODO Auto-generated constructor stub
 	}
 	private String poolId;
-	List<Item> topListItemArr = new ArrayList<Item>();
+	List<Item> topListItemArr;
+
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
+	private  ExpandableListView  topExpandableListView;
 	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.toplist);
+		
+        /*初始化界面的list目录*/
+		topExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_toplist_con);
 		
 		String version;
 		Intent intent = getIntent();
@@ -51,24 +65,23 @@ public class TopListActivity extends Activity {
 		if (version == null) {
 			version = "0";
 			editor.putString(poolId, version);
-		}	
+		}
+		/*获得初始化数据*/
+		poolItemRequstPost(poolId,version);
 		
 	}
 	
 	private void poolItemRequstPost(String poolid, String version) {
 		AsyncHttpClient client = new AsyncHttpClient();
-		String url = new String(this.getString(R.string.host) + "/file/getSource");
+		String url = new String(this.getString(R.string.host) + "file/getSource");
 		Log.v("sp", "" + url);
-		
-		List<JSONArray> topJsonArray = new ArrayList<JSONArray>();
-		
 		
 		RequestParams params = new RequestParams(); 
 		params.put("poolid", poolid);
 		params.put("version", version);
 		
 		try {  
-			client.post(url, params, new JsonHttpResponseHandler() {  
+			client.get(url, params, new JsonHttpResponseHandler() {  
 
                 public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
                 	Log.v("sp", "" + jsonObject); 
@@ -104,7 +117,7 @@ public class TopListActivity extends Activity {
                         					thrItem.setParentid(thrJsonObject.getString("parentid"));
                         					List<Item> forItemArr = new ArrayList<Item>();
                         					JSONArray thrChildJsonArray = thrJsonObject.getJSONArray("children");
-                        					for(int iFor =0; iFor < secChildJsonArray.length(); iFor++){
+                        					for(int iFor =0; iFor < thrChildJsonArray.length(); iFor++){
                         						JSONObject forJsonObject = (JSONObject)thrChildJsonArray.opt(iFor);
                             					Item forItem = new Item();
                             					forItem.setCaption(forJsonObject.getString("caption"));
@@ -122,9 +135,11 @@ public class TopListActivity extends Activity {
                 					topItem.setItemArr(secItemArr);
                 					topItemArr.add(topItem);                					
                 				}
-                			topItemArr = new ArrayList<Item>(topItemArr); 
+                				topListItemArr = new ArrayList<Item>(topItemArr); 
+                				topExpandableListView.setAdapter(new ExpandableListViewaAdapter(TopListActivity.this));
 							} else {
 								//TODO :更新树 --lxl
+								
 							}
                 			
 
@@ -134,16 +149,118 @@ public class TopListActivity extends Activity {
 						}
 					}
                 }  
-                  
+                   
             });  
 		} catch (Exception e) {
 			Log.e("sp", "" + Log.getStackTraceString(e));
 			Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show(); 
 		}
 		
+		
 	}
-	
-	
-	
+	class ExpandableListViewaAdapter extends BaseExpandableListAdapter {
+        Activity activity;
+         public  ExpandableListViewaAdapter(Activity a)  
+            {  
+                activity = a;  
+            }  
+       /*-----------------Child */
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            // TODO Auto-generated method stub
+            return topListItemArr.get(groupPosition).getItemArr().get(childPosition);
+        }
+ 
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            // TODO Auto-generated method stub
+            return childPosition;
+        }
+ 
+        @Override
+        public View getChildView(int groupPosition, int childPosition,
+                boolean isLastChild, View convertView, ViewGroup parent) {
+             
+            Item item =topListItemArr.get(groupPosition).getItemArr().get(childPosition);
+             
+            return getGenericView(item);
+        }
+ 
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            // TODO Auto-generated method stub
+            return topListItemArr.get(groupPosition).getItemArr().size();
+        }
+       /* ----------------------------Group */
+        @Override
+        public Object getGroup(int groupPosition) {
+            // TODO Auto-generated method stub
+            return getGroup(groupPosition);
+        }
+ 
+        @Override
+        public int getGroupCount() {
+            // TODO Auto-generated method stub
+            return topListItemArr.size();
+        }
+ 
+        @Override
+        public long getGroupId(int groupPosition) {
+            // TODO Auto-generated method stub
+            return groupPosition;
+        }
+ 
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded,
+                View convertView, ViewGroup parent) {
+             
+           Item   item=topListItemArr.get(groupPosition);
+           return getGenericView(item);
+        }
+ 
+        @Override
+        public boolean hasStableIds() {
+            // TODO Auto-generated method stub
+            return false;
+        }
+ 
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) 
+        {
+            // TODO Auto-generated method stub
+            return true;
+        }
+         
+        private View  getGenericView(Item item ) 
+        {
+        	// Layout parameters for the ExpandableListView    
+            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(    
+                    ViewGroup.LayoutParams.MATCH_PARENT, 40);  
+            lp.height = 44;           
+            TextView text = new TextView(TopListActivity.this);    
+            text.setLayoutParams(lp);    
+            // Center the text vertically    
+            text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);    
+            // Set the text starting position    
+            text.setPadding(36, 0, 0, 0);    
+                
+            text.setText(item.getCaption());    
+            return text;
+            
+//        	LinearLayout linearLayout = new LinearLayout(TopListActivity.this);
+//        	linearLayout.setOrientation(0);
+//            ImageView generallogo = new ImageView(TopListActivity.this);
+//           // generallogo.setImageResource();
+//            linearLayout.addView(generallogo);           
+//            AbsListView.LayoutParams layoutParams =new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
+//            TextView  textView =new TextView(activity);               
+//            textView.setGravity(Gravity.CENTER_VERTICAL |Gravity.LEFT);
+//            textView.setPadding(40, 0, 0, 0);
+//            textView.setText(item.getCaption());
+//            linearLayout.addView(textView);
+//            return linearLayout;
+         }		
+		
+    }
 
 }

@@ -1560,6 +1560,8 @@ containing a value of this type.
         public static final int tabbar_news_normal=0x7f02007c;
         public static final int tabbar_setting_highlight=0x7f02007d;
         public static final int tabbar_setting_normal=0x7f02007e;
+        public static final int toplist_childicon=0x7f02007f;
+        public static final int toplist_parenticon=0x7f020080;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1573,7 +1575,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f050055;
+        public static final int action_settings=0x7f05005b;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1590,6 +1592,7 @@ containing a value of this type.
         public static final int edit_query=0x7f050030;
         public static final int end=0x7f050013;
         public static final int expand_activities_button=0x7f050026;
+        public static final int expandableListView_toplist_con=0x7f050058;
         public static final int expanded_menu=0x7f05002c;
         public static final int gridView_home=0x7f050040;
         public static final int home=0x7f050014;
@@ -1603,6 +1606,8 @@ containing a value of this type.
         public static final int imageView_home_nav=0x7f05004d;
         public static final int imageView_login_password=0x7f050047;
         public static final int imageView_login_username=0x7f050045;
+        public static final int imageView_toplist_nav=0x7f050056;
+        public static final int imageView_toplistcell=0x7f050059;
         public static final int linearLayout_login_button=0x7f050049;
         public static final int linearLayout_login_field=0x7f050044;
         public static final int listMode=0x7f050001;
@@ -1622,6 +1627,7 @@ containing a value of this type.
         public static final int relativeLayout1=0x7f05003c;
         public static final int relativeLayout_home_container=0x7f050054;
         public static final int relativeLayout_home_nav=0x7f05004c;
+        public static final int relativeLayout_toplist_nav=0x7f050055;
         public static final int search_badge=0x7f050032;
         public static final int search_bar=0x7f050031;
         public static final int search_button=0x7f050033;
@@ -1642,6 +1648,8 @@ containing a value of this type.
         public static final int textView_home_gridcell=0x7f050042;
         public static final int textView_home_header=0x7f05003e;
         public static final int textView_home_nav=0x7f05004e;
+        public static final int textView_toplist_nav=0x7f050057;
+        public static final int textView_toplistcell=0x7f05005a;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int up=0x7f050021;
@@ -1707,6 +1715,7 @@ containing a value of this type.
         public static final int main=0x7f03001d;
         public static final int support_simple_spinner_dropdown_item=0x7f03001e;
         public static final int toplist=0x7f03001f;
+        public static final int toplist_cell=0x7f030020;
     }
     public static final class menu {
         public static final int home=0x7f0c0000;

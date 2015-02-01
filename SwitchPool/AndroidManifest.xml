@@ -24,6 +24,7 @@
         </activity>
         <activity android:name="com.switchpool.login.LoginActivity"></activity>
         <activity android:name="com.switchpool.home.MainActivity"></activity>
+        <activity android:name="com.switchpool.home.TopListActivity"></activity>
     </application>
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> 

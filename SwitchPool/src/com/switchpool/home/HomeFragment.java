@@ -110,8 +110,9 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 					int position, long id)
 			{
 				Log.v("sp", ""+position);
+				Log.v("sp", ""+curSubject.subjectid+"x"+(position+1));
 				Intent onItemClickIntent=new Intent();
-				onItemClickIntent.putExtra("poolId", curSubject.subjectid+"X"+getString(position));
+				onItemClickIntent.putExtra("poolId", curSubject.subjectid+"x"+(position+1));
 				onItemClickIntent.setClass(getActivity(), TopListActivity.class);
 				getActivity().startActivity(onItemClickIntent);
 				getActivity().finish();
