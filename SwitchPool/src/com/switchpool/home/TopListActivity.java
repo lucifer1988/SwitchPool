@@ -19,6 +19,8 @@ import android.R.integer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+
 import com.switchpool.model.Item;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +47,7 @@ public class TopListActivity extends Activity {
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 	private  ExpandableListView  topExpandableListView;
+	private  ExpandableListViewaAdapter adapter;
 	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class TopListActivity extends Activity {
 		
         /*初始化界面的list目录*/
 		topExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_toplist_con);
-		
+		topExpandableListView.setGroupIndicator(null);
 		String version;
 		Intent intent = getIntent();
 		poolId=intent.getStringExtra("poolId");
@@ -68,6 +72,23 @@ public class TopListActivity extends Activity {
 		}
 		/*获得初始化数据*/
 		poolItemRequstPost(poolId,version);
+		
+		//设置item点击的监听器
+		topExpandableListView.setOnChildClickListener(new OnChildClickListener() {
+			
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                    int groupPosition, int childPosition, long id) {
+            	
+            	Intent intent=new Intent();
+            	intent.setClass(TopListActivity.this, SecListActivity.class);
+            	Bundle bundle = new Bundle();
+            	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	intent.putExtras(bundle);
+            	TopListActivity.this.startActivity(intent); 
+                return true;
+            }
+        });
 		
 	}
 	
@@ -136,7 +157,8 @@ public class TopListActivity extends Activity {
                 					topItemArr.add(topItem);                					
                 				}
                 				topListItemArr = new ArrayList<Item>(topItemArr); 
-                				topExpandableListView.setAdapter(new ExpandableListViewaAdapter(TopListActivity.this));
+                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+                				topExpandableListView.setAdapter(adapter);
 							} else {
 								//TODO :更新树 --lxl
 								
@@ -166,7 +188,7 @@ public class TopListActivity extends Activity {
             }  
        /*-----------------Child */
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
+        public Item getChild(int groupPosition, int childPosition) {
             // TODO Auto-generated method stub
             return topListItemArr.get(groupPosition).getItemArr().get(childPosition);
         }
@@ -193,7 +215,7 @@ public class TopListActivity extends Activity {
         }
        /* ----------------------------Group */
         @Override
-        public Object getGroup(int groupPosition) {
+        public Item getGroup(int groupPosition) {
             // TODO Auto-generated method stub
             return getGroup(groupPosition);
         }
@@ -234,33 +256,26 @@ public class TopListActivity extends Activity {
         private View  getGenericView(Item item ) 
         {
         	// Layout parameters for the ExpandableListView    
-            AbsListView.LayoutParams lp = new AbsListView.LayoutParams(    
-                    ViewGroup.LayoutParams.MATCH_PARENT, 40);  
-            lp.height = 44;           
-            TextView text = new TextView(TopListActivity.this);    
-            text.setLayoutParams(lp);    
-            // Center the text vertically    
-            text.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);    
-            // Set the text starting position    
-            text.setPadding(36, 0, 0, 0);    
-                
-            text.setText(item.getCaption());    
-            return text;
-            
-//        	LinearLayout linearLayout = new LinearLayout(TopListActivity.this);
-//        	linearLayout.setOrientation(0);
-//            ImageView generallogo = new ImageView(TopListActivity.this);
-//           // generallogo.setImageResource();
-//            linearLayout.addView(generallogo);           
-//            AbsListView.LayoutParams layoutParams =new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
-//            TextView  textView =new TextView(activity);               
-//            textView.setGravity(Gravity.CENTER_VERTICAL |Gravity.LEFT);
-//            textView.setPadding(40, 0, 0, 0);
-//            textView.setText(item.getCaption());
-//            linearLayout.addView(textView);
-//            return linearLayout;
+        	 AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+                     ViewGroup.LayoutParams.FILL_PARENT, 100);
+             TextView textView = new TextView(activity);
+             textView.setLayoutParams(lp);
+             textView.setGravity(Gravity.CENTER_VERTICAL);
+             textView.setTextSize(17);
+             textView.setTextColor(Color.BLACK);
+             textView.setText(item.getCaption());
+	         if (item.getParentid() == null) {
+	        	 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.toplist_parenticon), null, null, null);
+	        	 textView.setPadding(30, 0, 0, 0);
+			 }
+	         else {
+	        	 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.toplist_childicon), null, null, null);
+	        	 textView.setPadding(60, 0, 0, 0);
+			 }
+             return textView;
          }		
 		
     }
+	
 
 }

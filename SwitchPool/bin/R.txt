@@ -436,7 +436,7 @@ int id action_context_bar 0x7f05001d
 int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f050024
-int id action_settings 0x7f05005b
+int id action_settings 0x7f05005d
 int id activity_chooser_view_content 0x7f050025
 int id always 0x7f05000b
 int id beginning 0x7f050011
@@ -453,7 +453,8 @@ int id editText_login_username 0x7f050046
 int id edit_query 0x7f050030
 int id end 0x7f050013
 int id expand_activities_button 0x7f050026
-int id expandableListView_toplist_con 0x7f050058
+int id expandableListView_seclist_con 0x7f050058
+int id expandableListView_toplist_con 0x7f05005c
 int id expanded_menu 0x7f05002c
 int id gridView_home 0x7f050040
 int id home 0x7f050014
@@ -467,8 +468,8 @@ int id imageView_home_head 0x7f050043
 int id imageView_home_nav 0x7f05004d
 int id imageView_login_password 0x7f050047
 int id imageView_login_username 0x7f050045
-int id imageView_toplist_nav 0x7f050056
-int id imageView_toplistcell 0x7f050059
+int id imageView_seclist_nav 0x7f050056
+int id imageView_toplist_nav 0x7f05005a
 int id linearLayout_login_button 0x7f050049
 int id linearLayout_login_field 0x7f050044
 int id listMode 0x7f050001
@@ -488,7 +489,8 @@ int id radio_home_setting 0x7f050052
 int id relativeLayout1 0x7f05003c
 int id relativeLayout_home_container 0x7f050054
 int id relativeLayout_home_nav 0x7f05004c
-int id relativeLayout_toplist_nav 0x7f050055
+int id relativeLayout_seclist_nav 0x7f050055
+int id relativeLayout_toplist_nav 0x7f050059
 int id search_badge 0x7f050032
 int id search_bar 0x7f050031
 int id search_button 0x7f050033
@@ -509,8 +511,8 @@ int id tabMode 0x7f050002
 int id textView_home_gridcell 0x7f050042
 int id textView_home_header 0x7f05003e
 int id textView_home_nav 0x7f05004e
-int id textView_toplist_nav 0x7f050057
-int id textView_toplistcell 0x7f05005a
+int id textView_seclist_nav 0x7f050057
+int id textView_toplist_nav 0x7f05005b
 int id title 0x7f05002b
 int id top_action_bar 0x7f050020
 int id up 0x7f050021
@@ -548,9 +550,9 @@ int layout home_headitem 0x7f03001a
 int layout loading 0x7f03001b
 int layout login 0x7f03001c
 int layout main 0x7f03001d
-int layout support_simple_spinner_dropdown_item 0x7f03001e
-int layout toplist 0x7f03001f
-int layout toplist_cell 0x7f030020
+int layout seclist 0x7f03001e
+int layout support_simple_spinner_dropdown_item 0x7f03001f
+int layout toplist 0x7f030020
 int menu home 0x7f0c0000
 int string Login_failed 0x7f0a0014
 int string Login_succeeded 0x7f0a0015
