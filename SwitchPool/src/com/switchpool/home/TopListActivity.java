@@ -23,6 +23,7 @@ import android.graphics.Color;
 
 import com.switchpool.model.Item;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -36,12 +37,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TopListActivity extends Activity {
+public class TopListActivity extends FragmentActivity {
 
 	public TopListActivity() {
 		// TODO Auto-generated constructor stub
 	}
 	private String poolId;
+	private String fileDir;
 	List<Item> topListItemArr;
 
 	SharedPreferences preferences;
@@ -70,6 +72,10 @@ public class TopListActivity extends Activity {
 			version = "0";
 			editor.putString(poolId, version);
 		}
+//		else {
+//			/*本地有树文件的情况下，先进行树结构的读取，然后初始化树结构*/
+//			
+//		}
 		/*获得初始化数据*/
 		poolItemRequstPost(poolId,version);
 		
@@ -110,7 +116,7 @@ public class TopListActivity extends Activity {
                 		try {
                 			editor.putString(poolId, jsonObject.getString("version"));
                 			List<Item> topItemArr = new ArrayList<Item>();
-                			if (jsonObject.getInt("isUpdate") == 0 ) {
+                			if ((jsonObject.getInt("isUpdate") == 0 ) ) {/*在服务器端返回的数据没有更新没有更新的情况*/
                 				JSONArray poolResultJsonArray = jsonObject.getJSONArray("item");
                 				for(int iTop = 0; iTop<poolResultJsonArray.length(); iTop++){
                 					JSONObject topJsonObject = (JSONObject)poolResultJsonArray.opt(iTop);

@@ -111,29 +111,39 @@ public class Utility extends Activity {
 	    }
 	
 	//bulid Directory
+	/*根目录*/
 	public String rootDir() {
 		return Environment.getExternalStorageDirectory().toString()
 	             + File.separator +"SwitchPoolCache"+File.separator;
 	}
-	
+	/*用户信息根目录*/
 	public String userRootDir() {
 		return this.rootDir() + "ikuser"+ File.separator;
 	}
-	
+	/*系统信息根目录*/
 	public String sysRootDir() {
 		return this.rootDir() + "iksys"+ File.separator;
 	}
-	
+	/*资源根目录*/	
 	public String resRootDir() {
 		return this.sysRootDir() + "ikres"+ File.separator;
 	}
-	
+	/*个性化用户目录*/
 	public String userInfoFile() {
 		return this.userRootDir() + "sp_user.dat";
 	}
-	
+	/*存subject的根目录*/
 	public String resSubjectListFile() {
 		return this.resRootDir() + "sp_subjectlist.dat";
+	}
+	public String cachPoolDir(String poolId,String subjectId) {
+		return this.resRootDir() + subjectId +File.separator + poolId + File.separator;
+	}
+	public String cachResPoolDir(String poolId,String subjectId,String resId) {
+		return this.resRootDir() + subjectId +File.separator + poolId + File.separator + resId + File.separator;
+	}
+	public String cachAudioDir(String poolId,String subjectId) {
+		return this.resRootDir() + "A40" +File.separator + subjectId + File.separator + poolId + File.separator;
 	}
 	
 }

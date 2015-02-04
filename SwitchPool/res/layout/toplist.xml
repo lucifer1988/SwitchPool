@@ -29,8 +29,16 @@
         android:id="@+id/expandableListView_toplist_con"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/relativeLayout_toplist_nav" >
+        android:layout_below="@id/relativeLayout_toplist_nav"
+        android:layout_marginBottom="44dp" >
 
     </ExpandableListView>
+    
+    <fragment
+        android:id="@+id/toplist_toolbar"
+        android:name="com.switchpool.utility.ToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>
