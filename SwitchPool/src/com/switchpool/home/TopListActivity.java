@@ -16,6 +16,7 @@ import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.R.integer;
+import android.R.string;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,7 +44,7 @@ public class TopListActivity extends FragmentActivity {
 		// TODO Auto-generated constructor stub
 	}
 	private String poolId;
-	private String fileDir;
+	private String subjectId;
 	List<Item> topListItemArr;
 
 	SharedPreferences preferences;
@@ -62,6 +63,7 @@ public class TopListActivity extends FragmentActivity {
 		String version;
 		Intent intent = getIntent();
 		poolId=intent.getStringExtra("poolId");
+		subjectId=intent.getStringExtra("subjectId");
 		
 		preferences = getSharedPreferences("switchpool", MODE_WORLD_READABLE);
 		editor = preferences.edit();
@@ -99,93 +101,143 @@ public class TopListActivity extends FragmentActivity {
 	}
 	
 	private void poolItemRequstPost(String poolid, String version) {
-		AsyncHttpClient client = new AsyncHttpClient();
-		String url = new String(this.getString(R.string.host) + "file/getSource");
-		Log.v("sp", "" + url);
+		final String cachePathString = Utility.shareInstance().cachPoolDir(poolId, subjectId)+this.getString(R.string.host);
+		final List<Item> cacheArr = (List<Item>) Utility.shareInstance().getObject(cachePathString);
 		
-		RequestParams params = new RequestParams(); 
-		params.put("poolid", poolid);
-		params.put("version", version);
-		
-		try {  
-			client.get(url, params, new JsonHttpResponseHandler() {  
+		if (Utility.shareInstance().isNetworkAvailable(this)) {
+			AsyncHttpClient client = new AsyncHttpClient();
+			String url = new String(this.getString(R.string.host) + "file/getSource");
+			Log.v("sp", "" + url);
+			
+			RequestParams params = new RequestParams(); 
+			params.put("poolid", poolid);
+			params.put("version", version);
+			
+			try {  
+				client.get(url, params, new JsonHttpResponseHandler() {  
 
-                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
-                	Log.v("sp", "" + jsonObject); 
-                	if (statusCode == 200) {
-                		try {
-                			editor.putString(poolId, jsonObject.getString("version"));
-                			List<Item> topItemArr = new ArrayList<Item>();
-                			if ((jsonObject.getInt("isUpdate") == 0 ) ) {/*在服务器端返回的数据没有更新没有更新的情况*/
-                				JSONArray poolResultJsonArray = jsonObject.getJSONArray("item");
-                				for(int iTop = 0; iTop<poolResultJsonArray.length(); iTop++){
-                					JSONObject topJsonObject = (JSONObject)poolResultJsonArray.opt(iTop);
-                					Item topItem = new Item();
-                					topItem.setCaption(topJsonObject.getString("caption"));
-                					topItem.setId(topJsonObject.getString("id"));
-                					topItem.setOrder(topJsonObject.getInt("order"));
-                					List<Item> secItemArr = new ArrayList<Item>();
-                					JSONArray topChildJsonArray = topJsonObject.getJSONArray("children");
-                					for(int iSec =0; iSec < topChildJsonArray.length(); iSec++){
-                						JSONObject secJsonObject = (JSONObject)topChildJsonArray.opt(iSec);
-                    					Item secItem = new Item();
-                    					secItem.setCaption(secJsonObject.getString("caption"));
-                    					secItem.setId(secJsonObject.getString("id"));
-                    					secItem.setOrder(secJsonObject.getInt("order"));
-                    					secItem.setParentid(secJsonObject.getString("parentid"));
-                    					List<Item> thrItemArr = new ArrayList<Item>();
-                    					JSONArray secChildJsonArray = secJsonObject.getJSONArray("children");
-                    					for(int iThr =0; iThr < secChildJsonArray.length(); iThr++){
-                    						JSONObject thrJsonObject = (JSONObject)secChildJsonArray.opt(iThr);
-                        					Item thrItem = new Item();
-                        					thrItem.setCaption(thrJsonObject.getString("caption"));
-                        					thrItem.setId(thrJsonObject.getString("id"));
-                        					thrItem.setOrder(thrJsonObject.getInt("order"));
-                        					thrItem.setParentid(thrJsonObject.getString("parentid"));
-                        					List<Item> forItemArr = new ArrayList<Item>();
-                        					JSONArray thrChildJsonArray = thrJsonObject.getJSONArray("children");
-                        					for(int iFor =0; iFor < thrChildJsonArray.length(); iFor++){
-                        						JSONObject forJsonObject = (JSONObject)thrChildJsonArray.opt(iFor);
-                            					Item forItem = new Item();
-                            					forItem.setCaption(forJsonObject.getString("caption"));
-                            					forItem.setId(forJsonObject.getString("id"));
-                            					forItem.setOrder(forJsonObject.getInt("order"));
-                            					forItem.setParentid(forJsonObject.getString("parentid"));                           					
-                            					forItemArr.add(forItem);
-                        					}
-                        					thrItem.setItemArr(forItemArr);
-                        					thrItemArr.add(thrItem);
-                    					}
-                    					secItem.setItemArr(thrItemArr);
-                    					secItemArr.add(secItem);
-                					}
-                					topItem.setItemArr(secItemArr);
-                					topItemArr.add(topItem);                					
-                				}
-                				topListItemArr = new ArrayList<Item>(topItemArr); 
-                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
-                				topExpandableListView.setAdapter(adapter);
-							} else {
-								//TODO :更新树 --lxl
+	                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+	                	Log.v("sp", "" + jsonObject); 
+	                	if (statusCode == 200) {
+	                		try {
+	                			editor.putString(poolId, jsonObject.getString("version"));
+	                			List<Item> topItemArr = new ArrayList<Item>();
+	                			if ((jsonObject.getInt("isUpdate") == 0 ) ) {/*在服务器端返回的数据没有更新没有更新的情况*/
+	                				if (cacheArr != null) {
+	                					topListItemArr = new ArrayList<Item>(cacheArr); 
+	                					adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+	                					topExpandableListView.setAdapter(adapter);
+	                				}
+	                				else {
+		                				JSONArray poolResultJsonArray = jsonObject.getJSONArray("item");
+		                				for(int iTop = 0; iTop<poolResultJsonArray.length(); iTop++){
+		                					JSONObject topJsonObject = (JSONObject)poolResultJsonArray.opt(iTop);
+		                					Item topItem = new Item();
+		                					topItem.setCaption(topJsonObject.getString("caption"));
+		                					topItem.setId(topJsonObject.getString("id"));
+		                					topItem.setOrder(topJsonObject.getInt("order"));
+		                					List<Item> secItemArr = new ArrayList<Item>();
+		                					JSONArray topChildJsonArray = topJsonObject.getJSONArray("children");
+		                					for(int iSec =0; iSec < topChildJsonArray.length(); iSec++){
+		                						JSONObject secJsonObject = (JSONObject)topChildJsonArray.opt(iSec);
+		                    					Item secItem = new Item();
+		                    					secItem.setCaption(secJsonObject.getString("caption"));
+		                    					secItem.setId(secJsonObject.getString("id"));
+		                    					secItem.setOrder(secJsonObject.getInt("order"));
+		                    					secItem.setParentid(secJsonObject.getString("parentid"));
+		                    					List<Item> thrItemArr = new ArrayList<Item>();
+		                    					JSONArray secChildJsonArray = secJsonObject.getJSONArray("children");
+		                    					for(int iThr =0; iThr < secChildJsonArray.length(); iThr++){
+		                    						JSONObject thrJsonObject = (JSONObject)secChildJsonArray.opt(iThr);
+		                        					Item thrItem = new Item();
+		                        					thrItem.setCaption(thrJsonObject.getString("caption"));
+		                        					thrItem.setId(thrJsonObject.getString("id"));
+		                        					thrItem.setOrder(thrJsonObject.getInt("order"));
+		                        					thrItem.setParentid(thrJsonObject.getString("parentid"));
+		                        					List<Item> forItemArr = new ArrayList<Item>();
+		                        					JSONArray thrChildJsonArray = thrJsonObject.getJSONArray("children");
+		                        					for(int iFor =0; iFor < thrChildJsonArray.length(); iFor++){
+		                        						JSONObject forJsonObject = (JSONObject)thrChildJsonArray.opt(iFor);
+		                            					Item forItem = new Item();
+		                            					forItem.setCaption(forJsonObject.getString("caption"));
+		                            					forItem.setId(forJsonObject.getString("id"));
+		                            					forItem.setOrder(forJsonObject.getInt("order"));
+		                            					forItem.setParentid(forJsonObject.getString("parentid"));                           					
+		                            					forItemArr.add(forItem);
+		                        					}
+		                        					thrItem.setItemArr(forItemArr);
+		                        					thrItemArr.add(thrItem);
+		                    					}
+		                    					secItem.setItemArr(thrItemArr);
+		                    					secItemArr.add(secItem);
+		                					}
+		                					topItem.setItemArr(secItemArr);
+		                					topItemArr.add(topItem);                					
+		                				}
+		                				topListItemArr = new ArrayList<Item>(topItemArr); 
+		                				Utility.shareInstance().saveObject(cachePathString, topItemArr);
+		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+		                				topExpandableListView.setAdapter(adapter);
+	                				}
+								} else {
+									//TODO :更新树 --lxl
+									if (cacheArr != null) {
+										topListItemArr = new ArrayList<Item>(updatePoolCache(cacheArr, jsonObject.getJSONObject("dynamic"), cachePathString));
+		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+		                				topExpandableListView.setAdapter(adapter);
+									}
+									else {
+										return;
+									}
+								}
+	                			
+
 								
+							} catch (JSONException e) {
+								Log.e("sp", "" + Log.getStackTraceString(e));
 							}
-                			
-
-							
-						} catch (JSONException e) {
-							Log.e("sp", "" + Log.getStackTraceString(e));
 						}
-					}
-                }  
-                   
-            });  
-		} catch (Exception e) {
-			Log.e("sp", "" + Log.getStackTraceString(e));
-			Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show(); 
+	                }  
+	                   
+	            });  
+			} catch (Exception e) {
+				Log.e("sp", "" + Log.getStackTraceString(e));
+				Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show(); 
+			}
 		}
-		
-		
+		else {
+			if (cacheArr == null) {
+				return;
+			}
+			else {
+				topListItemArr = new ArrayList<Item>(cacheArr); 
+				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+				topExpandableListView.setAdapter(adapter);
+			}
+		}	
 	}
+	
+	private List<Item> updatePoolCache(List<Item> cacheArr, JSONObject updateInfo, String cachePath) {
+		try {
+			JSONArray topInfoArray = updateInfo.getJSONArray("top");
+			JSONArray firstInfoArray = updateInfo.getJSONArray("firstInfos");
+			JSONArray secondInfoArray = updateInfo.getJSONArray("secondInfos");
+			JSONArray itemInfoArray = updateInfo.getJSONArray("itemInfos");
+			
+			String kSPItemOptype = "optype";
+			String kSPItemOptypeAdd = "A";
+			String kSPItemOptypeDelete = "D";
+			String kSPItemOptypeUpdate = "U";
+			String kSPItemParent = "parent";
+			
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return cacheArr;
+	}
+	
 	class ExpandableListViewaAdapter extends BaseExpandableListAdapter {
         Activity activity;
          public  ExpandableListViewaAdapter(Activity a)  

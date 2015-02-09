@@ -1747,6 +1747,7 @@ containing a value of this type.
          */
         public static final int OK=0x7f0a0023;
         public static final int Password_will_not_be_nil=0x7f0a0013;
+        public static final int SPItemList=0x7f0a0025;
         public static final int Username_will_not_be_nil=0x7f0a0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
