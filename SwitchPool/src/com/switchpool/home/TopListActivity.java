@@ -11,7 +11,10 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.login.LoginActivity;
 import com.switchpool.model.Subject;
+import com.switchpool.utility.ToolBar;
+import com.switchpool.utility.ToolBarCallBack;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
@@ -27,6 +30,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -46,6 +50,8 @@ public class TopListActivity extends FragmentActivity {
 	private String poolId;
 	private String subjectId;
 	List<Item> topListItemArr;
+	
+	private TopListActivity ctx;
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
@@ -57,6 +63,8 @@ public class TopListActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.toplist);
 		
+		ctx = this;
+		
         /*初始化界面的list目录*/
 		topExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_toplist_con);
 		topExpandableListView.setGroupIndicator(null);
@@ -64,6 +72,48 @@ public class TopListActivity extends FragmentActivity {
 		Intent intent = getIntent();
 		poolId=intent.getStringExtra("poolId");
 		subjectId=intent.getStringExtra("subjectId");
+		
+		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.toplist_toolbar);
+		toolBar.setCallBack(new ToolBarCallBack() {
+			
+			@Override
+			public void tapButton6() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton5() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton4() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton3() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton2() {
+				// TODO Auto-generated method stub
+	            Intent myIntent = new Intent();
+	            myIntent = new Intent(TopListActivity.this, MainActivity.class);
+	            startActivity(myIntent);
+	            ctx.finish();
+			}
+			
+			@Override
+			public void tapButton1() {
+				// TODO Auto-generated method stub
+			}
+		});
 		
 		preferences = getSharedPreferences("switchpool", MODE_WORLD_READABLE);
 		editor = preferences.edit();
@@ -99,6 +149,17 @@ public class TopListActivity extends FragmentActivity {
         });
 		
 	}
+	
+	@Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            Intent myIntent = new Intent();
+            myIntent = new Intent(TopListActivity.this, MainActivity.class);
+            startActivity(myIntent);
+            this.finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 	
 	private void poolItemRequstPost(String poolid, String version) {
 		final String cachePathString = Utility.shareInstance().cachPoolDir(poolId, subjectId)+this.getString(R.string.host);

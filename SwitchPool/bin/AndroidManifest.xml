@@ -15,17 +15,17 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.switchpool.home.LoadingActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.switchpool.login.LoginActivity"></activity>
-        <activity android:name="com.switchpool.home.MainActivity"></activity>
-        <activity android:name="com.switchpool.home.TopListActivity"></activity>
-        <activity android:name="com.switchpool.home.SecListActivity"></activity>
+        <activity android:name="com.switchpool.login.LoginActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.switchpool.home.MainActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.switchpool.home.TopListActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.switchpool.home.SecListActivity" android:screenOrientation="portrait"></activity>
     </application>
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> 

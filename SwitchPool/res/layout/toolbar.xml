@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/translucent"
             android:contentDescription="@string/app_name"
             android:src="@drawable/toolbar_left" />
 
@@ -22,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/translucent"
             android:contentDescription="@string/app_name"
             android:src="@drawable/toolbar_home" />
 
@@ -30,14 +32,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/translucent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/toolbar_search" />
+            android:src="@drawable/toolbar_search"
+            android:onClick="tap3" />
 
         <ImageButton
             android:id="@+id/imageButton_toolbar_4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/translucent"
             android:contentDescription="@string/app_name"
             android:src="@drawable/toolbar_audio" />
 
@@ -46,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/translucent"
             android:contentDescription="@string/app_name"
             android:src="@drawable/toolbar_setting" />
 
@@ -54,6 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@color/translucent"
             android:contentDescription="@string/app_name"
             android:src="@drawable/toolbar_right" />
 

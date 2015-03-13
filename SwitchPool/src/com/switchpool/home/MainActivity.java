@@ -291,4 +291,10 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         moreButton.setCompoundDrawablesWithIntrinsicBounds(null, normal_drawable3, null, null);  
         moreButton.setTextColor(this.getResources().getColor(R.color.tab_normal_color));
     }
+    
+	@Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  // TODO Auto-generated method stub
+	  super.onActivityResult(requestCode, resultCode, data);
+	 }
 }
