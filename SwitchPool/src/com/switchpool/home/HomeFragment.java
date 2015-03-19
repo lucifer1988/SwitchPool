@@ -116,6 +116,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 				onItemClickIntent.putExtra("subjectId", curSubject.subjectid);
 				onItemClickIntent.setClass(getActivity(), TopListActivity.class);
 				getActivity().startActivity(onItemClickIntent);
+				getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				getActivity().finish();
 			}
 		});

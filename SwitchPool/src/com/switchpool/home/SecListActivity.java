@@ -5,12 +5,15 @@ import java.util.List;
 
 import com.switchpool.home.TopListActivity.ExpandableListViewaAdapter;
 import com.switchpool.model.Item;
+import com.switchpool.utility.ToolBar;
+import com.switchpool.utility.ToolBarCallBack;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
@@ -20,20 +23,65 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-public class SecListActivity extends Activity {
+public class SecListActivity extends FragmentActivity {
 
 	public SecListActivity() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	private SecListActivity ctx;
+	
 	List<Item> secListItemArr;
 	private  ExpandableListView  secExpandableListView;
 	private  ExpandableListViewaAdapter adapter;
+	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.seclist);
 		
 		Item secItem = new Item();
+		ctx = this;
+		
+		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.toplist_toolbar);
+		toolBar.setCallBack(new ToolBarCallBack() {
+			
+			@Override
+			public void tapButton6() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton5() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton4() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton3() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton2() {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void tapButton1() {
+				// TODO Auto-generated method stub
+				finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+			}
+		});
 		
         /*初始化界面的list目录*/
 		secExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_seclist_con);
@@ -49,6 +97,13 @@ public class SecListActivity extends Activity {
 		}
 		
 	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
+	
 	class ExpandableListViewaAdapter extends BaseExpandableListAdapter {
         Activity activity;
          public  ExpandableListViewaAdapter(Activity a)  
@@ -126,7 +181,7 @@ public class SecListActivity extends Activity {
         {
         	// Layout parameters for the ExpandableListView    
         	 AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                     ViewGroup.LayoutParams.FILL_PARENT, 100);
+                     ViewGroup.LayoutParams.MATCH_PARENT, 100);
              TextView textView = new TextView(activity);
              textView.setLayoutParams(lp);
              textView.setGravity(Gravity.CENTER_VERTICAL);

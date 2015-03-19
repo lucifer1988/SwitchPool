@@ -32,5 +32,11 @@
         android:layout_below="@id/relativeLayout_seclist_nav" >
 
     </ExpandableListView>
+        <fragment
+        android:id="@+id/toplist_toolbar"
+        android:name="com.switchpool.utility.ToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

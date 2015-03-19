@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
 		
 		ctx = this;
 		
-		preferences = getSharedPreferences("switchpool", MODE_WORLD_READABLE);
+		preferences = getSharedPreferences("switchpool", 0x0001);
 		editor = preferences.edit();
 		
 		et_name = (EditText) findViewById(R.id.editText_login_username);

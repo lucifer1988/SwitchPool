@@ -11,15 +11,11 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.switchpool.login.LoginActivity;
-import com.switchpool.model.Subject;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
-import android.R.integer;
-import android.R.string;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,8 +33,6 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,7 +100,8 @@ public class TopListActivity extends FragmentActivity {
 	            Intent myIntent = new Intent();
 	            myIntent = new Intent(TopListActivity.this, MainActivity.class);
 	            startActivity(myIntent);
-	            ctx.finish();
+	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	            finish();
 			}
 			
 			@Override
@@ -115,7 +110,7 @@ public class TopListActivity extends FragmentActivity {
 			}
 		});
 		
-		preferences = getSharedPreferences("switchpool", MODE_WORLD_READABLE);
+		preferences = getSharedPreferences("switchpool", 0x0001);
 		editor = preferences.edit();
 		
 		// ¶ÁÈ¡×Ö·û´®Êý¾Ý
@@ -143,12 +138,19 @@ public class TopListActivity extends FragmentActivity {
             	Bundle bundle = new Bundle();
             	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
             	intent.putExtras(bundle);
-            	TopListActivity.this.startActivity(intent); 
+            	startActivity(intent); 
+            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             }
         });
 		
 	}
+	
+	@Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  // TODO Auto-generated method stub
+	  super.onActivityResult(requestCode, resultCode, data);
+	 }
 	
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -517,7 +519,7 @@ public class TopListActivity extends FragmentActivity {
         {
         	// Layout parameters for the ExpandableListView    
         	 AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
-                     ViewGroup.LayoutParams.FILL_PARENT, 100);
+                     ViewGroup.LayoutParams.MATCH_PARENT, 100);
              TextView textView = new TextView(activity);
              textView.setLayoutParams(lp);
              textView.setGravity(Gravity.CENTER_VERTICAL);

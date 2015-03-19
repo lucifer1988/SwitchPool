@@ -26,6 +26,7 @@
         <activity android:name="com.switchpool.home.MainActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.home.TopListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.home.SecListActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.switchpool.detail.DetailActivity" android:screenOrientation="portrait"></activity>
     </application>
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> 
