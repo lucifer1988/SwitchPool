@@ -7,6 +7,8 @@ import java.io.OutputStream;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.switchpool.utility.ToolBar;
+import com.switchpool.utility.ToolBarCallBack;
 import com.xiaoshuye.switchpool.R;
 
 import org.apache.http.Header; 
@@ -16,7 +18,10 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,9 +36,60 @@ public class DetailActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login);
+		setContentView(R.layout.detail);
 		
 		mContext = this;
+		
+		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.detail_toolbar);
+		toolBar.setCallBack(new ToolBarCallBack() {
+			
+			@Override
+			public void tapButton6() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton5() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton4() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton3() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void tapButton2() {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void tapButton1() {
+				// TODO Auto-generated method stub
+				finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+			}
+		});
+	}
+	
+	public void tabTopBar(Button sourceButton) {
+		switch (sourceButton.getId()) {
+		case R.id.button_detail_toptab_summary:
+			
+			break;
+
+		default:
+			break;
+		}
 	}
 	
 	 /**

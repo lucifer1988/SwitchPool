@@ -10,6 +10,7 @@ import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,7 +59,8 @@ public class HomeHeadPagerAdapter extends PagerAdapter {
 		((ViewPager) arg0).addView(mPageViewList.get(arg1));
 		final ImageView ImageV = (ImageView) mPageViewList.get(arg1)
 				.findViewById(R.id.imageView_home_head);
-		ImageV.setImageResource(mImageList.get(arg1).getBgImage());
+		Log.v("sp", "" + mImageList.get(arg1).getBgImage());
+		ImageV.setImageResource(R.drawable.home_bg_header);
 		ImageV.setScaleType(ScaleType.FIT_XY);
 //		ImageV.setOnClickListener(new OnClickListener() {
 //			@Override

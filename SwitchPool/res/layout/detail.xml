@@ -25,21 +25,90 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout_detail_toptab_bg"
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:layout_below="@id/relativeLayout_detail_nav" >
+        android:layout_below="@id/relativeLayout_detail_nav"
+        android:background="@drawable/detailtab_bg_nor" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/button_detail_toptab_summary"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            android:src="@drawable/detailtab_bg_nor" />
+            android:layout_weight="1"
+            android:background="@drawable/detail_toptab_summary_bg"
+            android:drawableTop="@drawable/detail_toptab_summary_topdraw"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="@string/detail_tab_summary"
+            android:textColor="@drawable/detail_toptab_textcolor"
+            android:textSize="12sp"
+            android:onClick="tabTopBar" />
+         <Button
+            android:id="@+id/button_detail_toptab_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/detail_toptab_summary_bg"
+            android:drawableTop="@drawable/detail_toptab_content_topdraw"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="@string/detail_tab_content"
+            android:textColor="@drawable/detail_toptab_textcolor"
+            android:textSize="12sp"
+            android:onClick="tabTopBar" />
+         <Button
+            android:id="@+id/button_detail_toptab_note"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/detail_toptab_summary_bg"
+            android:drawableTop="@drawable/detail_toptab_note_topdraw"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="@string/detail_tab_note"
+            android:textColor="@drawable/detail_toptab_textcolor"
+            android:textSize="12sp"
+            android:onClick="tabTopBar" />
+         <Button
+            android:id="@+id/button_detail_toptab_audio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/detail_toptab_summary_bg"
+            android:drawableTop="@drawable/detail_toptab_audio_topdraw"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="@string/detail_tab_audio"
+            android:textColor="@drawable/detail_toptab_textcolor"
+            android:textSize="12sp"
+            android:onClick="tabTopBar" />
+        <Button
+            android:id="@+id/button_detail_toptab_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/detail_toptab_summary_bg"
+            android:drawableTop="@drawable/detail_toptab_more_topdraw"
+            android:gravity="center"
+            android:paddingTop="5dp"
+            android:text="@string/detail_tab_more"
+            android:textColor="@drawable/detail_toptab_textcolor"
+            android:textSize="12sp"
+            android:onClick="tabTopBar" />
 
     </LinearLayout>
 
-        <fragment
-        android:id="@+id/toplist_toolbar"
+    <fragment
+        android:id="@+id/detail_fragment_summary"
+        android:name="com.switchpool.detail.DetailSummaryFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/linearLayout_detail_toptab_bg"
+        android:layout_marginBottom="44dp" />
+            
+    <fragment
+        android:id="@+id/detail_toolbar"
         android:name="com.switchpool.utility.ToolBar"
         android:layout_width="match_parent"
         android:layout_height="44dp"

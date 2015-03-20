@@ -150,5 +150,6 @@
 
 <color name="tab_normal_color">#6B6B6B</color>
 <color name="tab_highlight_color">#2DA1F5</color>
+<color name="detail_toolbutton_color">#CB2C65</color>
 
 </resources>

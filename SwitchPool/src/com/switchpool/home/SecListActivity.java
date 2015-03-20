@@ -3,6 +3,7 @@ package com.switchpool.home;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.switchpool.detail.DetailActivity;
 import com.switchpool.home.TopListActivity.ExpandableListViewaAdapter;
 import com.switchpool.model.Item;
 import com.switchpool.utility.ToolBar;
@@ -22,6 +23,7 @@ import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 public class SecListActivity extends FragmentActivity {
 
@@ -96,6 +98,23 @@ public class SecListActivity extends FragmentActivity {
 			secExpandableListView.setAdapter(adapter);
 		}
 		
+		//ÉèÖÃitemµã»÷µÄ¼àÌýÆ÷
+		secExpandableListView.setOnChildClickListener(new OnChildClickListener() {
+			
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                    int groupPosition, int childPosition, long id) {
+            	
+            	Intent intent=new Intent();
+            	intent.setClass(SecListActivity.this, DetailActivity.class);
+            	Bundle bundle = new Bundle();
+            	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	intent.putExtras(bundle);
+            	startActivity(intent); 
+            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return true;
+            }
+        });
 	}
 	
 	@Override
