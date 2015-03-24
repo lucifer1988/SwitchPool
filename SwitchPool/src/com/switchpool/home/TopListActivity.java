@@ -39,10 +39,10 @@ import android.widget.Toast;
 public class TopListActivity extends FragmentActivity {
 
 	public TopListActivity() {
-		// TODO Auto-generated constructor stub
 	}
 	private String poolId;
 	private String subjectId;
+	private String poolName;
 	List<Item> topListItemArr;
 	
 	private TopListActivity ctx;
@@ -66,6 +66,10 @@ public class TopListActivity extends FragmentActivity {
 		Intent intent = getIntent();
 		poolId=intent.getStringExtra("poolId");
 		subjectId=intent.getStringExtra("subjectId");
+		poolName = intent.getStringExtra("poolName");
+		
+		TextView textView = (TextView)findViewById(R.id.textView_toplist_nav);
+		textView.setText(getString(R.string.toplist_nav_title, poolName));
 		
 		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.toplist_toolbar);
 		toolBar.setCallBack(new ToolBarCallBack() {
@@ -138,6 +142,9 @@ public class TopListActivity extends FragmentActivity {
             	Bundle bundle = new Bundle();
             	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
             	intent.putExtras(bundle);
+            	intent.putExtra("poolId", poolId);
+            	intent.putExtra("subjectId", subjectId);
+            	intent.putExtra("poolName", poolName);
             	startActivity(intent); 
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
@@ -164,7 +171,7 @@ public class TopListActivity extends FragmentActivity {
     }
 	
 	private void poolItemRequstPost(String poolid, String version) {
-		final String cachePathString = Utility.shareInstance().cachPoolDir(poolId, subjectId)+this.getString(R.string.host);
+		final String cachePathString = Utility.shareInstance().cachPoolDir(poolId, subjectId)+this.getString(R.string.SPItemList);
 		final List<Item> cacheArr = (List<Item>) Utility.shareInstance().getObject(cachePathString);
 		
 		if (Utility.shareInstance().isNetworkAvailable(this)) {
@@ -243,7 +250,6 @@ public class TopListActivity extends FragmentActivity {
 		                				topExpandableListView.setAdapter(adapter);
 	                				}
 								} else {
-									//TODO :更新树 --lxl
 									if (cacheArr != null) {
 										topListItemArr = new ArrayList<Item>(updatePoolCache(cacheArr, jsonObject.getJSONObject("dynamic"), cachePathString));
 		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
@@ -265,7 +271,7 @@ public class TopListActivity extends FragmentActivity {
 	            });  
 			} catch (Exception e) {
 				Log.e("sp", "" + Log.getStackTraceString(e));
-				Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show(); 
+				Toast.makeText(this, "获取pool树", Toast.LENGTH_LONG).show(); 
 			}
 		}
 		else {

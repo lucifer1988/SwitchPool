@@ -1,7 +1,6 @@
 package com.switchpool.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,7 +12,6 @@ public class Item implements Serializable {
 	private static final long serialVersionUID = 3029730234676572044L;
 
 	public Item() {
-		// TODO Auto-generated constructor stub
 	}
 	String caption;
 	List<Item> itemArr ;

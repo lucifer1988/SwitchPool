@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.switchpool.detail.DetailActivity;
+import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.home.TopListActivity.ExpandableListViewaAdapter;
 import com.switchpool.model.Item;
 import com.switchpool.utility.ToolBar;
@@ -32,6 +33,10 @@ public class SecListActivity extends FragmentActivity {
 	}
 	
 	private SecListActivity ctx;
+	
+	private String poolId;
+	private String subjectId;
+	private String poolName;
 	
 	List<Item> secListItemArr;
 	private  ExpandableListView  secExpandableListView;
@@ -91,6 +96,12 @@ public class SecListActivity extends FragmentActivity {
 		
 		Intent intent = this.getIntent(); 
 		secItem=(Item)intent.getSerializableExtra("item");
+		poolId=intent.getStringExtra("poolId");
+		subjectId=intent.getStringExtra("subjectId");
+		poolName = intent.getStringExtra("poolName");
+		
+		TextView textView = (TextView)findViewById(R.id.textView_seclist_nav);
+		textView.setText(getString(R.string.seclist_nav_title, poolName, secItem.getOrder()));
 		
 		if(secItem!=null){
 			secListItemArr = new ArrayList<Item>(secItem.getItemArr()); 
@@ -109,7 +120,10 @@ public class SecListActivity extends FragmentActivity {
             	intent.setClass(SecListActivity.this, DetailActivity.class);
             	Bundle bundle = new Bundle();
             	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	bundle.putSerializable("type", DeatilType.DeatilTypeOrigin);
             	intent.putExtras(bundle);
+            	intent.putExtra("poolId", poolId);
+            	intent.putExtra("subjectId", subjectId);
             	startActivity(intent); 
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;

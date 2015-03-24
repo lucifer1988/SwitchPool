@@ -20,7 +20,9 @@
             android:id="@+id/textView_detail_nav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:textColorLink="@color/white"
+            android:textSize="18sp" />
         
     </RelativeLayout>
 
