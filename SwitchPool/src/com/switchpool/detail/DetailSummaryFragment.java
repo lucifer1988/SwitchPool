@@ -1,13 +1,17 @@
 package com.switchpool.detail;
 
+import com.switchpool.model.Model;
+import com.switchpool.model.SPFile;
 import com.xiaoshuye.switchpool.R;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -15,6 +19,9 @@ import android.widget.Button;
 public class DetailSummaryFragment extends Fragment implements OnClickListener {
 
 	private WebView webView;
+	private Model model;
+	private SPFile file;
+	private String url;
 	
 	public DetailSummaryFragment() {
 		// TODO Auto-generated constructor stub
@@ -25,8 +32,9 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_summary, container,false);
         webView = (WebView) view.findViewById(R.id.webView_detail_summary);
-        webView.loadUrl("http://www.baidu.com");
         webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setUseWideViewPort(true); 
+        webView.getSettings().setLoadWithOverviewMode(true);
         
         Button backButton = (Button)view.findViewById(R.id.button_detail_summary_back);
         Button homeButton = (Button)view.findViewById(R.id.button_detail_summary_home);
@@ -38,6 +46,21 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
         return view;
     }
 	
+	public void reload(Model resModel) {
+		model = resModel;
+		if (model != null) {
+			for (int i = 0; i < model.getFileArr().size(); i++) {
+				SPFile curFile = model.getFileArr().get(i);
+				if (curFile.getSeq() == 1) {
+					file = curFile;
+					url = "file://"+file.getPath();
+					Log.v("sp", ""+url);
+					webView.loadUrl(url);
+				}
+			}
+		}
+	}
+	
     @Override
     public void onClick(View v) {
         int id  = v.getId();
@@ -46,7 +69,9 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
         	webView.goBack();
             break;
         case R.id.button_detail_summary_home:
-        	webView.loadUrl("http://www.baidu.com");
+        	if (url != null) {
+        		webView.loadUrl(url);
+			}
             break;
         case R.id.button_detail_summary_forward:
         	webView.goForward();

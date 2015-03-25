@@ -29,6 +29,8 @@
     <string name="detail_summary_tool_home">首页</string>
     <string name="detail_summary_tool_back">上一页</string>
     
+    <string name="SPAudioFilePrefix">001</string>
+    
     <!-- home -->
     <string name="hoem_nav_title">去哪儿玩</string>
     <string name="home_item_grid1">概览区</string>

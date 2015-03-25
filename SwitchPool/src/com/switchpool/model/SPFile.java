@@ -2,17 +2,16 @@ package com.switchpool.model;
 
 import java.io.Serializable;
 
-public class File implements Serializable {
+public class SPFile implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -1041432958635177260L;
+	private static final long serialVersionUID = -2221775071202390361L;
 
-	public File() {
-		// TODO Auto-generated constructor stub
+	public SPFile() {
 	}
-	
+
 	String fid;
 	String ftype;
 	String itemid;

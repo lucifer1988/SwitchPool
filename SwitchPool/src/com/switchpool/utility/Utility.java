@@ -70,6 +70,21 @@ public class Utility extends Activity {
         return false;
     }
 
+    public boolean isFileExist(String path) {
+    	File file = new File(path);
+    	if (!file.exists()) {
+    		if (file.mkdir()) {
+    			return true;
+    		}
+    		else {
+    			return false;
+    		}
+    	}
+    	else {
+    		return true;
+		}
+    }
+    
 	public void saveObject(String name, Object object){  
         FileOutputStream fos = null;  
         ObjectOutputStream oos = null;  
@@ -119,34 +134,39 @@ public class Utility extends Activity {
 	        FileInputStream fis = null;  
 	        ObjectInputStream ois = null;  
 	        File file = new File(name);
-	        
-	        try {  
-	            fis = new FileInputStream(file.toString());  
-	            ois = new ObjectInputStream(fis);  
-	            return ois.readObject();  
-	        } catch (Exception e) {  
-	            e.printStackTrace();  
-	            //这里是读取文件产生异常  
-	        } finally {  
-	            if (fis != null){  
-	                try {  
-	                    fis.close();  
-	                } catch (IOException e) {  
-	                    //fis流关闭异常  
-	                    e.printStackTrace();  
-	                }  
-	            }  
-	            if (ois != null){  
-	                try {  
-	                    ois.close();  
-	                } catch (IOException e) {  
-	                    //ois流关闭异常  
-	                    e.printStackTrace();  
-	                }  
-	            }  
-	        }  
-	        //读取产生异常，返回null  
-	        return null;  
+			if (file.exists()) {
+		        try {  
+		            fis = new FileInputStream(file.toString());  
+		            ois = new ObjectInputStream(fis);  
+		            return ois.readObject();  
+		        } catch (Exception e) {  
+		            e.printStackTrace();  
+		            //这里是读取文件产生异常  
+		        } finally {  
+		            if (fis != null){  
+		                try {  
+		                    fis.close();  
+		                } catch (IOException e) {  
+		                    //fis流关闭异常  
+		                    e.printStackTrace();  
+		                }  
+		            }  
+		            if (ois != null){  
+		                try {  
+		                    ois.close();  
+		                } catch (IOException e) {  
+		                    //ois流关闭异常  
+		                    e.printStackTrace();  
+		                }  
+		            }  
+		        }  
+		        //读取产生异常，返回null  
+		        return null;
+			}
+			else {
+				return null;
+			}
+			
 	    }
 	
 	//bulid Directory

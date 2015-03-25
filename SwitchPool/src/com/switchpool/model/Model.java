@@ -14,7 +14,7 @@ public class Model implements Serializable {
 	}
 	
 	String itemid;
-	List<File> fileArr;
+	List<SPFile> fileArr;
 	String modetype;
 	String version;
 
@@ -24,10 +24,10 @@ public class Model implements Serializable {
 	public void setItemid(String itemid) {
 		this.itemid = itemid;
 	}
-	public List<File> getFileArr() {
+	public List<SPFile> getFileArr() {
 		return fileArr;
 	}
-	public void setFileArr(List<File> fileArr) {
+	public void setFileArr(List<SPFile> fileArr) {
 		this.fileArr = fileArr;
 	}
 	public String getModetype() {

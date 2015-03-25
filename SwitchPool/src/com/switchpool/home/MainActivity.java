@@ -87,7 +87,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		super.onStart();
 		
         Intent intent = getIntent();
-        if (intent.getStringExtra("isFromLoadingActivity") == "true") {
+        Log.v("sp", ""+intent.getStringExtra("isFromLoadingActivity"));
+        if (intent.getStringExtra("isFromLoadingActivity").equals("true")) {
     		AsyncHttpClient client = new AsyncHttpClient();
     		String url = new String(this.getString(R.string.host) + "login/index");
     		Log.v("sp", "" + url);

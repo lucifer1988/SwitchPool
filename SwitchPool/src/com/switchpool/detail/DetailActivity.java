@@ -1,17 +1,16 @@
 package com.switchpool.detail;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Dictionary;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.switchpool.model.Item;
 import com.switchpool.model.Model;
+import com.switchpool.model.SPFile;
 import com.switchpool.model.User;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
@@ -19,21 +18,18 @@ import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import org.apache.http.Header; 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +71,12 @@ public class DetailActivity extends FragmentActivity {
 	private HashMap<String, Model> modelMap;
 	private RequestParams params;
 	
+	public interface downloadCallBack {  
+	   void downloadFinished(SPFile file);  
+	} 
+	
+	private DetailSummaryFragment summaryFragment;
+	
 	public DetailActivity() {
 	}
 
@@ -101,25 +103,14 @@ public class DetailActivity extends FragmentActivity {
 		audioButton = (Button)findViewById(R.id.button_detail_toptab_audio);
 		moreButton = (Button)findViewById(R.id.button_detail_toptab_more);
 		
-		if (deatilType == DeatilType.DeatilTypeOrigin) {
-			summaryButton.setTextColor(Color.WHITE);
-			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
-			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
-			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
-		}
-		else {
-			audioButton.setTextColor(Color.WHITE);
-			audioButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
-			Drawable audio_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_audio_hig);
-			audioButton.setCompoundDrawablesWithIntrinsicBounds(null, audio_top_drawable, null, null);
-		}
+		summaryFragment = (DetailSummaryFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment_summary);
 		
 		//initial Model Version
 		verPath = Utility.shareInstance().cachPoolDir(poolId, subjectId)+poolId;
 		modelCachePath = Utility.shareInstance().cachPoolDir(poolId, subjectId)+item.getId();
 		
 		HashMap<String, HashMap<String, String>> map = (HashMap<String, HashMap<String, String>>)Utility.shareInstance().getObject(verPath);
-		if (map.isEmpty()) {
+		if (map == null || map.isEmpty()) {
 			resVerMap = new HashMap<String, String>();
 			String[] modelTypeStrings = new String[]{"10", "20", "21", "22", "40"};
 			for (int i = 0; i < modelTypeStrings.length; i++) {
@@ -135,8 +126,11 @@ public class DetailActivity extends FragmentActivity {
 		}
 		
 		HashMap<String, Model> tempModelMap = (HashMap<String, Model>)Utility.shareInstance().getObject(modelCachePath);
-		if (!tempModelMap.isEmpty()) {
+		if (tempModelMap != null && !tempModelMap.isEmpty()) {
 			modelMap = tempModelMap;
+		}
+		else {
+			modelMap = new HashMap<String, Model>();
 		}
 		
 		//request params
@@ -154,31 +148,27 @@ public class DetailActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton6() {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void tapButton5() {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void tapButton4() {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void tapButton3() {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void tapButton2() {
-				// TODO Auto-generated method stub
+				
 			}
 			
 			@Override
@@ -188,7 +178,20 @@ public class DetailActivity extends FragmentActivity {
 			}
 		});
 		
-		
+		if (deatilType == DeatilType.DeatilTypeOrigin) {
+			summaryButton.setTextColor(Color.WHITE);
+			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
+			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
+			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
+			requestModel("10", 0);
+		}
+		else {
+			audioButton.setTextColor(Color.WHITE);
+			audioButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
+			Drawable audio_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_audio_hig);
+			audioButton.setCompoundDrawablesWithIntrinsicBounds(null, audio_top_drawable, null, null);
+			requestModel("40", 3);
+		}
 	}
 	
 	public void tabTopBar(View sourceButton) {
@@ -264,18 +267,152 @@ public class DetailActivity extends FragmentActivity {
 	
 	
 	
-	private void requestModel(String modelType, int index) {
+	private void requestModel(final String modelType, final int index) {
 		params.put("modetype", modelType);
 		if (resVerMap.get(modelType) == null) {
 			resVerMap.put(modelType, "0");
 		}
-		params.put("localver", resVerMap.get(modelType));
-		if (modelType == "30") {
+//		params.put("localver", resVerMap.get(modelType));
+		params.put("localver", "0");//test
+		if (modelType.equals("30")) {
 			// TODO:文字笔记下载
 		}
 		else {
-			3
+			final Model cacheModel = modelMap.get(modelType);
+			if (Utility.shareInstance().isNetworkAvailable(this)) {
+				AsyncHttpClient client = new AsyncHttpClient();
+				String url = new String(this.getString(R.string.host) + "model/item");
+				Log.v("sp", ""+url);
+				Log.v("sp", ""+params);
+				try {  
+					client.post(url, params, new JsonHttpResponseHandler() {  
+
+		                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+		                	Log.v("sp", "" + jsonObject); 
+		                	if (statusCode == 200) {
+		                		try {
+		                			Model curModel;
+		                			String curVer = jsonObject.getString("version");
+		                			if (resVerMap.get(modelType).equals(curVer) && cacheModel != null) {
+		                				handelModelFiles(index, cacheModel, modelType);
+									}
+		                			else {
+		                				curModel = new Model();
+		                				curModel.setItemid(jsonObject.getString("itemid"));
+		                				curModel.setModetype(jsonObject.getString("modetype"));
+		                				curModel.setVersion(jsonObject.getString("version"));
+		                				JSONArray fileJsonArray = jsonObject.getJSONArray("models");
+		                				List<SPFile> fileArr = new ArrayList<SPFile>();
+		                				for (int i = 0; i < fileJsonArray.length(); i++) {
+		                					JSONObject fileObject = (JSONObject) fileJsonArray.opt(i);
+		                					SPFile file = new SPFile();
+		                					file.setFid(fileObject.getString("fid"));
+		                					file.setFtype(fileObject.getString("ftype"));
+		                					file.setItemid(fileObject.getString("itemid"));
+		                					file.setSeq(fileObject.getInt("seq"));
+		                					fileArr.add(file);
+										}
+		                				curModel.setFileArr(fileArr);
+		                				
+		                				resVerMap.put(modelType, curVer);
+		                				saveModelVer();
+		                				handelModelFiles(index, curModel, modelType);
+		                			}
+								} catch (JSONException e) {
+									if (cacheModel != null) {
+										handelModelFiles(index, cacheModel, modelType);
+									}
+									Log.e("sp", "" + Log.getStackTraceString(e));
+								}
+							}
+		                }  
+		                   
+		            });  
+				} catch (Exception e) {
+					if (cacheModel != null) {
+						handelModelFiles(index, cacheModel, modelType);
+					}
+					Log.e("sp", "" + Log.getStackTraceString(e));
+				}
+			}
+			else {
+				if (cacheModel != null) {
+					handelModelFiles(index, cacheModel, modelType);
+				}
+			}
 		}
+	}
+	
+	private void handelModelFiles(final int index, final Model model, final String type) {
+		if (type.equals("30")) {
+			// TODO:文字笔记下载
+		}
+		else {
+			if (model!=null) {
+				final List<SPFile> modelFileArr = model.getFileArr();
+				final List<SPFile> resultFileArrFiles = new ArrayList<SPFile>();
+				if (!modelFileArr.isEmpty()) {
+					modelMap.put(type, model);
+					saveModel();
+					
+					int downloadCount = 0;
+					for (int i = 0; i < modelFileArr.size(); i++) {
+						SPFile file = modelFileArr.get(i);
+						downloadCount++;
+						if (file.getPath() !=null && Utility.shareInstance().isFileExist(file.getPath())) {
+							resultFileArrFiles.add(file);
+							if (downloadCount == modelFileArr.size()) {
+								model.setFileArr(resultFileArrFiles);
+								modelMap.put(type, model);
+								saveModel();
+								reloadChildFragment(index, model, type);
+							}
+						}
+						else {
+							final int finalDownloadCount = downloadCount;
+							try {
+								downloadFile(type, file, new downloadCallBack(){
+									public void downloadFinished(SPFile file) {
+										resultFileArrFiles.add(file);
+										Log.v("sp", "finalDownloadCount:"+finalDownloadCount);
+										Log.v("sp", "modelFileArr.size:"+modelFileArr.size());
+										if (finalDownloadCount == modelFileArr.size()) {
+											model.setFileArr(resultFileArrFiles);
+											modelMap.put(type, model);
+											saveModel();
+											reloadChildFragment(index, model, type);
+										}
+									}
+								});
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private void reloadChildFragment(int index, Model model, String type) {
+		switch (index) {
+		case 0:{
+			summaryFragment.reload(model);
+		}
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	private void saveModelVer() {
+		allVerMap.put(item.getId(), resVerMap);
+		Utility.shareInstance().saveObject(verPath, allVerMap);
+	}
+	
+	private void saveModel() {
+		Utility.shareInstance().saveObject(modelCachePath, modelMap);
 	}
 	
 	 /**
@@ -283,51 +420,30 @@ public class DetailActivity extends FragmentActivity {
 	 * 要下载的文件URL
 	 * @throws Exception
 	 */
-	 public void downloadFile(String url) throws Exception {
+	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
 		AsyncHttpClient client = new AsyncHttpClient();
-		// 指定文件类型
-		String[] allowedContentTypes = new String[] {"image/png", "image/jpeg" };
+		new String();
+		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
+		String url = new String(this.getString(R.string.host) + paramString);
 		// 获取二进制数据如图片和其他文件
-		client.get(url, new BinaryHttpResponseHandler(allowedContentTypes) {
+		client.get(url, new BinaryHttpResponseHandler() {
 	
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					byte[] binaryData) {
-//				String tempPath = Environment.getExternalStorageDirectory().getPath() + "/temp.jpg";
-				// TODO Auto-generated method stub
 				// 下载成功后需要做的工作
 //				progress.setProgress(0);
-				//
 				Log.e("binaryData:", "共下载了：" + binaryData.length);
-				//
-				Bitmap bmp = BitmapFactory.decodeByteArray(binaryData, 0,
-						binaryData.length);
-	
-//				File file = new File(tempPath);
-				// 压缩格式
-				CompressFormat format = Bitmap.CompressFormat.JPEG;
-				// 压缩比例
-				int quality = 100;
-//				try {
-//					// 若存在则删除
-//					if (file.exists())
-//						file.delete();
-//					// 创建文件
-//					file.createNewFile();
-//					//
-//					OutputStream stream = new FileOutputStream(file);
-//					// 压缩输出
-//					bmp.compress(format, quality, stream);
-					// 关闭
-//					stream.close();
-					//
-//					Toast.makeText(mContext, "下载成功\n" + tempPath, Toast.LENGTH_LONG).show();
-	
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-	
+				String filePath = new String();
+				if (modelType.equals("40")) {
+					filePath = Utility.shareInstance().cachAudioDir(poolId, subjectId)+getString(R.string.SPAudioFilePrefix)+file.getFid();
+				}
+				else {
+					filePath = Utility.shareInstance().cachResPoolDir(poolId, subjectId, modelType)+file.getFid();
+				}
+				Utility.shareInstance().saveObject(filePath, binaryData);
+				file.setPath(filePath);
+				callBack.downloadFinished(file);
 			}
 	
 			@Override
