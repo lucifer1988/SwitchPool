@@ -29,6 +29,11 @@
     <string name="detail_summary_tool_home">首页</string>
     <string name="detail_summary_tool_back">上一页</string>
     
+    <string name="detail_content_tab">切换</string>
+    <string name="detail_content_content1">内容一</string>
+    <string name="detail_content_content2">内容二</string>
+    <string name="detail_content_content3">内容三</string>
+    
     <string name="SPAudioFilePrefix">001</string>
     
     <!-- home -->

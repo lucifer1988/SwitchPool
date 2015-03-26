@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.switchpool.detail.DetailActivity;
 import com.switchpool.detail.DetailActivity.DeatilType;
-import com.switchpool.home.TopListActivity.ExpandableListViewaAdapter;
 import com.switchpool.model.Item;
+import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
 import com.xiaoshuye.switchpool.R;
@@ -16,6 +16,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils.TruncateAt;
 import android.view.Gravity;
 import android.view.View;
@@ -29,10 +31,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 public class SecListActivity extends FragmentActivity {
 
 	public SecListActivity() {
-		// TODO Auto-generated constructor stub
 	}
-	
-	private SecListActivity ctx;
 	
 	private String poolId;
 	private String subjectId;
@@ -42,13 +41,16 @@ public class SecListActivity extends FragmentActivity {
 	private  ExpandableListView  secExpandableListView;
 	private  ExpandableListViewaAdapter adapter;
 	
+	FragmentManager fManager;
+	NoContnetFragment ncFragment;
+	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.seclist);
 		
 		Item secItem = new Item();
-		ctx = this;
+		fManager = getSupportFragmentManager();
 		
 		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.toplist_toolbar);
 		toolBar.setCallBack(new ToolBarCallBack() {
@@ -107,7 +109,10 @@ public class SecListActivity extends FragmentActivity {
 		TextView textView = (TextView)findViewById(R.id.textView_seclist_nav);
 		textView.setText(getString(R.string.seclist_nav_title, poolName, secItem.getOrder()));
 		
-		if(secItem!=null){
+		if(secItem == null || secItem.getItemArr().size() == 0) {
+			showNoContent();
+		}
+		else {
 			secListItemArr = new ArrayList<Item>(secItem.getItemArr()); 
 			adapter = new ExpandableListViewaAdapter(SecListActivity.this);
 			secExpandableListView.setAdapter(adapter);
@@ -133,6 +138,16 @@ public class SecListActivity extends FragmentActivity {
                 return true;
             }
         });
+	}
+	
+	private void showNoContent() {
+        if (ncFragment == null) {  
+    		ncFragment = new NoContnetFragment();
+    		ncFragment.initialize(getString(R.string.nocontenttip_list));
+    		FragmentTransaction transaction = fManager.beginTransaction();
+    		transaction.add(R.id.relativeLayout_toplist_nocontent, ncFragment).commit();
+        }
+        fManager.beginTransaction().show(ncFragment);
 	}
 	
 	@Override

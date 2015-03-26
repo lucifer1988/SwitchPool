@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +48,8 @@ public class DetailActivity extends FragmentActivity {
 	private Button noteButton;
 	private Button audioButton;
 	private Button moreButton;
+	private List<Button> topTabBtnArr;
+	private int curTabIndex;
 	
 	public enum DeatilType { 
 		DeatilTypeOrigin(0), DeatilTypeAudio(1); 
@@ -77,6 +80,9 @@ public class DetailActivity extends FragmentActivity {
 	} 
 	
 	private DetailSummaryFragment summaryFragment;
+	private DetailContentFragment contentFragment;
+	
+	FragmentManager fManager;
 	
 	public DetailActivity() {
 	}
@@ -87,6 +93,7 @@ public class DetailActivity extends FragmentActivity {
 		setContentView(R.layout.detail);
 		
 		mContext = this;
+		fManager = getSupportFragmentManager();
 		
 		Intent intent = this.getIntent(); 
 		item = (Item)intent.getSerializableExtra("item");
@@ -103,8 +110,15 @@ public class DetailActivity extends FragmentActivity {
 		noteButton = (Button)findViewById(R.id.button_detail_toptab_note);
 		audioButton = (Button)findViewById(R.id.button_detail_toptab_audio);
 		moreButton = (Button)findViewById(R.id.button_detail_toptab_more);
+		topTabBtnArr = new ArrayList<>();
+		topTabBtnArr.add(summaryButton);
+		topTabBtnArr.add(contentButton);
+		topTabBtnArr.add(noteButton);
+		topTabBtnArr.add(audioButton);
+		topTabBtnArr.add(moreButton);
 		
 		summaryFragment = (DetailSummaryFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment_summary);
+		contentFragment = (DetailContentFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment_content);
 		
 		//initial Model Version
 		verPath = Utility.shareInstance().cachPoolDir(poolId, subjectId)+poolId;
@@ -190,6 +204,7 @@ public class DetailActivity extends FragmentActivity {
 			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
 			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
 			requestModel("10", 0);
+			curTabIndex = 0;
 		}
 		else {
 			audioButton.setTextColor(Color.WHITE);
@@ -197,17 +212,28 @@ public class DetailActivity extends FragmentActivity {
 			Drawable audio_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_audio_hig);
 			audioButton.setCompoundDrawablesWithIntrinsicBounds(null, audio_top_drawable, null, null);
 			requestModel("40", 3);
+			curTabIndex = 3;
 		}
 	}
 	
 	public void tabTopBar(View sourceButton) {
+		int index = topTabBtnArr.indexOf(sourceButton);
+		if (index == curTabIndex) {
+			return;
+		}
 		this.resetTopTab();
+		curTabIndex = index;
 		switch (sourceButton.getId()) {
 		case R.id.button_detail_toptab_summary:{
 			summaryButton.setTextColor(Color.WHITE);
 			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
 			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
+			fManager.beginTransaction().show(summaryFragment);
+			fManager.beginTransaction().hide(contentFragment);
+			if (summaryFragment.getModel() == null) {
+				requestModel("10", index);
+			}
 		}
 			break;
 		case R.id.button_detail_toptab_content:{
@@ -215,6 +241,11 @@ public class DetailActivity extends FragmentActivity {
 			contentButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable content_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_content_hig);
 			contentButton.setCompoundDrawablesWithIntrinsicBounds(null, content_top_drawable, null, null);
+			fManager.beginTransaction().hide(summaryFragment);
+			fManager.beginTransaction().show(contentFragment);
+			if (contentFragment.content20Fragment.getModel() == null) {
+				requestModel("20", index);
+			}
 		}
 			break;
 		case R.id.button_detail_toptab_note:{
@@ -406,7 +437,10 @@ public class DetailActivity extends FragmentActivity {
 			summaryFragment.reload(model);
 		}
 			break;
-
+		case 1:{
+			contentFragment.content20Fragment.reload(model);
+		}
+			break;	
 		default:
 			break;
 		}
@@ -455,13 +489,11 @@ public class DetailActivity extends FragmentActivity {
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					byte[] binaryData, Throwable error) {
-				// TODO Auto-generated method stub
 				Toast.makeText(mContext, "下载失败", Toast.LENGTH_LONG).show();
 			}
 	
 			@Override
 			public void onProgress(int bytesWritten, int totalSize) {
-				// TODO Auto-generated method stub
 				super.onProgress(bytesWritten, totalSize);
 				int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
 				// 下载进度显示
@@ -472,7 +504,6 @@ public class DetailActivity extends FragmentActivity {
 	
 			@Override
 			public void onRetry(int retryNo) {
-				// TODO Auto-generated method stub
 				super.onRetry(retryNo);
 				// 返回重试次数
 			}

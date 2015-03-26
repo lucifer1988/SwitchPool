@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -19,12 +18,11 @@ import android.widget.Button;
 public class DetailSummaryFragment extends Fragment implements OnClickListener {
 
 	private WebView webView;
-	private Model model;
+	public Model model;
 	private SPFile file;
 	private String url;
 	
 	public DetailSummaryFragment() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -80,4 +78,14 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
             break;
         }
     }
+
+	public Model getModel() {
+		return model;
+	}
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+    
+    
 }
