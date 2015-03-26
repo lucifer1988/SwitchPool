@@ -79,12 +79,16 @@ public class SecListActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton2() {
-				// TODO Auto-generated method stub
+	            Intent myIntent = new Intent();
+	            myIntent.setClass(SecListActivity.this, MainActivity.class);
+	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(myIntent);
+	            SecListActivity.this.finish();
+	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			
 			@Override
 			public void tapButton1() {
-				// TODO Auto-generated method stub
 				finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}

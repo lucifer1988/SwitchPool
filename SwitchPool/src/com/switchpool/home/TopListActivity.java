@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
 import com.switchpool.utility.Utility;
@@ -24,6 +25,8 @@ import android.graphics.Color;
 import com.switchpool.model.Item;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -34,30 +37,28 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class TopListActivity extends FragmentActivity {
 
 	public TopListActivity() {
 	}
-	private String poolId;
-	private String subjectId;
-	private String poolName;
+	private String poolId, subjectId, poolName;
 	List<Item> topListItemArr;
-	
-	private TopListActivity ctx;
 
 	SharedPreferences preferences;
 	SharedPreferences.Editor editor;
 	private  ExpandableListView  topExpandableListView;
 	private  ExpandableListViewaAdapter adapter;
 	
+	FragmentManager fManager;
+	NoContnetFragment ncFragment;
+	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.toplist);
 		
-		ctx = this;
+		fManager = getSupportFragmentManager();
 		
         /*初始化界面的list目录*/
 		topExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_toplist_con);
@@ -100,12 +101,12 @@ public class TopListActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton2() {
-				// TODO Auto-generated method stub
 	            Intent myIntent = new Intent();
-	            myIntent = new Intent(TopListActivity.this, MainActivity.class);
+	            myIntent.setClass(TopListActivity.this, MainActivity.class);
+	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 	            startActivity(myIntent);
+	            TopListActivity.this.finish();
 	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-	            finish();
 			}
 			
 			@Override
@@ -123,10 +124,6 @@ public class TopListActivity extends FragmentActivity {
 			version = "0";
 			editor.putString(poolId, version);
 		}
-//		else {
-//			/*本地有树文件的情况下，先进行树结构的读取，然后初始化树结构*/
-//			
-//		}
 		/*获得初始化数据*/
 		poolItemRequstPost(poolId,version);
 		
@@ -153,9 +150,18 @@ public class TopListActivity extends FragmentActivity {
 		
 	}
 	
+	private void showNoContent() {
+        if (ncFragment == null) {  
+    		ncFragment = new NoContnetFragment();
+    		ncFragment.initialize(getString(R.string.nocontenttip_list));
+    		FragmentTransaction transaction = fManager.beginTransaction();
+    		transaction.add(R.id.relativeLayout_toplist_nocontent, ncFragment).commit();
+        }
+        fManager.beginTransaction().show(ncFragment);
+	}
+	
 	@Override
 	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	  // TODO Auto-generated method stub
 	  super.onActivityResult(requestCode, resultCode, data);
 	 }
 	
@@ -163,9 +169,11 @@ public class TopListActivity extends FragmentActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
             Intent myIntent = new Intent();
-            myIntent = new Intent(TopListActivity.this, MainActivity.class);
+            myIntent.setClass(TopListActivity.this, MainActivity.class);
+            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(myIntent);
-            this.finish();
+            TopListActivity.this.finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -175,6 +183,7 @@ public class TopListActivity extends FragmentActivity {
 		final List<Item> cacheArr = (List<Item>) Utility.shareInstance().getObject(cachePathString);
 		
 		if (Utility.shareInstance().isNetworkAvailable(this)) {
+			Utility.shareInstance().showWaitingHUD(this);
 			AsyncHttpClient client = new AsyncHttpClient();
 			String url = new String(this.getString(R.string.host) + "file/getSource");
 			Log.v("sp", "" + url);
@@ -182,11 +191,10 @@ public class TopListActivity extends FragmentActivity {
 			RequestParams params = new RequestParams(); 
 			params.put("poolid", poolid);
 			params.put("version", version);
-			
 			try {  
 				client.get(url, params, new JsonHttpResponseHandler() {  
-
-	                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+	                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+	                	Utility.shareInstance().hideWaitingHUD();
 	                	Log.v("sp", "" + jsonObject); 
 	                	if (statusCode == 200) {
 	                		try {
@@ -256,26 +264,66 @@ public class TopListActivity extends FragmentActivity {
 		                				topExpandableListView.setAdapter(adapter);
 									}
 									else {
+										showNoContent();
 										return;
 									}
-								}
-	                			
-
-								
+								}	
 							} catch (JSONException e) {
+								if (cacheArr == null) {
+									showNoContent();
+									return;
+								}
+								else {
+									topListItemArr = new ArrayList<Item>(cacheArr); 
+									adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+									topExpandableListView.setAdapter(adapter);
+								}
 								Log.e("sp", "" + Log.getStackTraceString(e));
 							}
 						}
-	                }  
-	                   
+	                	else {
+							if (cacheArr == null) {
+								showNoContent();
+								return;
+							}
+							else {
+								topListItemArr = new ArrayList<Item>(cacheArr); 
+								adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+								topExpandableListView.setAdapter(adapter);
+							}
+						}
+	                }
+	                
+	                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+	                	Utility.shareInstance().hideWaitingHUD();
+	                	if (cacheArr == null) {
+							showNoContent();
+							return;
+						}
+						else {
+							topListItemArr = new ArrayList<Item>(cacheArr); 
+							adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+							topExpandableListView.setAdapter(adapter);
+						}
+	                }
 	            });  
 			} catch (Exception e) {
+				Utility.shareInstance().hideWaitingHUD();
+				if (cacheArr == null) {
+					showNoContent();
+					return;
+				}
+				else {
+					topListItemArr = new ArrayList<Item>(cacheArr); 
+					adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+					topExpandableListView.setAdapter(adapter);
+				}
 				Log.e("sp", "" + Log.getStackTraceString(e));
-				Toast.makeText(this, "获取pool树", Toast.LENGTH_LONG).show(); 
 			}
 		}
 		else {
 			if (cacheArr == null) {
+				showNoContent();
 				return;
 			}
 			else {

@@ -4,6 +4,12 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
+        android:id="@+id/relativeLayout_toplist_nocontent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/relativeLayout_toplist_nav"
         android:layout_width="match_parent"
         android:layout_height="50dp" >

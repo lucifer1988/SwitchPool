@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -29,6 +31,25 @@ public class Utility extends Activity {
     	    }
     	}
     	return singleton; 
+	}
+	
+	private ProgressDialog pd;
+	
+	public void showWaitingHUD(Context ctx) {
+		pd = new ProgressDialog(ctx);
+		pd.setTitle(ctx.getString(R.string.loading));
+		pd.setMessage(ctx.getString(R.string.loadingandwait));
+		pd.setCancelable(false);
+		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		pd.setIndeterminate(true);
+		pd.show();
+	}
+	
+	public void hideWaitingHUD() {
+		if (pd!=null) {
+			pd.dismiss();
+			pd = null;
+		}
 	}
 	
 	 /**

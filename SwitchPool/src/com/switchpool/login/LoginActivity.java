@@ -10,6 +10,7 @@ import com.switchpool.model.User;
 import com.switchpool.utility.Utility;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -71,6 +72,8 @@ public class LoginActivity extends Activity {
 	}
 	
 	public void loginPost(String userName, String userPass) { 
+		Utility.shareInstance().showWaitingHUD(this);
+		
 		AsyncHttpClient client = new AsyncHttpClient();
 		String url = new String(this.getString(R.string.host) + "login/index");
 		Log.v("sp", "" + url);
@@ -114,7 +117,8 @@ public class LoginActivity extends Activity {
 		try {  
 			client.post(url, params, new JsonHttpResponseHandler() {  
 
-                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+                	Utility.shareInstance().hideWaitingHUD();
                 	Log.v("sp", "" + jsonObject); 
                 	if (statusCode == 200) {
                 		try {
@@ -161,6 +165,7 @@ public class LoginActivity extends Activity {
                   
             });  
 		} catch (Exception e) {
+			Utility.shareInstance().hideWaitingHUD();
 			Log.e("sp", "" + Log.getStackTraceString(e));
 			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
 		}

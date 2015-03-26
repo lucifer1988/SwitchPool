@@ -8,6 +8,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.home.MainActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
@@ -168,7 +169,12 @@ public class DetailActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton2() {
-				
+	            Intent myIntent = new Intent();
+	            myIntent.setClass(DetailActivity.this, MainActivity.class);
+	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(myIntent);
+	            DetailActivity.this.finish();
+	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			
 			@Override

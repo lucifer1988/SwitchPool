@@ -45,7 +45,17 @@
     <string name="toplist_nav_title"><xliff:g>索引（</xliff:g>%s<xliff:g>）</xliff:g></string>
     <string name="seclist_nav_title"><xliff:g>索引（</xliff:g>%s<xliff:g> 第</xliff:g>%d<xliff:g>类）</xliff:g></string>
     <string name="detail_nav_title"><xliff:g>第</xliff:g>%s<xliff:g>类</xliff:g></string>
+    
     <!-- utility-->
     <string name="OK">OK</string>
+    <string name="loading">加载中</string>
+    <string name="loadingandwait">加载中，请稍等</string>
+    
+    <string name="nocontenttip_list">本模块内容正在审核中，我们将尽快推出</string>
+    <string name="nocontenttip_detail_content">本节内容正在审核中，我们将尽快推出</string>
+    <string name="nocontenttip_detail_textnote">本节还没有文本笔记</string>
+    <string name="nocontenttip_detail_imagenote">本节还没有图片笔记</string>
+    <string name="nocontenttip_detail_audionote">本节还没有音频笔记</string>
+    <string name="nocontenttip_search">暂无您所搜索的内容</string>
     
 </resources>

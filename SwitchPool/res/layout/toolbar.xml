@@ -44,7 +44,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/toolbar_audio" />
+            android:src="@drawable/toolbar_tag" />
 
         <ImageButton
             android:id="@+id/imageButton_toolbar_5"
@@ -53,7 +53,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/toolbar_setting" />
+            android:src="@drawable/toolbar_audio" />
 
         <ImageButton
             android:id="@+id/imageButton_toolbar_6"
