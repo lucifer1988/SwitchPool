@@ -21,7 +21,7 @@ public class LoadingActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.loading);
-		
+		Utility.shareInstance().setAppRootPath(getExternalFilesDir(null).getAbsolutePath());
 		new Handler().postDelayed(new Runnable() {
             public void run() {
                 /* Create an Intent that will start the Main WordPress Activity. */

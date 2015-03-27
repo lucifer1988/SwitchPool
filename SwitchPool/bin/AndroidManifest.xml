@@ -6,7 +6,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="8"
         android:targetSdkVersion="19" />
 
     <application
@@ -27,6 +27,7 @@
         <activity android:name="com.switchpool.home.TopListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.home.SecListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.detail.DetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:screenOrientation="portrait" android:name="com.switchpool.utility.Utility"></activity>
     </application>
     
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission> 

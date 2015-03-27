@@ -2,6 +2,7 @@ package com.switchpool.utility;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,14 +12,16 @@ import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Environment;
+import android.util.Log;
 
 public class Utility extends Activity {
 	
 	private volatile static Utility singleton;
-	  
+	private String appRootPath;
 	private Utility(){}
 	  
 	public static Utility shareInstance(){
@@ -62,7 +65,7 @@ public class Utility extends Activity {
     public boolean isNetworkAvailable(Activity activity)
     {
         Context context = activity.getApplicationContext();
-        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        // 获取手机所有连接管理对象（包括对wifi,net等连接的管理）
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         
         if (connectivityManager == null)
@@ -190,12 +193,38 @@ public class Utility extends Activity {
 			
 	    }
 	
+   /**
+    * 加载本地图片
+    * @param url
+    * @return
+    */
+    public Bitmap getLoacalBitmap(String url) {
+         try {
+              FileInputStream fis = new FileInputStream(url);
+              return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片        
+              
+           } catch (FileNotFoundException e) {
+              e.printStackTrace();
+              return null;
+         }
+    }
+	
 	//bulid Directory
 	/*根目录*/
-	public String rootDir() {
-		return Environment.getExternalStorageDirectory().toString()
-	             + File.separator +"SwitchPoolCache"+File.separator;
+	public String getAppRootPath() {
+		return appRootPath;
 	}
+
+	public void setAppRootPath(String appRootPath) {
+		this.appRootPath = appRootPath;
+	}
+	
+	public String rootDir() {
+		String rootPathString = getAppRootPath()+File.separator+"SwitchPoolCache"+File.separator;		
+		Log.v("sp", ""+ rootPathString);
+		return rootPathString;
+	}
+
 	/*用户信息根目录*/
 	public String userRootDir() {
 		return this.rootDir() + "ikuser"+ File.separator;

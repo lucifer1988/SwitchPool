@@ -8,6 +8,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.detail.DetailContentFragment.DetailContentHandler;
 import com.switchpool.home.MainActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.Model;
@@ -29,13 +30,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class DetailActivity extends FragmentActivity {
+public class DetailActivity extends FragmentActivity implements DetailContentHandler  {
 
 	static DetailActivity mContext;
 	
@@ -83,6 +84,7 @@ public class DetailActivity extends FragmentActivity {
 	private DetailContentFragment contentFragment;
 	
 	FragmentManager fManager;
+	AsyncHttpClient client;
 	
 	public DetailActivity() {
 	}
@@ -110,7 +112,7 @@ public class DetailActivity extends FragmentActivity {
 		noteButton = (Button)findViewById(R.id.button_detail_toptab_note);
 		audioButton = (Button)findViewById(R.id.button_detail_toptab_audio);
 		moreButton = (Button)findViewById(R.id.button_detail_toptab_more);
-		topTabBtnArr = new ArrayList<>();
+		topTabBtnArr = new ArrayList<Button>();
 		topTabBtnArr.add(summaryButton);
 		topTabBtnArr.add(contentButton);
 		topTabBtnArr.add(noteButton);
@@ -203,6 +205,10 @@ public class DetailActivity extends FragmentActivity {
 			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
 			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
+			FragmentTransaction transaction = fManager.beginTransaction();
+			transaction.show(summaryFragment);
+			transaction.hide(contentFragment);
+			transaction.commit();
 			requestModel("10", 0);
 			curTabIndex = 0;
 		}
@@ -229,8 +235,8 @@ public class DetailActivity extends FragmentActivity {
 			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
 			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
-			fManager.beginTransaction().show(summaryFragment);
-			fManager.beginTransaction().hide(contentFragment);
+			fManager.beginTransaction().show(summaryFragment).commit();
+			fManager.beginTransaction().hide(contentFragment).commit();
 			if (summaryFragment.getModel() == null) {
 				requestModel("10", index);
 			}
@@ -241,8 +247,8 @@ public class DetailActivity extends FragmentActivity {
 			contentButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable content_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_content_hig);
 			contentButton.setCompoundDrawablesWithIntrinsicBounds(null, content_top_drawable, null, null);
-			fManager.beginTransaction().hide(summaryFragment);
-			fManager.beginTransaction().show(contentFragment);
+			fManager.beginTransaction().hide(summaryFragment).commit();
+			fManager.beginTransaction().show(contentFragment).commit();
 			if (contentFragment.content20Fragment.getModel() == null) {
 				requestModel("20", index);
 			}
@@ -302,7 +308,22 @@ public class DetailActivity extends FragmentActivity {
 		moreButton.setCompoundDrawablesWithIntrinsicBounds(null, more_top_drawable, null, null);
 	}
 	
-	
+	public void handleMessage(int index) {
+		switch (index) {
+		case 0:{
+			requestModel("20", 1);
+		}
+			break;
+		case 1:{
+			requestModel("21", 1);
+		}
+			break;
+		case 2:{
+			requestModel("22", 1);
+		}
+			break;
+		}
+	}
 	
 	private void requestModel(final String modelType, final int index) {
 		params.put("modetype", modelType);
@@ -395,9 +416,12 @@ public class DetailActivity extends FragmentActivity {
 					int downloadCount = 0;
 					for (int i = 0; i < modelFileArr.size(); i++) {
 						SPFile file = modelFileArr.get(i);
+						Log.v("sp", ""+"fileid:"+file.getFid());
+						Log.v("sp", ""+"sq:"+file.getSeq());
 						downloadCount++;
 						if (file.getPath() !=null && Utility.shareInstance().isFileExist(file.getPath())) {
 							resultFileArrFiles.add(file);
+							Log.v("sp", "downloadCount:"+downloadCount);
 							if (downloadCount == modelFileArr.size()) {
 								model.setFileArr(resultFileArrFiles);
 								modelMap.put(type, model);
@@ -407,6 +431,7 @@ public class DetailActivity extends FragmentActivity {
 						}
 						else {
 							final int finalDownloadCount = downloadCount;
+							Log.v("sp", "finalDownloadCount:"+finalDownloadCount);
 							try {
 								downloadFile(type, file, new downloadCallBack(){
 									public void downloadFinished(SPFile file) {
@@ -438,7 +463,15 @@ public class DetailActivity extends FragmentActivity {
 		}
 			break;
 		case 1:{
-			contentFragment.content20Fragment.reload(model);
+			if (type.equals("20")) {
+				contentFragment.content20Fragment.reload(model);
+			}
+			else if (type.equals("21")) {
+				contentFragment.content21Fragment.reload(model);
+			}
+			else if (type.equals("22")) {
+				contentFragment.content22Fragment.reload(model);
+			}
 		}
 			break;	
 		default:
@@ -461,7 +494,9 @@ public class DetailActivity extends FragmentActivity {
 	 * @throws Exception
 	 */
 	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
-		AsyncHttpClient client = new AsyncHttpClient();
+		 if (client == null) {
+			 client = new AsyncHttpClient();
+		} 
 		new String();
 		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
 		String url = new String(this.getString(R.string.host) + paramString);
@@ -472,7 +507,7 @@ public class DetailActivity extends FragmentActivity {
 			public void onSuccess(int statusCode, Header[] headers,
 					byte[] binaryData) {
 				// 下载成功后需要做的工作
-//				progress.setProgress(0);
+//					progress.setProgress(0);
 				Log.e("binaryData:", "共下载了：" + binaryData.length);
 				String filePath = new String();
 				if (modelType.equals("40")) {
@@ -482,14 +517,15 @@ public class DetailActivity extends FragmentActivity {
 					filePath = Utility.shareInstance().cachResPoolDir(poolId, subjectId, modelType)+file.getFid();
 				}
 				Utility.shareInstance().saveObject(filePath, binaryData);
-				file.setPath(filePath);
-				callBack.downloadFinished(file);
+				SPFile tempFile = file;
+				tempFile.setPath(filePath);
+				callBack.downloadFinished(tempFile); 
 			}
 	
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					byte[] binaryData, Throwable error) {
-				Toast.makeText(mContext, "下载失败", Toast.LENGTH_LONG).show();
+				callBack.downloadFinished(file); 
 			}
 	
 			@Override
@@ -497,7 +533,7 @@ public class DetailActivity extends FragmentActivity {
 				super.onProgress(bytesWritten, totalSize);
 				int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
 				// 下载进度显示
-//				progress.setProgress(count);
+//					progress.setProgress(count);
 				Log.e("下载 Progress>>>>>", bytesWritten + " / " + totalSize);
 	
 			}
