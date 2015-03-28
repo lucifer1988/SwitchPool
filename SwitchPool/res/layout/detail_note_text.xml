@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/editText__detail_note_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:ems="10"
+        android:enabled="true"
+        android:focusable="false"
+        android:gravity="top"
+        android:hint="@string/detail_note_text_hint"
+        android:inputType="textMultiLine"
+        android:lines="100"
+        android:maxLines="100"
+        android:minLines="8"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:scrollbars="none"
+        android:selectAllOnFocus="true"
+        android:textSize="15sp" >
+
+     </EditText>
+            
+</RelativeLayout>

@@ -34,6 +34,11 @@
     <string name="detail_content_content2">内容二</string>
     <string name="detail_content_content3">内容三</string>
     
+    <string name="detail_note_tab">切换</string>
+    <string name="detail_note_edit">编辑</string>
+    <string name="detail_note_complete">完成</string>
+    <string name="detail_note_text_hint">请输入您的笔记</string>
+    
     <string name="SPAudioFilePrefix">001</string>
     
     <!-- home -->

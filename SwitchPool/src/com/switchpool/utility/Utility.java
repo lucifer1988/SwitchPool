@@ -200,6 +200,7 @@ public class Utility extends Activity {
     */
     public Bitmap getLoacalBitmap(String url) {
          try {
+        	 Log.v("sp", "url:"+url);
               FileInputStream fis = new FileInputStream(url);
               return BitmapFactory.decodeStream(fis);  ///把流转化为Bitmap图片        
               
@@ -237,13 +238,9 @@ public class Utility extends Activity {
 	public String resRootDir() {
 		return this.sysRootDir() + "ikres"+ File.separator;
 	}
-	/*个性化用户目录*/
-	public String userInfoFile() {
-		return this.userRootDir() + "sp_user.dat";
-	}
 	/*存subject的根目录*/
 	public String resSubjectListFile() {
-		return this.resRootDir() + "sp_subjectlist.dat";
+		return this.resRootDir() + "sp_subjectlist";
 	}
 	public String cachPoolDir(String poolId,String subjectId) {
 		return this.resRootDir() + subjectId +File.separator + poolId + File.separator;
@@ -254,5 +251,14 @@ public class Utility extends Activity {
 	public String cachAudioDir(String poolId,String subjectId) {
 		return this.resRootDir() + "A40" +File.separator + subjectId + File.separator + poolId + File.separator;
 	}
-	
+	/*个性化用户目录*/
+	public String userInfoFile() {
+		return this.userRootDir() + "sp_user";
+	}
+	public String cacheUserTextNote(String poolid) {
+		return this.userRootDir() + "tnote" + File.separator + poolid + File.separator + "kSPTextNoteDict";
+	}
+	public String cacheUserPhotoNote(String poolid) {
+		return this.userRootDir() + "inote" + File.separator + poolid + File.separator;
+	}
 }

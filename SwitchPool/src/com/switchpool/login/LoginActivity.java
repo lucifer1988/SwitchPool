@@ -162,6 +162,10 @@ public class LoginActivity extends Activity {
 						}
 					}
                 }  
+                
+				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+					Utility.shareInstance().hideWaitingHUD();
+				}
                   
             });  
 		} catch (Exception e) {

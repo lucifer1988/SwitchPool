@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -51,6 +53,9 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 	private ViewPager homeHeadViewPager;
 	private HomeHeadPagerAdapter homeHeaderAdapter;
 	private TextView homeHeadTextView;
+	private ImageView placeholderImageView;
+	private RelativeLayout headerRelativeLayout;
+	
 	private Subject curSubject;
 	
 	public HomeFragment() {
@@ -63,7 +68,8 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
         
         homeHeadViewPager = (ViewPager) view.findViewById(R.id.viewpager_home_header);
         homeHeadTextView = (TextView)view.findViewById(R.id.textView_home_header);
-        
+        placeholderImageView = (ImageView)view.findViewById(R.id.imageView_home_header_placeholder);
+        headerRelativeLayout = (RelativeLayout)view.findViewById(R.id.relativeLayout_home_header);
 //		String subjectPathString = Utility.shareInstance().resSubjectListFile();
 //        List<Subject> subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
 //        homeHeaderAdapter = new HomeHeadPagerAdapter(this.getActivity(), subjectArr);
@@ -125,8 +131,10 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
     }
 	
 	public void refreshHeader() {
+		headerRelativeLayout.removeView(placeholderImageView);
 		String subjectPathString = Utility.shareInstance().resSubjectListFile();
         subjectArr = (List<Subject>) Utility.shareInstance().getObject(subjectPathString);
+        Log.v("sp", ""+ subjectArr);
         homeHeaderAdapter = new HomeHeadPagerAdapter(this.getActivity(), subjectArr);
         homeHeadViewPager.setAdapter(homeHeaderAdapter);
         homeHeadViewPager.setOnPageChangeListener(this);

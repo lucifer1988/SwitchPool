@@ -17,7 +17,7 @@ public class Note implements Serializable {
 	String poolid;
 	String itemid;
 	int size;
-	float time;
+	Long time;
 	Boolean canBeDeleted;
 	Boolean isPlaying;
 
@@ -51,10 +51,10 @@ public class Note implements Serializable {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	public float getTime() {
+	public Long getTime() {
 		return time;
 	}
-	public void setTime(float time) {
+	public void setTime(Long time) {
 		this.time = time;
 	}
 	public Boolean getCanBeDeleted() {

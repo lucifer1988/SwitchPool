@@ -101,7 +101,14 @@
 
     </LinearLayout>
 
-
+    <fragment
+        android:id="@+id/detail_fragment_note"
+        android:name="com.switchpool.detail.DetailNoteFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/linearLayout_detail_toptab_bg"
+        android:layout_marginBottom="44dp" />
+        
     <fragment
         android:id="@+id/detail_fragment_content"
         android:name="com.switchpool.detail.DetailContentFragment"

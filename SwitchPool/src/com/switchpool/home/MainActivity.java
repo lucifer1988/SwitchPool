@@ -84,81 +84,92 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		if (intent.getStringExtra("isFromLoadingActivity") != null) {
 	        Log.v("sp", ""+intent.getStringExtra("isFromLoadingActivity"));
 	        if (intent.getStringExtra("isFromLoadingActivity").equals("true")) {
-	        	Utility.shareInstance().showWaitingHUD(this);
-	    		AsyncHttpClient client = new AsyncHttpClient();
-	    		String url = new String(this.getString(R.string.host) + "login/index");
-	    		Log.v("sp", "" + url);
-	    		
-	    		final User user = (User) Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile());
-	    		
-	    		RequestParams params = new RequestParams();  
-	    		params.put("cellphone", user.cellphone);  
-	    		params.put("passwd", user.password); 
-	    		params.put("ver", user.getVer());
-	    		params.put("prefix", user.getPrefix());
-	    		params.put("uetype", user.getUetype());
-	    		params.put("ueid", user.getUeid());
-	    		params.put("uename", user.getUename());
-	    		params.put("os", user.getOs());
-	    		params.put("osver", user.getOsver());
-	    		params.put("vender", user.getVender());
-	    		params.put("brand", user.getBrand());
-	    		params.put("ip", user.getIp());
-	    		params.put("mod", user.getMod());
-	    		params.put("buglog", user.getBuglog());
-	    		params.put("channel", user.getChannel());
-	    		params.put("inreg", user.getInreg());
-	    		params.put("topic", user.getTopic());
-	    		params.put("token", user.getToken());
-	    		
-	    		Log.v("sp", "" + params);
-	    		
-	    		
-	    		try {  
-	    			client.post(url, params, new JsonHttpResponseHandler() {  
+	        	
+	        	if (Utility.shareInstance().isNetworkAvailable(this)) {
+	        		Utility.shareInstance().showWaitingHUD(this);
+		    		AsyncHttpClient client = new AsyncHttpClient();
+		    		String url = new String(this.getString(R.string.host) + "login/index");
+		    		Log.v("sp", "" + url);
+		    		
+		    		final User user = (User) Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile());
+		    		
+		    		RequestParams params = new RequestParams();  
+		    		params.put("cellphone", user.cellphone);  
+		    		params.put("passwd", user.password); 
+		    		params.put("ver", user.getVer());
+		    		params.put("prefix", user.getPrefix());
+		    		params.put("uetype", user.getUetype());
+		    		params.put("ueid", user.getUeid());
+		    		params.put("uename", user.getUename());
+		    		params.put("os", user.getOs());
+		    		params.put("osver", user.getOsver());
+		    		params.put("vender", user.getVender());
+		    		params.put("brand", user.getBrand());
+		    		params.put("ip", user.getIp());
+		    		params.put("mod", user.getMod());
+		    		params.put("buglog", user.getBuglog());
+		    		params.put("channel", user.getChannel());
+		    		params.put("inreg", user.getInreg());
+		    		params.put("topic", user.getTopic());
+		    		params.put("token", user.getToken());
+		    		
+		    		Log.v("sp", "" + params);
+		    		
+		    		try {  
+		    			client.post(url, params, new JsonHttpResponseHandler() {  
 
-	                    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
-	                    	Utility.shareInstance().hideWaitingHUD();
-	                    	Log.v("sp", "" + jsonObject); 
-	                    	if (statusCode == 200) {
-	                    		try {
-	    							user.setUid(jsonObject.getString("uid"));
-	    							user.setToken(jsonObject.getString("token"));
-	    							user.setBuglog(jsonObject.getInt("buglog"));
-	    							user.setChannel(jsonObject.getInt("channel"));
-	    							user.setInreg(jsonObject.getInt("inreg"));
-	    							user.setTopic(jsonObject.getInt("topic"));  
-	    							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
-	    							
-	    							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
-	    							List<Subject> subjectArr = new ArrayList<Subject>();
-	    							 for(int i=0; i<resultSubjectList.length(); i++){ 
-	    			                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
-	    			                        Subject subject = new Subject(); 
-	    			                        subject.setTitle(subjectJsonObject.getString("title"));
-	    			                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
-	    			                        subject.setDesc(subjectJsonObject.getString("desc"));
-	    			                        subject.setSeq(subjectJsonObject.getString("seq"));
-	    			                        subject.setType(subjectJsonObject.getString("type"));
-	    			                        subject.setBgImage(R.drawable.home_bg_header);
-	    			                        subjectArr.add(subject); 
-	    			                    }
-	    							 Log.v("sp", "" + Utility.shareInstance().resSubjectListFile());
-	    							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
-	    							 ctx.homeFragment.refreshHeader();
-	    						} catch (JSONException e) {
-	    							Log.e("sp", "" + Log.getStackTraceString(e));
-	    						}
-	    					}
-	                    }  
-	                      
-	                });  
-	    		} catch (Exception e) {
-	    			Utility.shareInstance().hideWaitingHUD();
-	    			Log.e("sp", "" + Log.getStackTraceString(e));
-	    			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
-	    		}
-	        
+		                    public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+		                    	Utility.shareInstance().hideWaitingHUD();
+		                    	Log.v("sp", "" + jsonObject); 
+		                    	if (statusCode == 200) {
+		                    		try {
+		    							user.setUid(jsonObject.getString("uid"));
+		    							user.setToken(jsonObject.getString("token"));
+		    							user.setBuglog(jsonObject.getInt("buglog"));
+		    							user.setChannel(jsonObject.getInt("channel"));
+		    							user.setInreg(jsonObject.getInt("inreg"));
+		    							user.setTopic(jsonObject.getInt("topic"));  
+		    							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
+		    							
+		    							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
+		    							List<Subject> subjectArr = new ArrayList<Subject>();
+		    							 for(int i=0; i<resultSubjectList.length(); i++){ 
+		    			                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
+		    			                        Subject subject = new Subject(); 
+		    			                        subject.setTitle(subjectJsonObject.getString("title"));
+		    			                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
+		    			                        subject.setDesc(subjectJsonObject.getString("desc"));
+		    			                        subject.setSeq(subjectJsonObject.getString("seq"));
+		    			                        subject.setType(subjectJsonObject.getString("type"));
+		    			                        subject.setBgImage(R.drawable.home_bg_header);
+		    			                        subjectArr.add(subject); 
+		    			                    }
+		    							 Log.v("sp", "" + Utility.shareInstance().resSubjectListFile());
+		    							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
+		    							 ctx.homeFragment.refreshHeader();
+		    						} catch (JSONException e) {
+		    							Log.e("sp", "" + Log.getStackTraceString(e));
+		    							ctx.homeFragment.refreshHeader();
+		    						}
+		    					}
+		                    }  
+		                    
+							public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
+								Utility.shareInstance().hideWaitingHUD();
+								ctx.homeFragment.refreshHeader();
+							}
+		                });  
+		    		} catch (Exception e) {
+		    			Utility.shareInstance().hideWaitingHUD();
+		    			Log.e("sp", "" + Log.getStackTraceString(e));
+		    			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show();
+		    			ctx.homeFragment.refreshHeader();
+		    		}
+				}
+	        	else {
+	        		Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show();
+	        		ctx.homeFragment.refreshHeader();
+				}
 			}
 	        else {
 	        	ctx.homeFragment.refreshHeader();

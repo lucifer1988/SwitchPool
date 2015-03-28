@@ -1,8 +1,14 @@
 package com.switchpool.detail;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
@@ -14,6 +20,7 @@ import com.switchpool.model.Item;
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
 import com.switchpool.model.User;
+import com.switchpool.utility.ImageTools;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
 import com.switchpool.utility.Utility;
@@ -24,25 +31,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DetailActivity extends FragmentActivity implements DetailContentHandler  {
 
 	static DetailActivity mContext;
 	
-	private String poolId;
-	private String subjectId;
-	private Item item;
+	public String poolId;
+	public String subjectId;
+	public Item item;
 	
 	private Button summaryButton;
 	private Button contentButton;
@@ -82,6 +98,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	private DetailSummaryFragment summaryFragment;
 	private DetailContentFragment contentFragment;
+	private DetailNoteFragment noteFragment;
 	
 	FragmentManager fManager;
 	AsyncHttpClient client;
@@ -119,8 +136,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		topTabBtnArr.add(audioButton);
 		topTabBtnArr.add(moreButton);
 		
-		summaryFragment = (DetailSummaryFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment_summary);
-		contentFragment = (DetailContentFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment_content);
+		summaryFragment = (DetailSummaryFragment)fManager.findFragmentById(R.id.detail_fragment_summary);
+		contentFragment = (DetailContentFragment)fManager.findFragmentById(R.id.detail_fragment_content);
+		noteFragment = (DetailNoteFragment)fManager.findFragmentById(R.id.detail_fragment_note);
 		
 		//initial Model Version
 		verPath = Utility.shareInstance().cachPoolDir(poolId, subjectId)+poolId;
@@ -208,6 +226,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			FragmentTransaction transaction = fManager.beginTransaction();
 			transaction.show(summaryFragment);
 			transaction.hide(contentFragment);
+			transaction.hide(noteFragment);
 			transaction.commit();
 			requestModel("10", 0);
 			curTabIndex = 0;
@@ -235,8 +254,13 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
 			summaryButton.setCompoundDrawablesWithIntrinsicBounds(null, summary_top_drawable, null, null);
-			fManager.beginTransaction().show(summaryFragment).commit();
-			fManager.beginTransaction().hide(contentFragment).commit();
+			
+			FragmentTransaction transaction = fManager.beginTransaction();
+			transaction.show(summaryFragment);
+			transaction.hide(contentFragment);
+			transaction.hide(noteFragment);
+			transaction.commit();
+			
 			if (summaryFragment.getModel() == null) {
 				requestModel("10", index);
 			}
@@ -247,8 +271,13 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			contentButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable content_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_content_hig);
 			contentButton.setCompoundDrawablesWithIntrinsicBounds(null, content_top_drawable, null, null);
-			fManager.beginTransaction().hide(summaryFragment).commit();
-			fManager.beginTransaction().show(contentFragment).commit();
+			
+			FragmentTransaction transaction = fManager.beginTransaction();
+			transaction.show(contentFragment);
+			transaction.hide(summaryFragment);
+			transaction.hide(noteFragment);
+			transaction.commit();
+			
 			if (contentFragment.content20Fragment.getModel() == null) {
 				requestModel("20", index);
 			}
@@ -259,6 +288,16 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			noteButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable note_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_note_hig);
 			noteButton.setCompoundDrawablesWithIntrinsicBounds(null, note_top_drawable, null, null);
+			
+			FragmentTransaction transaction = fManager.beginTransaction();
+			transaction.show(noteFragment);
+			transaction.hide(summaryFragment);
+			transaction.hide(contentFragment);
+			transaction.commit();
+			
+			if (noteFragment.noteTextFragment.getNote() == null) {
+				requestModel("30", index);
+			}
 		}
 			break;
 		case R.id.button_detail_toptab_audio:{
@@ -333,7 +372,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 //		params.put("localver", resVerMap.get(modelType));
 		params.put("localver", "0");//test
 		if (modelType.equals("30")) {
-			// TODO:Œƒ◊÷± º«œ¬‘ÿ
+			noteFragment.noteTextFragment.requestNoteText(params);
 		}
 		else {
 			final Model cacheModel = modelMap.get(modelType);
@@ -383,7 +422,18 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 									Log.e("sp", "" + Log.getStackTraceString(e));
 								}
 							}
+		                	else {
+								if (cacheModel != null) {
+									handelModelFiles(index, cacheModel, modelType);
+								}
+							}
 		                }  
+		                
+		                public void onFailure(int statusCode, Header[] headers,String responseString, Throwable throwable) {
+							if (cacheModel != null) {
+								handelModelFiles(index, cacheModel, modelType);
+							}
+		                }
 		                   
 		            });  
 				} catch (Exception e) {
@@ -403,7 +453,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	private void handelModelFiles(final int index, final Model model, final String type) {
 		if (type.equals("30")) {
-			// TODO:Œƒ◊÷± º«œ¬‘ÿ
+			// TODO:ÊñáÂ≠óÁ¨îËÆ∞‰∏ãËΩΩ
 		}
 		else {
 			if (model!=null) {
@@ -490,7 +540,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	 /**
 	 * @param url
-	 * “™œ¬‘ÿµƒŒƒº˛URL
+	 * Ë¶Å‰∏ãËΩΩÁöÑÊñá‰ª∂URL
 	 * @throws Exception
 	 */
 	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
@@ -500,15 +550,15 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		new String();
 		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
 		String url = new String(this.getString(R.string.host) + paramString);
-		// ªÒ»°∂˛Ω¯÷∆ ˝æ›»ÁÕº∆¨∫Õ∆‰À˚Œƒº˛
+		// Ëé∑Âèñ‰∫åËøõÂà∂Êï∞ÊçÆÂ¶ÇÂõæÁâáÂíåÂÖ∂‰ªñÊñá‰ª∂
 		client.get(url, new BinaryHttpResponseHandler() {
 	
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					byte[] binaryData) {
-				// œ¬‘ÿ≥…π¶∫Û–Ë“™◊ˆµƒπ§◊˜
+				// ‰∏ãËΩΩÊàêÂäüÂêéÈúÄË¶ÅÂÅöÁöÑÂ∑•‰Ωú
 //					progress.setProgress(0);
-				Log.e("binaryData:", "π≤œ¬‘ÿ¡À£∫" + binaryData.length);
+				Log.e("binaryData:", "ÂÖ±‰∏ãËΩΩ‰∫ÜÔºö" + binaryData.length);
 				String filePath = new String();
 				if (modelType.equals("40")) {
 					filePath = Utility.shareInstance().cachAudioDir(poolId, subjectId)+getString(R.string.SPAudioFilePrefix)+file.getFid();
@@ -532,18 +582,105 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			public void onProgress(int bytesWritten, int totalSize) {
 				super.onProgress(bytesWritten, totalSize);
 				int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
-				// œ¬‘ÿΩ¯∂»œ‘ æ
+				// ‰∏ãËΩΩËøõÂ∫¶ÊòæÁ§∫
 //					progress.setProgress(count);
-				Log.e("œ¬‘ÿ Progress>>>>>", bytesWritten + " / " + totalSize);
+				Log.e("‰∏ãËΩΩ Progress>>>>>", bytesWritten + " / " + totalSize);
 	
 			}
 	
 			@Override
 			public void onRetry(int retryNo) {
 				super.onRetry(retryNo);
-				// ∑µªÿ÷ÿ ‘¥Œ ˝
+				// ËøîÂõûÈáçËØïÊ¨°Êï∞
 			}
 	
 		});
 	}
+
+	public String getPoolId() {
+		return poolId;
+	}
+
+	public void setPoolId(String poolId) {
+		this.poolId = poolId;
+	}
+
+	public String getSubjectId() {
+		return subjectId;
+	}
+
+	public void setSubjectId(String subjectId) {
+		this.subjectId = subjectId;
+	}
+
+	public Item getItem() {
+		return item;
+	}
+
+	public void setItem(Item item) {
+		this.item = item;
+	}
+	
+	private static final int TAKE_PICTURE = 100;
+//	private static final int CHOOSE_PICTURE = 1;
+	private static final int SCALE = 5;
+	
+	public void takePhoto() {
+	    PackageManager packageManager = getPackageManager();
+	    if(packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA) ==false){
+		    Toast.makeText(this, "ËØ∑ÂÖÅËÆ∏Â∫îÁî®‰ΩøÁî®ÊëÑÂÉèÂ§¥ÊùÉÈôê.", Toast.LENGTH_SHORT) .show();
+		    return;
+	    } 
+		
+		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		Uri imageUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(),"image.jpg"));
+		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		startActivityForResult(openCameraIntent, TAKE_PICTURE);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK) {			
+			switch (requestCode) {
+			case TAKE_PICTURE:	
+				Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory()+"/image.jpg");
+				Bitmap newBitmap = ImageTools.zoomBitmap(bitmap, bitmap.getWidth() / SCALE, bitmap.getHeight() / SCALE);
+				bitmap.recycle();
+				SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");  
+		        String timeString=format.format(new Date());
+		        Random md = new Random();
+		        int randomInt = 100 + md.nextInt(900);
+				String fileName = String.format("%s_%s_31_%s_%d.jpg", poolId, item.getId(), timeString, randomInt);
+				String imgPath = Utility.shareInstance().cacheUserPhotoNote(poolId) + fileName;
+				ImageTools.savePhotoToSDCard(newBitmap, Utility.shareInstance().cacheUserPhotoNote(poolId), fileName);
+				
+				noteFragment.notePhotoFragment.addNewPhoto(imgPath);
+				
+				break;
+
+//			case CHOOSE_PICTURE:
+//				ContentResolver resolver = getContentResolver();				
+//				Uri originalUri = data.getData(); 
+//	            try {
+//					Bitmap photo = MediaStore.Images.Media.getBitmap(resolver, originalUri);
+//					if (photo != null) {						
+//						Bitmap smallBitmap = ImageTools.zoomBitmap(photo, photo.getWidth() / SCALE, photo.getHeight() / SCALE);
+//						photo.recycle();
+//						
+//						iv_image.setImageBitmap(smallBitmap);
+//					}
+//				} catch (FileNotFoundException e) {
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}  
+//				break;
+			
+			default:
+				break;
+			}
+		}
+	}
+	 
 }
