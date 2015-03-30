@@ -18,6 +18,7 @@ public class Note implements Serializable {
 	String itemid;
 	int size;
 	Long time;
+    int section;
 	Boolean canBeDeleted;
 	Boolean isPlaying;
 
@@ -56,6 +57,12 @@ public class Note implements Serializable {
 	}
 	public void setTime(Long time) {
 		this.time = time;
+	}
+	public int getSection() {
+		return section;
+	}
+	public void setSection(int section) {
+		this.section = section;
 	}
 	public Boolean getCanBeDeleted() {
 		return canBeDeleted;

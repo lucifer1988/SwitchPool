@@ -7,6 +7,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
@@ -209,6 +212,14 @@ public class Utility extends Activity {
               return null;
          }
     }
+    
+	public String paserTimeToYM(long time) {
+		System.setProperty("user.timezone", "Asia/Shanghai");
+		TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
+		TimeZone.setDefault(tz);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+		return format.format(new Date(time * 1000L));
+	}
 	
 	//bulid Directory
 	/*根目录*/

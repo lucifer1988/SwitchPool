@@ -3,12 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <GridView
-        android:id="@+id/gridView_detail_note_photo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="4"
-        android:listSelector="@color/translucent" >
-    </GridView>
+    <com.tonicartos.widget.stickygridheaders.StickyGridHeadersGridView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/gridView_detail_note_photo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:columnWidth="55dip"
+    android:numColumns="auto_fit"
+    android:horizontalSpacing="0dip"
+    android:verticalSpacing="3dip"
+    android:listSelector="@color/translucent" />
         
 </RelativeLayout>
