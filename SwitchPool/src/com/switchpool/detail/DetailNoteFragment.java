@@ -79,6 +79,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener {
 	        	transaction.show(notePhotoFragment);
 	        	actionButton.setImageResource(R.drawable.detail_note_camera);
 	        	actionButton.setVisibility(View.VISIBLE);
+	        	notePhotoFragment.reload();
 	        }
 	            break;
 	        case 2: {

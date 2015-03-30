@@ -5,8 +5,8 @@
     
     <ImageView
         android:id="@+id/imageView_detail_note_gridcell"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -18,7 +18,7 @@
     <TextView
         android:id="@+id/textView1_detail_note_gridcell"
         android:layout_width="60dp"
-        android:layout_height="20dp"
+        android:layout_height="15dp"
         android:layout_below="@id/imageView_detail_note_gridcell"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
@@ -28,7 +28,7 @@
     <TextView
         android:id="@+id/textView2_detail_note_gridcell"
         android:layout_width="60dp"
-        android:layout_height="20dp"
+        android:layout_height="15dp"
         android:layout_below="@id/textView1_detail_note_gridcell"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"

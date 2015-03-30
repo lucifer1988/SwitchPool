@@ -1,8 +1,6 @@
 package com.switchpool.detail;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -651,7 +648,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		        String timeString=format.format(new Date());
 		        Random md = new Random();
 		        int randomInt = 100 + md.nextInt(900);
-				String fileName = String.format("%s_%s_31_%s_%d.jpg", poolId, item.getId(), timeString, randomInt);
+				String fileName = String.format("%s_%s_31_%s_%d", poolId, item.getId(), timeString, randomInt);
 				String imgPath = Utility.shareInstance().cacheUserPhotoNote(poolId) + fileName;
 				ImageTools.savePhotoToSDCard(newBitmap, Utility.shareInstance().cacheUserPhotoNote(poolId), fileName);
 				

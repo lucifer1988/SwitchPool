@@ -221,6 +221,14 @@ public class Utility extends Activity {
 		return format.format(new Date(time * 1000L));
 	}
 	
+	public String paserTimeToHM(long time) {
+		System.setProperty("user.timezone", "Asia/Shanghai");
+		TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
+		TimeZone.setDefault(tz);
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+		return format.format(new Date(time * 1000L));
+	}
+	
 	//bulid Directory
 	/*¸ùÄ¿Â¼*/
 	public String getAppRootPath() {

@@ -73,7 +73,7 @@ public class DetailNoteTextFragment extends Fragment {
 		imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 		
 		note.setContent(textView.getText().toString());
-		note.setTime(System.currentTimeMillis());
+		note.setTime(System.currentTimeMillis()/1000);
 		note.setSize(note.getContent().length());
 		
 		User userInfo = (User)Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile());

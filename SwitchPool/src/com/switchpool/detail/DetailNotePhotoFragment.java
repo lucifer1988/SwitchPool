@@ -1,5 +1,9 @@
 package com.switchpool.detail;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -51,12 +55,12 @@ public class DetailNotePhotoFragment extends Fragment {
 	
 	public void reload() {
 		notePhotoCachePath = Utility.shareInstance().cacheUserPhotoNote(ctx.getPoolId()) + ctx.getItem().getId();
-		if (Utility.shareInstance().isFileExist(notePhotoCachePath)) {
-			notePhotoArr = (List<Note>)Utility.shareInstance().getObject(notePhotoCachePath);
-		}
-		else {
+		Log.v("sp", ""+notePhotoCachePath);
+		notePhotoArr = (List<Note>)Utility.shareInstance().getObject(notePhotoCachePath);
+		if (notePhotoArr == null) {
 			notePhotoArr = new ArrayList<Note>();
 		}
+
 		if (notePhotoArr.size() > 0) {
 			Collections.sort(notePhotoArr, new DetailNoteComparator());
 			
@@ -71,14 +75,42 @@ public class DetailNotePhotoFragment extends Fragment {
 					note.setSection(sectionMap.get(ym));
 				}
 			}
-			
-			noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 		}
+		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 	}
 	
 	public void addNewPhoto(String path) {
 		Log.v("sp", ""+path);
+		Note note = new Note();
 		
+		note.setPath(path);
+		note.setPoolid(ctx.getPoolId());
+		note.setItemid(ctx.getItem().getId());
+		note.setTime(System.currentTimeMillis()/1000);
+		
+		File dF = new File(path); 
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(dF);
+			note.setSize(fis.available());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
+		note.setCanBeDeleted(false);
+		note.setIsPlaying(false);
+		String ym = Utility.shareInstance().paserTimeToYM(note.getTime());
+		if(!sectionMap.containsKey(ym)){
+			note.setSection(section);
+			sectionMap.put(ym, section);
+			section ++;
+		}else{
+			note.setSection(sectionMap.get(ym));
+		}
+		notePhotoArr.add(note);
+		Utility.shareInstance().saveObject(notePhotoCachePath, notePhotoArr);
 	}
 	
 	public void takePhoto() {
