@@ -2,11 +2,16 @@ package com.switchpool.detail;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
 
 import com.switchpool.utility.AudioRecorder;
+import com.switchpool.utility.Utility;
 
 import com.xiaoshuye.switchpool.R;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -41,6 +46,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	
 	FragmentManager fManager;
 	private int index;
+	private DetailActivity ctx;
 	
 	public DetailNoteTextFragment noteTextFragment;
 	public DetailNotePhotoFragment notePhotoFragment;
@@ -50,7 +56,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 
     private static final int RECORD_OFF = 0; // 不在录音
     private static final int RECORD_ON = 1; // 正在录音
-    private static final String RECORD_FILENAME = "record0033"; // 录音文件名
+    private String curRecordPath; // 录音文件名
 	
     private Dialog mRecordDialog;
     private AudioRecorder mAudioRecorder;
@@ -76,6 +82,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_note, container,false);
+        ctx = (DetailActivity) getActivity();
         
         tabButton = (Button)view.findViewById(R.id.button_detail_note_tab);
         editButton = (Button)view.findViewById(R.id.button_detail_note_edit);
@@ -101,90 +108,122 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	
 	  @Override
 	  public boolean onTouch(View v, MotionEvent event) {
-	      switch (event.getAction()) {
-	      case MotionEvent.ACTION_DOWN: // 按下按钮
-	      if (recordState != RECORD_ON) {
-	          downY = event.getY();
-	          mAudioRecorder = new AudioRecorder(RECORD_FILENAME);
-	          recordState = RECORD_ON;
-	          try {
-	              mAudioRecorder.start();
-	              recordTimethread();
-	              showVoiceDialog(0);
-	          } catch (IOException e) {
-	              e.printStackTrace();
-	          }
-	      }
-	      break;
-	  case MotionEvent.ACTION_MOVE: // 滑动手指
-	      float moveY = event.getY();
-	      if (moveY - downY > 50) {
-	          moveState = true;
-	          showVoiceDialog(1);
-	      }
-	      if (moveY - downY < 20) {
-	          moveState = false;
-	          showVoiceDialog(0);
-	      }
-	      break;
-	  case MotionEvent.ACTION_CANCEL:
-	  case MotionEvent.ACTION_UP: // 松开手指
-	  if (recordState == RECORD_ON) {
-	      recordState = RECORD_OFF;
-	      if (mRecordDialog.isShowing()) {
-	          mRecordDialog.dismiss();
-	      }
-	      try {
-	          mAudioRecorder.stop();
-	          mRecordThread.interrupt();
-	          voiceValue = 0.0;
-	      } catch (IOException e) {
-	          e.printStackTrace();
-	      }
-	
-	      if (!moveState) {
-	          if (recodeTime < MIN_RECORD_TIME) {
-	              showWarnToast("时间太短  录音失败");
-	      } else {
-	          mTvRecordTxt.setText("录音时间："
-	                  + ((int) recodeTime));
-	          mTvRecordPath.setText("文件路径：" + getAmrPath());
-	                  }
-	              }
-	              moveState = false;
-	          }
-	          break;
-	      }
-	      return false;
+		  if (index == 1) {
+		      switch (event.getAction()) {
+		      case MotionEvent.ACTION_DOWN: // 按下按钮
+		          downY = event.getY();
+		      break;
+		      case MotionEvent.ACTION_MOVE: // 滑动手指
+		      float moveY = event.getY();
+		      if (moveY - downY > 50) {
+		          moveState = true;
+		      }
+		      if (moveY - downY < 20) {
+		          moveState = false;
+		      }
+		      break;
+		     case MotionEvent.ACTION_CANCEL:
+		     case MotionEvent.ACTION_UP: // 松开手指
+			      if (!moveState){
+			    	  notePhotoFragment.takePhoto();
+			      }
+			      moveState = false;
+		          break;
+		          }
+		      }
+		  else if(index == 2) {
+			      switch (event.getAction()) {
+			      case MotionEvent.ACTION_DOWN: // 按下按钮
+			      if (recordState != RECORD_ON) {
+			          downY = event.getY();
+			          
+					 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");  
+					 String timeString=format.format(new Date());
+					 Random md = new Random();
+					 int randomInt = 100 + md.nextInt(900);
+					 String fileName = String.format("%s_%s_31_%s_%d", ctx.getPoolId(), ctx.getItem().getId(), timeString, randomInt);
+			          curRecordPath = Utility.shareInstance().cacheUserAudioNote(ctx.getPoolId()) + fileName;
+			          
+			          mAudioRecorder = new AudioRecorder(curRecordPath);
+			          recordState = RECORD_ON;
+			          try {
+			              mAudioRecorder.start();
+			              recordTimethread();
+			              showVoiceDialog(0);
+			          } catch (IOException e) {
+			              e.printStackTrace();
+			          }
+			      }
+			      break;
+				  case MotionEvent.ACTION_MOVE: // 滑动手指
+				      float moveY = event.getY();
+				      if (moveY - downY > 50) {
+				          moveState = true;
+				          showVoiceDialog(1);
+				      }
+				      if (moveY - downY < 20) {
+				          moveState = false;
+				          showVoiceDialog(0);
+				      }
+				      break;
+				  case MotionEvent.ACTION_CANCEL:
+				  case MotionEvent.ACTION_UP: // 松开手指
+				  if (recordState == RECORD_ON) {
+				      recordState = RECORD_OFF;
+				      if (mRecordDialog.isShowing()) {
+				          mRecordDialog.dismiss();
+				      }
+				      try {
+				          mAudioRecorder.stop();
+				          mRecordThread.interrupt();
+				          voiceValue = 0.0;
+				      } catch (IOException e) {
+				          e.printStackTrace();
+				      }
+				
+				      if (!moveState) {
+				          if (recodeTime < MIN_RECORD_TIME) {
+				              showWarnToast("时间太短  录音失败");
+				          } 
+					      else {
+					    	  noteAudioFragment.addNewAudio(curRecordPath, (int) recodeTime);
+					      }
+				      }
+				      moveState = false;
+				  }
+				  break;
+		    }
+		}
+		return false;
 	  }
-	  
+	    
 	    // 录音时显示Dialog
-	void showVoiceDialog(int flag) {
-	    if (mRecordDialog == null) {
-	        mRecordDialog = new Dialog(getActivity(), R.style.DialogStyle);
-	        mRecordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-	        mRecordDialog.getWindow().setFlags(
-	                WindowManager.LayoutParams.FLAG_FULLSCREEN,
-	                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-	        mRecordDialog.setContentView(R.layout.detail_note_audio_dialog);
-	        mIvRecVolume = (ImageView) mRecordDialog.findViewById(R.id.imageView2_detail_note_audio_dialog);
-	        mTvRecordDialogTxt = (TextView) mRecordDialog.findViewById(R.id.textView_detail_note_audio_dialog);
-	        mIvRecTip = (ImageView) mRecordDialog.findViewById(R.id.imageView3_detail_note_audio_dialog);
-	    }
-	    switch (flag) {
-	    case 1:
-	        mIvRecVolume.setImageResource(R.drawable.record_cancel);
-	        mTvRecordDialogTxt.setText("松开手指可取消录音");
-	    break;
-	
-	default:
-	    mIvRecVolume.setImageResource(R.drawable.record_animate_01);
-	    mTvRecordDialogTxt.setText("向下滑动可取消录音");
-	        break;
-	    }
-	    mTvRecordDialogTxt.setTextSize(14);
-	    mRecordDialog.show();
-	}
+		void showVoiceDialog(int flag) {
+		    if (mRecordDialog == null) {
+		        mRecordDialog = new Dialog(getActivity(), R.style.DialogStyle);
+		        mRecordDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		        mRecordDialog.getWindow().setFlags(
+		                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+		                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		        mRecordDialog.setContentView(R.layout.detail_note_audio_dialog);
+		        mIvRecVolume = (ImageView) mRecordDialog.findViewById(R.id.imageView2_detail_note_audio_dialog);
+		        mTvRecordDialogTxt = (TextView) mRecordDialog.findViewById(R.id.textView_detail_note_audio_dialog);
+		        mIvRecTip = (ImageView) mRecordDialog.findViewById(R.id.imageView3_detail_note_audio_dialog);
+		    }
+		    switch (flag) {
+		    case 1:
+		        mIvRecVolume.setImageResource(R.drawable.recordcancel);
+		        mTvRecordDialogTxt.setText("松开手指可取消录音");
+		    break;
+		
+		default:
+		    mIvRecVolume.setImageResource(R.drawable.recordcancel);
+		    mTvRecordDialogTxt.setText("向下滑动可取消录音");
+		        break;
+		    }
+		    mTvRecordDialogTxt.setTextSize(14);
+		    mRecordDialog.show();
+		}
 	
 	// 录音时间太短时Toast显示
 	void showWarnToast(String toastText) {
@@ -195,7 +234,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	
 	    // 定义一个ImageView
 	ImageView imageView = new ImageView(getActivity());
-	imageView.setImageResource(R.drawable.voice_to_short); // 图标
+	imageView.setImageResource(R.drawable.messagetooshort); // 图标
 	
 	TextView mTv = new TextView(getActivity());
 	mTv.setText(toastText);
@@ -213,13 +252,6 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	    toast.show();
 	}
 	
-	// 获取文件手机路径
-	private String getAmrPath() {
-	    File file = new File(Environment.getExternalStorageDirectory(),
-	            "WifiChat/voiceRecord/" + RECORD_FILENAME + ".amr");
-	    return file.getAbsolutePath();
-	}
-	
 	// 录音计时线程
 	void recordTimethread() {
 	    mRecordThread = new Thread(recordThread);
@@ -229,33 +261,33 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	// 录音Dialog图片随声音大小切换
 	void setDialogImage() {
 	    if (voiceValue < 600.0) {
-	        mIvRecVolume.setImageResource(R.drawable.RecordingSignal001);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal001);
 	    } else if (voiceValue > 600.0 && voiceValue < 1000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_02);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal001);
 	    } else if (voiceValue > 1000.0 && voiceValue < 1200.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_03);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal002);
 	    } else if (voiceValue > 1200.0 && voiceValue < 1400.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_04);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal002);
 	    } else if (voiceValue > 1400.0 && voiceValue < 1600.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_05);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal003);
 	    } else if (voiceValue > 1600.0 && voiceValue < 1800.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_06);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal003);
 	    } else if (voiceValue > 1800.0 && voiceValue < 2000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_07);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal004);
 	    } else if (voiceValue > 2000.0 && voiceValue < 3000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_08);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal004);
 	    } else if (voiceValue > 3000.0 && voiceValue < 4000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_09);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal005);
 	    } else if (voiceValue > 4000.0 && voiceValue < 6000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_10);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal005);
 	    } else if (voiceValue > 6000.0 && voiceValue < 8000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_11);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal006);
 	    } else if (voiceValue > 8000.0 && voiceValue < 10000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_12);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal006);
 	    } else if (voiceValue > 10000.0 && voiceValue < 12000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_13);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal007);
 	    } else if (voiceValue > 12000.0) {
-	        mIvRecVolume.setImageResource(R.drawable.record_animate_14);
+	        mIvRecVolume.setImageResource(R.drawable.recordingsignal008);
 	    }
 	}
 	
@@ -330,20 +362,20 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	        }
 	        transaction.commit();
 		}
-		else if (v.getId() == R.id.button_detail_note_action) {
-			switch (index) {
-			case 1:{
-				notePhotoFragment.takePhoto();
-			}
-				break;
-			case 2:{
-				noteAudioFragment.startRecord();
-			}
-				break;
-			default:
-				break;
-			}
-		}
+//		else if (v.getId() == R.id.button_detail_note_action) {
+//			switch (index) {
+//			case 1:{
+//				notePhotoFragment.takePhoto();
+//			}
+//				break;
+//			case 2:{
+//				noteAudioFragment.startRecord();
+//			}
+//				break;
+//			default:
+//				break;
+//			}
+//		}
 		else if (v.getId() == R.id.button_detail_note_edit) {
 			if (editButton.getText().equals(getActivity().getString(R.string.detail_note_edit))) {
 				editButton.setText(getActivity().getString(R.string.detail_note_complete));

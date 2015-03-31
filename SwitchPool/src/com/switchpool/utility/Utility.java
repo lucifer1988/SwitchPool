@@ -280,4 +280,7 @@ public class Utility extends Activity {
 	public String cacheUserPhotoNote(String poolid) {
 		return this.userRootDir() + "inote" + File.separator + poolid + File.separator;
 	}
+	public String cacheUserAudioNote(String poolid) {
+		return this.userRootDir() + "anote" + File.separator + poolid + File.separator;
+	}
 }

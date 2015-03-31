@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/RecordCancel"
+            android:src="@drawable/recordcancel"
             android:visibility="invisible"
             android:contentDescription="@string/app_name" />
 
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="30dp"
-            android:src="@drawable/RecordingBkg"
+            android:src="@drawable/recordingbkg"
             android:contentDescription="@string/app_name" />
 
         <ImageView
@@ -37,7 +37,7 @@
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="10dp"
             android:layout_toEndOf="@id/imageView1_detail_note_audio_dialog"
-            android:src="@drawable/RecordingSignal001"
+            android:src="@drawable/recordingsignal001"
             android:contentDescription="@string/app_name" />
 
         <TextView

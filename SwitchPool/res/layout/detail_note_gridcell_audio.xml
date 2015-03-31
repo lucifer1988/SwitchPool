@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <ImageView
+        android:id="@+id/imageView_detail_note_gridcell_audio"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        android:src="@drawable/nocontent_tip" />
+
+    <TextView
+        android:id="@+id/textView1_detail_note_gridcell_audio"
+        android:layout_width="60dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/imageView_detail_note_gridcell"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="12sp" />
+     <TextView
+        android:id="@+id/textView2_detail_note_gridcell_audio"
+        android:layout_width="60dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/textView1_detail_note_gridcell"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="12sp" />
+
+</RelativeLayout>
