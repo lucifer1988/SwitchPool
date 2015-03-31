@@ -111,6 +111,8 @@ public class DetailNotePhotoFragment extends Fragment {
 		}
 		notePhotoArr.add(note);
 		Utility.shareInstance().saveObject(notePhotoCachePath, notePhotoArr);
+		
+		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 	}
 	
 	public void takePhoto() {

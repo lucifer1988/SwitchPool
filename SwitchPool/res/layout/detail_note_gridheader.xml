@@ -11,7 +11,19 @@
         android:textColor="@color/black"
         android:textSize="13sp"
         android:textStyle="normal"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp" />
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout_detail_note_gridheader"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/TextView_detail_note_gridheader"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/lightgrey"
+        android:orientation="vertical" >
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_detail_note_audio_dialog"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/voice_rcd_hint_bg" >
+
+        <ImageView
+            android:id="@+id/imageView3_detail_note_audio_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/RecordCancel"
+            android:visibility="invisible"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/imageView1_detail_note_audio_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/RecordingBkg"
+            android:contentDescription="@string/app_name" />
+
+        <ImageView
+            android:id="@+id/imageView2_detail_note_audio_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/imageView1_detail_note_audio_dialog"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@id/imageView1_detail_note_audio_dialog"
+            android:src="@drawable/RecordingSignal001"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/textView_detail_note_audio_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1_detail_note_audio_dialog"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+
+</LinearLayout>

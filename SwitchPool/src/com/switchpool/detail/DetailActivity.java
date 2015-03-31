@@ -44,8 +44,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,6 +137,8 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		summaryFragment = (DetailSummaryFragment)fManager.findFragmentById(R.id.detail_fragment_summary);
 		contentFragment = (DetailContentFragment)fManager.findFragmentById(R.id.detail_fragment_content);
 		noteFragment = (DetailNoteFragment)fManager.findFragmentById(R.id.detail_fragment_note);
+		ImageButton actionButton = (ImageButton)findViewById(R.id.button_detail_note_action);  
+		actionButton.setOnTouchListener((OnTouchListener)noteFragment);
 		
 		//initial Model Version
 		verPath = Utility.shareInstance().cachPoolDir(poolId, subjectId)+poolId;
@@ -618,6 +621,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		this.item = item;
 	}
 	
+	//photo note
 	private static final int TAKE_PICTURE = 100;
 //	private static final int CHOOSE_PICTURE = 1;
 	private static final int SCALE = 5;

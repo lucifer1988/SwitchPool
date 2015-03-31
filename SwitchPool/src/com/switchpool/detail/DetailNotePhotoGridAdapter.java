@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.xiaoshuye.switchpool.R;
 
@@ -47,17 +48,24 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		Note note = list.get(position);
+		ViewHolder mViewHolder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.detail_note_gridcell, parent, false);			
+			mViewHolder = new ViewHolder();
+			convertView = mInflater.inflate(R.layout.detail_note_gridcell, parent, false);
+			mViewHolder.mImageView = (ImageView) convertView
+					.findViewById(R.id.imageView_detail_note_gridcell);
+			mViewHolder.mTextView1 = (TextView) convertView.findViewById(R.id.textView1_detail_note_gridcell);
+			convertView.setTag(mViewHolder);
+		} else {
+			mViewHolder = (ViewHolder) convertView.getTag();
 		}
-		ImageView mImageView = (ImageView) convertView
-				.findViewById(R.id.imageView_detail_note_gridcell); 
-		mImageView.setImageResource(R.drawable.nocontent_tip);
-		TextView textView1 = (TextView) convertView.findViewById(R.id.textView1_detail_note_gridcell);
-		textView1.setText(Utility.shareInstance().paserTimeToHM(note.getTime()));
-
+		Note note = list.get(position);
+		String path = list.get(position).getPath();
+		mViewHolder.mImageView.setTag(path);
+		 
+		mViewHolder.mImageView.setImageResource(R.drawable.nocontent_tip);
+		mViewHolder.mTextView1.setText(Utility.shareInstance().paserTimeToHM(note.getTime()));
+		
 		return convertView;
 	}
 	
@@ -70,6 +78,7 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 			convertView = mInflater.inflate(R.layout.detail_note_gridheader, parent, false);
 			mHeaderHolder.mTextView = (TextView) convertView
 					.findViewById(R.id.TextView_detail_note_gridheader);
+			mHeaderHolder.line = (LinearLayout)convertView.findViewById(R.id.linearLayout_detail_note_gridheader);
 			convertView.setTag(mHeaderHolder);
 		} else {
 			mHeaderHolder = (HeaderViewHolder) convertView.getTag();
@@ -82,10 +91,12 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 
 	public static class ViewHolder {
 		public ImageView mImageView;
+		public TextView mTextView1;
 	}
 
 	public static class HeaderViewHolder {
 		public TextView mTextView;
+		public LinearLayout line;
 	}
 
 	@Override

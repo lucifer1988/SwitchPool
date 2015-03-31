@@ -862,7 +862,7 @@ containing a value of this type.
         public static final int abc_split_action_bar_is_narrow=0x7f060002;
     }
     public static final class color {
-        public static final int abc_search_url_text_holo=0x7f070099;
+        public static final int abc_search_url_text_holo=0x7f07009a;
         public static final int abc_search_url_text_normal=0x7f070000;
         public static final int abc_search_url_text_pressed=0x7f070002;
         public static final int abc_search_url_text_selected=0x7f070001;
@@ -1089,6 +1089,7 @@ containing a value of this type.
         /** 亮灰色 
          */
         public static final int lightgrey=0x7f070041;
+        public static final int lightgrey_hearder=0x7f070099;
         /** 粉红色 
          */
         public static final int lightpink=0x7f070017;
@@ -1616,7 +1617,7 @@ containing a value of this type.
         public static final int toplist_parenticon=0x7f0200af;
     }
     public static final class id {
-        public static final int TextView_detail_note_gridheader=0x7f050058;
+        public static final int TextView_detail_note_gridheader=0x7f050057;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1692,6 +1693,7 @@ containing a value of this type.
         public static final int imageView_nocontent=0x7f05007a;
         public static final int imageView_seclist_nav=0x7f05007d;
         public static final int imageView_toplist_nav=0x7f050089;
+        public static final int linearLayout_detail_note_gridheader=0x7f050058;
         public static final int linearLayout_detail_summary=0x7f05005c;
         public static final int linearLayout_detail_toptab_bg=0x7f05003f;
         public static final int linearLayout_login_button=0x7f05006e;
@@ -1739,7 +1741,6 @@ containing a value of this type.
         public static final int submit_area=0x7f050039;
         public static final int tabMode=0x7f050002;
         public static final int textView1_detail_note_gridcell=0x7f050056;
-        public static final int textView2_detail_note_gridcell=0x7f050057;
         public static final int textView_detail_nav=0x7f05003e;
         public static final int textView_home_gridcell=0x7f050067;
         public static final int textView_home_header=0x7f050063;
@@ -1816,22 +1817,23 @@ containing a value of this type.
         public static final int detail_content22=0x7f03001c;
         public static final int detail_note=0x7f03001d;
         public static final int detail_note_audio=0x7f03001e;
-        public static final int detail_note_gridcell=0x7f03001f;
-        public static final int detail_note_gridheader=0x7f030020;
-        public static final int detail_note_photo=0x7f030021;
-        public static final int detail_note_text=0x7f030022;
-        public static final int detail_summary=0x7f030023;
-        public static final int home=0x7f030024;
-        public static final int home_gridcell=0x7f030025;
-        public static final int home_headitem=0x7f030026;
-        public static final int loading=0x7f030027;
-        public static final int login=0x7f030028;
-        public static final int main=0x7f030029;
-        public static final int nocontent=0x7f03002a;
-        public static final int seclist=0x7f03002b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002c;
-        public static final int toolbar=0x7f03002d;
-        public static final int toplist=0x7f03002e;
+        public static final int detail_note_audio_dialog=0x7f03001f;
+        public static final int detail_note_gridcell=0x7f030020;
+        public static final int detail_note_gridheader=0x7f030021;
+        public static final int detail_note_photo=0x7f030022;
+        public static final int detail_note_text=0x7f030023;
+        public static final int detail_summary=0x7f030024;
+        public static final int home=0x7f030025;
+        public static final int home_gridcell=0x7f030026;
+        public static final int home_headitem=0x7f030027;
+        public static final int loading=0x7f030028;
+        public static final int login=0x7f030029;
+        public static final int main=0x7f03002a;
+        public static final int nocontent=0x7f03002b;
+        public static final int seclist=0x7f03002c;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
+        public static final int toolbar=0x7f03002e;
+        public static final int toplist=0x7f03002f;
     }
     public static final class menu {
         public static final int home=0x7f0c0000;
