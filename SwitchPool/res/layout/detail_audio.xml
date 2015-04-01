@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ImageView
+        android:id="@+id/imageView_detail_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/detail_audio_bg" />
+
+    <SeekBar
+        android:id="@+id/seekBar_detail_audio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView_detail_audio"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="15dp"
+        android:maxHeight="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:progressDrawable="@drawable/detail_audio_seekbar_style"
+        android:thumb="@drawable/detail_audio_progress_point" />
+
+    <TextView
+        android:id="@+id/textView1_detail_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekBar_detail_audio"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="/"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+    
+    <TextView
+        android:id="@+id/textView2_detail_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/textView1_detail_audio"
+        android:layout_toLeftOf="@id/textView1_detail_audio"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+        
+     <TextView
+         android:id="@+id/textView3_detail_audio"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignTop="@id/textView1_detail_audio"
+         android:layout_toRightOf="@id/textView1_detail_audio"
+         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+     <ImageButton
+         android:id="@+id/imageButton1_detail_audio"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/seekBar_detail_audio"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="70dp"
+         android:src="@drawable/detail_audio_play_nor" />
+        
+</RelativeLayout>
