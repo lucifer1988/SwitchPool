@@ -34,11 +34,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/imageView1_detail_note_audio_dialog"
+            android:layout_alignParentRight="true"
             android:layout_marginBottom="12dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toEndOf="@id/imageView1_detail_note_audio_dialog"
-            android:src="@drawable/recordingsignal001"
-            android:contentDescription="@string/app_name" />
+            android:layout_marginRight="35dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/recordingsignal001" />
 
         <TextView
             android:id="@+id/textView_detail_note_audio_dialog"
@@ -47,7 +47,8 @@
             android:layout_below="@+id/imageView1_detail_note_audio_dialog"
             android:layout_centerHorizontal="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="15sp" />
 
     </RelativeLayout>
 

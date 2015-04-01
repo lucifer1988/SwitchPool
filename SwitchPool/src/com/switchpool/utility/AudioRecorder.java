@@ -16,13 +16,13 @@ public class AudioRecorder {
         if (mMediaRecorder == null) {
             mMediaRecorder = new MediaRecorder();
         }
-        this.mPath = sanitizePath(path);
+        this.mPath = path;
     }
 
-    private String sanitizePath(String path) {
-        return Environment.getExternalStorageDirectory().getAbsolutePath()
-                + "/WifiChat/voiceRecord/" + path + ".amr";
-    }
+//    private String sanitizePath(String path) {
+//        return Environment.getExternalStorageDirectory().getAbsolutePath()
+//                + "/WifiChat/voiceRecord/" + path + ".amr";
+//    }
 
     public void start() throws IOException {
         String state = android.os.Environment.getExternalStorageState();

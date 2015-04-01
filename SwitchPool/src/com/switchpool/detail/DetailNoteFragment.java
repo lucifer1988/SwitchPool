@@ -19,6 +19,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -60,6 +61,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
     private MediaPlayer mMediaPlayer;
     private Thread mRecordThread;
     private TextView mTvRecordDialogTxt;
+    private ImageView mIvRecPhone;
     private ImageView mIvRecVolume;
     private ImageView mIvRecTip;
 
@@ -138,7 +140,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 					 String timeString=format.format(new Date());
 					 Random md = new Random();
 					 int randomInt = 100 + md.nextInt(900);
-					 String fileName = String.format("%s_%s_31_%s_%d", ctx.getPoolId(), ctx.getItem().getId(), timeString, randomInt);
+					 String fileName = String.format("%s_%s_31_%s_%d.amr", ctx.getPoolId(), ctx.getItem().getId(), timeString, randomInt);
 			          curRecordPath = Utility.shareInstance().cacheUserAudioNote(ctx.getPoolId()) + fileName;
 			          
 			          mAudioRecorder = new AudioRecorder(curRecordPath);
@@ -154,11 +156,13 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 			      break;
 				  case MotionEvent.ACTION_MOVE: // 滑动手指
 				      float moveY = event.getY();
-				      if (moveY - downY > 50) {
+				      Log.v("sp", "downY:"+ downY);
+				      Log.v("sp", "moveY:"+ moveY);
+				      if (downY - moveY > 50) {
 				          moveState = true;
 				          showVoiceDialog(1);
 				      }
-				      if (moveY - downY < 20) {
+				      if (downY - moveY < 20) {
 				          moveState = false;
 				          showVoiceDialog(0);
 				      }
@@ -180,7 +184,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 				
 				      if (!moveState) {
 				          if (recodeTime < MIN_RECORD_TIME) {
-				              showWarnToast("时间太短  录音失败");
+				              showWarnToast("时间太短，录音失败");
 				          } 
 					      else {
 					    	  noteAudioFragment.addNewAudio(curRecordPath, (int) recodeTime);
@@ -203,19 +207,25 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 		                WindowManager.LayoutParams.FLAG_FULLSCREEN,
 		                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		        mRecordDialog.setContentView(R.layout.detail_note_audio_dialog);
+		        mIvRecPhone = (ImageView) mRecordDialog.findViewById(R.id.imageView1_detail_note_audio_dialog);
 		        mIvRecVolume = (ImageView) mRecordDialog.findViewById(R.id.imageView2_detail_note_audio_dialog);
 		        mTvRecordDialogTxt = (TextView) mRecordDialog.findViewById(R.id.textView_detail_note_audio_dialog);
 		        mIvRecTip = (ImageView) mRecordDialog.findViewById(R.id.imageView3_detail_note_audio_dialog);
 		    }
 		    switch (flag) {
 		    case 1:
-		        mIvRecVolume.setImageResource(R.drawable.recordcancel);
-		        mTvRecordDialogTxt.setText("松开手指可取消录音");
+		    	mIvRecPhone.setVisibility(View.INVISIBLE);
+		    	mIvRecVolume.setVisibility(View.INVISIBLE);
+		    	mIvRecTip.setImageResource(R.drawable.recordcancel);
+		    	mIvRecTip.setVisibility(View.VISIBLE);
+		        mTvRecordDialogTxt.setText("松开手指，取消录音");
 		    break;
 		
-		default:
-		    mIvRecVolume.setImageResource(R.drawable.recordcancel);
-		    mTvRecordDialogTxt.setText("向下滑动可取消录音");
+		    default:
+		    	mIvRecPhone.setVisibility(View.VISIBLE);
+		    	mIvRecVolume.setVisibility(View.VISIBLE);
+		    	mIvRecTip.setVisibility(View.INVISIBLE);
+		        mTvRecordDialogTxt.setText("向上滑动，取消录音");
 		        break;
 		    }
 		    mTvRecordDialogTxt.setTextSize(14);
@@ -227,26 +237,28 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	    Toast toast = new Toast(getActivity());
 	    LinearLayout linearLayout = new LinearLayout(getActivity());
 	    linearLayout.setOrientation(LinearLayout.VERTICAL);
-	    linearLayout.setPadding(20, 20, 20, 20);
+	    linearLayout.setPadding(30, 30, 30, 30);
 	
-	    // 定义一个ImageView
-	ImageView imageView = new ImageView(getActivity());
-	imageView.setImageResource(R.drawable.messagetooshort); // 图标
-	
-	TextView mTv = new TextView(getActivity());
-	mTv.setText(toastText);
-	mTv.setTextSize(14);
-	mTv.setTextColor(Color.WHITE);// 字体颜色
-	
-	// 将ImageView和ToastView合并到Layout中
-	linearLayout.addView(imageView);
-	linearLayout.addView(mTv);
-	linearLayout.setGravity(Gravity.CENTER);// 内容居中
-	linearLayout.setBackgroundResource(R.drawable.voice_rcd_hint_bg);// 设置自定义toast的背景
-	
-	toast.setView(linearLayout);
-	toast.setGravity(Gravity.CENTER, 0, 0);// 起点位置为中间
-	    toast.show();
+		// 定义一个ImageView
+		ImageView imageView = new ImageView(getActivity());
+		imageView.setImageResource(R.drawable.messagetooshort); // 图标
+		imageView.setPadding(10, 10, 10, 0);
+		
+		TextView mTv = new TextView(getActivity());
+		mTv.setText(toastText);
+		mTv.setTextSize(13);
+		mTv.setTextColor(Color.WHITE);// 字体颜色
+		mTv.setPadding(10, 0, 10, 10);
+		
+		// 将ImageView和ToastView合并到Layout中
+		linearLayout.addView(imageView);
+		linearLayout.addView(mTv);
+		linearLayout.setGravity(Gravity.CENTER);// 内容居中
+		linearLayout.setBackgroundResource(R.drawable.voice_rcd_hint_bg);// 设置自定义toast的背景
+		
+		toast.setView(linearLayout);
+		toast.setGravity(Gravity.CENTER, 0, 0);// 起点位置为中间
+		toast.show();
 	}
 	
 	// 录音计时线程
@@ -354,6 +366,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	        	transaction.show(noteAudioFragment);
 	        	actionButton.setImageResource(R.drawable.detail_note_record);
 	        	actionButton.setVisibility(View.VISIBLE);
+	        	noteAudioFragment.reload();
 	        }
 	            break;
 	        }

@@ -12,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.switchpool.detail.DetailNotePhotoGridAdapter.HeaderViewHolder;
-import com.switchpool.detail.DetailNotePhotoGridAdapter.ViewHolder;
 import com.switchpool.model.Note;
 import com.switchpool.utility.Utility;
 import com.tonicartos.widget.stickygridheaders.StickyGridHeadersSimpleAdapter;
@@ -50,41 +48,42 @@ public class DetailNoteAudioGridAdapter extends BaseAdapter implements
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ViewHolder mViewHolder;
+		audioViewHolder mViewHolder;
 		if (convertView == null) {
-			mViewHolder = new ViewHolder();
+			mViewHolder = new audioViewHolder();
 			convertView = mInflater.inflate(R.layout.detail_note_gridcell_audio, parent, false);
 			mViewHolder.mImageView = (ImageView) convertView
 					.findViewById(R.id.imageView_detail_note_gridcell_audio);
 			mViewHolder.mTextView1 = (TextView) convertView.findViewById(R.id.textView1_detail_note_gridcell_audio);
-			mViewHolder.mTextView2 = (TextView) convertView.findViewById(R.id.textView1_detail_note_gridcell_audio);
+			mViewHolder.mTextView2 = (TextView) convertView.findViewById(R.id.textView2_detail_note_gridcell_audio);
 			convertView.setTag(mViewHolder);
 		} else {
-			mViewHolder = (ViewHolder) convertView.getTag();
+			mViewHolder = (audioViewHolder) convertView.getTag();
 		}
+		
 		Note note = list.get(position);
 		String path = list.get(position).getPath();
 		mViewHolder.mImageView.setTag(path);
 		 
 		mViewHolder.mImageView.setImageResource(R.drawable.nocontent_tip);
 		mViewHolder.mTextView1.setText(Utility.shareInstance().paserTimeToHM(note.getTime()));
-		mViewHolder.mTextView1.setText(note.getSize());
+		mViewHolder.mTextView2.setText(String.valueOf(note.getSize()) + " √Î");
 		return convertView;
 	}
 	
 
 	@Override
 	public View getHeaderView(int position, View convertView, ViewGroup parent) {
-		HeaderViewHolder mHeaderHolder;
+		audioHeaderViewHolder mHeaderHolder;
 		if (convertView == null) {
-			mHeaderHolder = new HeaderViewHolder();
+			mHeaderHolder = new audioHeaderViewHolder();
 			convertView = mInflater.inflate(R.layout.detail_note_gridheader, parent, false);
 			mHeaderHolder.mTextView = (TextView) convertView
 					.findViewById(R.id.TextView_detail_note_gridheader);
 			mHeaderHolder.line = (LinearLayout)convertView.findViewById(R.id.linearLayout_detail_note_gridheader);
 			convertView.setTag(mHeaderHolder);
 		} else {
-			mHeaderHolder = (HeaderViewHolder) convertView.getTag();
+			mHeaderHolder = (audioHeaderViewHolder) convertView.getTag();
 		}
 
 		mHeaderHolder.mTextView.setText(Utility.shareInstance().paserTimeToYM(list.get(position).getTime()));
@@ -92,13 +91,13 @@ public class DetailNoteAudioGridAdapter extends BaseAdapter implements
 		return convertView;
 	}
 
-	public static class ViewHolder {
+	public static class audioViewHolder {
 		public ImageView mImageView;
 		public TextView mTextView1;
 		public TextView mTextView2;
 	}
 
-	public static class HeaderViewHolder {
+	public static class audioHeaderViewHolder {
 		public TextView mTextView;
 		public LinearLayout line;
 	}
