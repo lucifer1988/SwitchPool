@@ -1,6 +1,5 @@
 package com.switchpool.detail;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,12 +10,10 @@ import com.switchpool.utility.Utility;
 
 import com.xiaoshuye.switchpool.R;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
