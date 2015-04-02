@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/detail_audio_bg" />
+        android:src="@drawable/detail_audio_bg"
+        android:contentDescription="@string/app_name" />
 
     <SeekBar
         android:id="@+id/seekBar_detail_audio"
@@ -50,14 +51,82 @@
          android:layout_alignTop="@id/textView1_detail_audio"
          android:layout_toRightOf="@id/textView1_detail_audio"
          android:textAppearance="?android:attr/textAppearanceSmall" />
+     
+    <TextView
+        android:id="@+id/textView4_detail_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekBar_detail_audio"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />     
 
      <ImageButton
-         android:id="@+id/imageButton1_detail_audio"
+         android:id="@+id/imageButton_detail_audio_play"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_below="@id/seekBar_detail_audio"
          android:layout_centerHorizontal="true"
          android:layout_marginTop="70dp"
-         android:src="@drawable/detail_audio_play_nor" />
+         android:src="@drawable/detail_audio_play_selector"
+         android:background="@color/translucent"
+         android:contentDescription="@string/app_name" />
+     
+      <ImageButton
+          android:id="@+id/imageButton_detail_audio_forward"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@id/imageButton_detail_audio_play"
+          android:layout_marginRight="30dp"
+          android:layout_marginTop="4dp"
+          android:layout_toLeftOf="@id/imageButton_detail_audio_play"
+          android:background="@color/translucent"
+          android:contentDescription="@string/app_name"
+          android:src="@drawable/detail_audio_forward_selector" />
+      
+      <ImageButton
+          android:id="@+id/imageButton_detail_audio_volumeup"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@id/imageButton_detail_audio_play"
+          android:layout_marginRight="20dp"
+          android:layout_marginTop="3dp"
+          android:layout_toLeftOf="@id/imageButton_detail_audio_forward"
+          android:background="@color/translucent"
+          android:contentDescription="@string/app_name"
+          android:src="@drawable/detail_audio_volumeup_selector" />
+
+      <ImageButton
+          android:id="@+id/imageButton_detail_audio_next"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@id/imageButton_detail_audio_play"
+          android:layout_marginLeft="30dp"
+          android:layout_marginTop="4dp"
+          android:layout_toRightOf="@id/imageButton_detail_audio_play"
+          android:background="@color/translucent"
+          android:contentDescription="@string/app_name"
+          android:src="@drawable/detail_audio_next_selector" />
+      
+      <ImageButton
+          android:id="@+id/imageButton_detail_audio_volumedown"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignTop="@id/imageButton_detail_audio_play"
+          android:layout_marginLeft="20dp"
+          android:layout_marginTop="3dp"
+          android:layout_toRightOf="@id/imageButton_detail_audio_next"
+          android:background="@color/translucent"
+          android:contentDescription="@string/app_name"
+          android:src="@drawable/detail_audio_volumedown_selector" />
+      
+    <TextView
+        android:id="@+id/textView5_detail_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageButton_detail_audio_play"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
         
 </RelativeLayout>

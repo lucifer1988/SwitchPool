@@ -19,6 +19,7 @@ import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
 import com.switchpool.model.User;
 import com.switchpool.utility.ImageTools;
+import com.switchpool.utility.MusicPlayer;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
 import com.switchpool.utility.Utility;
@@ -29,7 +30,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,6 +42,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -97,10 +102,30 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	private DetailSummaryFragment summaryFragment;
 	private DetailContentFragment contentFragment;
 	private DetailNoteFragment noteFragment;
+	private DetailAudioFragment audioFragment;
 	
 	FragmentManager fManager;
 	AsyncHttpClient client;
 	
+	 public MusicPlayer musicPlayer;  
+     
+    //使用ServiceConnection来监听Service状态的变化  
+    private ServiceConnection conn = new ServiceConnection() {  
+          
+        @Override  
+        public void onServiceDisconnected(ComponentName name) {  
+            // TODO Auto-generated method stub  
+        	musicPlayer = null;  
+        }  
+          
+        @Override  
+        public void onServiceConnected(ComponentName name, IBinder binder) {  
+            //这里我们实例化audioService,通过binder来实现  
+        	musicPlayer = ((MusicPlayer.AudioBinder)binder).getService();  
+              
+        }  
+    }; 
+	    
 	public DetailActivity() {
 	}
 
@@ -137,6 +162,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		summaryFragment = (DetailSummaryFragment)fManager.findFragmentById(R.id.detail_fragment_summary);
 		contentFragment = (DetailContentFragment)fManager.findFragmentById(R.id.detail_fragment_content);
 		noteFragment = (DetailNoteFragment)fManager.findFragmentById(R.id.detail_fragment_note);
+		audioFragment = (DetailAudioFragment)fManager.findFragmentById(R.id.detail_fragment_audio);
 		ImageButton actionButton = (ImageButton)findViewById(R.id.button_detail_note_action);  
 		actionButton.setOnTouchListener((OnTouchListener)noteFragment);
 		
@@ -227,6 +253,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.show(summaryFragment);
 			transaction.hide(contentFragment);
 			transaction.hide(noteFragment);
+			transaction.hide(audioFragment);
 			transaction.commit();
 			requestModel("10", 0);
 			curTabIndex = 0;
@@ -236,9 +263,20 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			audioButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable audio_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_audio_hig);
 			audioButton.setCompoundDrawablesWithIntrinsicBounds(null, audio_top_drawable, null, null);
+			FragmentTransaction transaction = fManager.beginTransaction();
+			transaction.show(audioFragment);
+			transaction.hide(contentFragment);
+			transaction.hide(noteFragment);
+			transaction.hide(summaryFragment);
+			transaction.commit();
 			requestModel("40", 3);
 			curTabIndex = 3;
 		}
+		
+		Intent playIntentntent = new Intent();  
+		playIntentntent.setClass(this, MusicPlayer.class); 
+	    startService(playIntentntent);  
+        bindService(playIntentntent, conn, Context.BIND_AUTO_CREATE); 
 	}
 	
 	public void tabTopBar(View sourceButton) {
@@ -259,6 +297,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.show(summaryFragment);
 			transaction.hide(contentFragment);
 			transaction.hide(noteFragment);
+			transaction.hide(audioFragment);
 			transaction.commit();
 			
 			if (summaryFragment.getModel() == null) {
@@ -276,6 +315,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.show(contentFragment);
 			transaction.hide(summaryFragment);
 			transaction.hide(noteFragment);
+			transaction.hide(audioFragment);
 			transaction.commit();
 			
 			if (contentFragment.content20Fragment.getModel() == null) {
@@ -293,6 +333,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.show(noteFragment);
 			transaction.hide(summaryFragment);
 			transaction.hide(contentFragment);
+			transaction.hide(audioFragment);
 			transaction.commit();
 			
 			if (noteFragment.noteTextFragment.getNote() == null) {
@@ -305,6 +346,17 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			audioButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable audio_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_audio_hig);
 			audioButton.setCompoundDrawablesWithIntrinsicBounds(null, audio_top_drawable, null, null);
+			
+			FragmentTransaction transaction = fManager.beginTransaction();
+			transaction.show(audioFragment);
+			transaction.hide(summaryFragment);
+			transaction.hide(contentFragment);
+			transaction.hide(noteFragment);
+			transaction.commit();
+			
+			if (audioFragment.model == null) {
+				requestModel("40", index);
+			}
 		}
 			break;
 		case R.id.button_detail_toptab_more:{
@@ -524,6 +576,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 		}
 			break;	
+		case 3:{
+	         
+			musicPlayer.loadMusicList(poolId, subjectId);
+			audioFragment.reload(model);
+		}
+			break;
 		default:
 			break;
 		}
@@ -682,6 +740,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				break;
 			}
 		}
-	}
-	 
+	} 
+	    
+    protected void onResume() {  
+        super.onResume();  
+//        resume();  
+    } 
 }

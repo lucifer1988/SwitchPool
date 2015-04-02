@@ -32,7 +32,6 @@ public class Utility extends Activity {
         	synchronized(Utility.class){
         	    if(singleton==null){
         	    singleton=new Utility();
-        		// 获取只能被本应用程序读、写的SharedPreferences对象
         	    }
     	    }
     	}
@@ -268,7 +267,7 @@ public class Utility extends Activity {
 		return this.resRootDir() + subjectId +File.separator + poolId + File.separator + resId + File.separator;
 	}
 	public String cachAudioDir(String poolId,String subjectId) {
-		return this.resRootDir() + "A40" +File.separator + subjectId + File.separator + poolId + File.separator;
+		return this.resRootDir() + "A40" +File.separator + subjectId.substring(3) + File.separator + poolId.substring(6) + File.separator;
 	}
 	/*个性化用户目录*/
 	public String userInfoFile() {

@@ -14,8 +14,6 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <!-- 监听电话呼出 -->  
     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>  
-    <!-- 监听电话状态改变 -->  
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />  
     
     <uses-sdk
         android:minSdkVersion="8"
@@ -40,6 +38,7 @@
         <activity android:name="com.switchpool.home.SecListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.detail.DetailActivity" android:screenOrientation="portrait"></activity>
         <activity android:screenOrientation="portrait" android:name="com.switchpool.utility.Utility"></activity>
+        <service android:name="com.switchpool.utility.MusicPlayer"></service>
     </application>
 
 </manifest>
