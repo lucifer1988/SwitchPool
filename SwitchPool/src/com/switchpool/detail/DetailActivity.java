@@ -113,8 +113,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
     private ServiceConnection conn = new ServiceConnection() {  
           
         @Override  
-        public void onServiceDisconnected(ComponentName name) {  
-            // TODO Auto-generated method stub  
+        public void onServiceDisconnected(ComponentName name) {    
         	musicPlayer = null;  
         }  
           
@@ -183,7 +182,21 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		}
 		else {
 			allVerMap = map;
-			resVerMap = map.get(item.getId());
+			HashMap<String, String> tempVerMap = map.get(item.getId());
+			if (tempVerMap == null || tempVerMap.isEmpty()) {
+				resVerMap = new HashMap<String, String>();
+				String[] modelTypeStrings = new String[]{"10", "20", "21", "22", "40"};
+				for (int i = 0; i < modelTypeStrings.length; i++) {
+					resVerMap.put(modelTypeStrings[i], "0");
+				}
+				allVerMap = new HashMap<String, HashMap<String, String>>();
+				allVerMap.put(item.getId(), resVerMap);
+				Utility.shareInstance().saveObject(verPath, allVerMap);
+			}
+			else {
+				resVerMap = tempVerMap;
+			}
+			Log.v("sp", "resVerMap"+resVerMap);
 		}
 		
 		HashMap<String, Model> tempModelMap = (HashMap<String, Model>)Utility.shareInstance().getObject(modelCachePath);
@@ -418,11 +431,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	private void requestModel(final String modelType, final int index) {
 		params.put("modetype", modelType);
+		Log.v("sp", "ver"+resVerMap.get(modelType));
 		if (resVerMap.get(modelType) == null) {
 			resVerMap.put(modelType, "0");
 		}
-//		params.put("localver", resVerMap.get(modelType));
-		params.put("localver", "0");//test
+		params.put("localver", resVerMap.get(modelType));
+//		params.put("localver", "0");//test
 		if (modelType.equals("30")) {
 			noteFragment.noteTextFragment.requestNoteText(params);
 		}
@@ -576,8 +590,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 		}
 			break;	
-		case 3:{
-	         
+		case 3:{ 
 			musicPlayer.loadMusicList(poolId, subjectId);
 			audioFragment.reload(model);
 		}
@@ -639,11 +652,13 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			@Override
 			public void onProgress(int bytesWritten, int totalSize) {
 				super.onProgress(bytesWritten, totalSize);
-				int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
-				// 下载进度显示
-//					progress.setProgress(count);
+				if (modelType.equals("40")) {
+					int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
+					audioFragment.seekBar.setMax(totalSize);
+					audioFragment.seekBar.setProgress(bytesWritten); 
+					audioFragment.refreshLoadProgress(count);
+				}
 				Log.e("下载 Progress>>>>>", bytesWritten + " / " + totalSize);
-	
 			}
 	
 			@Override

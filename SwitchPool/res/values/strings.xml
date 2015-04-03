@@ -40,6 +40,7 @@
     <string name="detail_note_text_hint">请输入您的笔记</string>
     
     <string name="SPAudioFilePrefix">001</string>
+    <string name="detail_note_audio_cacheProgress"><xliff:g>已缓存 </xliff:g><xliff:g>%d</xliff:g><xliff:g>%%</xliff:g></string>
     
     <!-- home -->
     <string name="hoem_nav_title">去哪儿玩</string>

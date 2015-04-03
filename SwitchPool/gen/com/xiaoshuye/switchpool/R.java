@@ -1887,10 +1887,10 @@ containing a value of this type.
         /**  utility
  utility
          */
-        public static final int OK=0x7f0a0037;
+        public static final int OK=0x7f0a0038;
         public static final int Password_will_not_be_nil=0x7f0a0013;
         public static final int SPAudioFilePrefix=0x7f0a002a;
-        public static final int SPItemList=0x7f0a0041;
+        public static final int SPItemList=0x7f0a0042;
         public static final int Username_will_not_be_nil=0x7f0a0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
@@ -1938,7 +1938,8 @@ containing a value of this type.
         public static final int detail_content_content2=0x7f0a0024;
         public static final int detail_content_content3=0x7f0a0025;
         public static final int detail_content_tab=0x7f0a0022;
-        public static final int detail_nav_title=0x7f0a0036;
+        public static final int detail_nav_title=0x7f0a0037;
+        public static final int detail_note_audio_cacheProgress=0x7f0a002b;
         public static final int detail_note_complete=0x7f0a0028;
         public static final int detail_note_edit=0x7f0a0027;
         public static final int detail_note_tab=0x7f0a0026;
@@ -1957,33 +1958,33 @@ containing a value of this type.
         /**  home 
  home 
          */
-        public static final int hoem_nav_title=0x7f0a002b;
-        public static final int home_item_grid1=0x7f0a002c;
-        public static final int home_item_grid2=0x7f0a002d;
-        public static final int home_item_grid3=0x7f0a002e;
-        public static final int home_item_grid4=0x7f0a002f;
-        public static final int home_item_grid5=0x7f0a0030;
-        public static final int home_item_grid6=0x7f0a0031;
-        public static final int home_item_grid7=0x7f0a0032;
-        public static final int home_item_grid8=0x7f0a0033;
+        public static final int hoem_nav_title=0x7f0a002c;
+        public static final int home_item_grid1=0x7f0a002d;
+        public static final int home_item_grid2=0x7f0a002e;
+        public static final int home_item_grid3=0x7f0a002f;
+        public static final int home_item_grid4=0x7f0a0030;
+        public static final int home_item_grid5=0x7f0a0031;
+        public static final int home_item_grid6=0x7f0a0032;
+        public static final int home_item_grid7=0x7f0a0033;
+        public static final int home_item_grid8=0x7f0a0034;
         /**  key
          */
-        public static final int host=0x7f0a0040;
-        public static final int loading=0x7f0a0038;
-        public static final int loadingandwait=0x7f0a0039;
+        public static final int host=0x7f0a0041;
+        public static final int loading=0x7f0a0039;
+        public static final int loadingandwait=0x7f0a003a;
         public static final int login_login_btn=0x7f0a0011;
         public static final int login_password_hint=0x7f0a0010;
         /**  login
 login
          */
         public static final int login_username_hint=0x7f0a000f;
-        public static final int nocontenttip_detail_audionote=0x7f0a003e;
-        public static final int nocontenttip_detail_content=0x7f0a003b;
-        public static final int nocontenttip_detail_imagenote=0x7f0a003d;
-        public static final int nocontenttip_detail_textnote=0x7f0a003c;
-        public static final int nocontenttip_list=0x7f0a003a;
-        public static final int nocontenttip_search=0x7f0a003f;
-        public static final int seclist_nav_title=0x7f0a0035;
+        public static final int nocontenttip_detail_audionote=0x7f0a003f;
+        public static final int nocontenttip_detail_content=0x7f0a003c;
+        public static final int nocontenttip_detail_imagenote=0x7f0a003e;
+        public static final int nocontenttip_detail_textnote=0x7f0a003d;
+        public static final int nocontenttip_list=0x7f0a003b;
+        public static final int nocontenttip_search=0x7f0a0040;
+        public static final int seclist_nav_title=0x7f0a0036;
         /**  tab 
  tab 
          */
@@ -1991,7 +1992,7 @@ login
         public static final int tabbar_item_more=0x7f0a0019;
         public static final int tabbar_item_news=0x7f0a0017;
         public static final int tabbar_item_setting=0x7f0a0018;
-        public static final int toplist_nav_title=0x7f0a0034;
+        public static final int toplist_nav_title=0x7f0a0035;
     }
     public static final class style {
         /** 

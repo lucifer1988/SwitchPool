@@ -1,31 +1,18 @@
 package com.switchpool.detail;
 
-import java.util.List;
-
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
-import com.switchpool.utility.MusicPlayer;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class DetailAudioFragment extends Fragment implements OnClickListener {
@@ -37,13 +24,10 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 	
 	ImageButton playbButton, forwardButton, nextButton, volumeupButton, volumedownButton;
 	TextView curTimeTextView, totalTimeTextView, downloadProgressTextView, titleTextView, slashTextView;
-	SeekBar seekBar;
+	public SeekBar seekBar;
 	
-	private int current;  
-    private MediaPlayer player;  
-    private Handler handler = new Handler(); 
+	private int current;    
     private boolean isPause;  
-    private boolean isStartTrackingTouch; 
 	
 	public DetailAudioFragment() {
 	}
@@ -72,21 +56,13 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
         downloadProgressTextView = (TextView)view.findViewById(R.id.textView4_detail_audio);
         titleTextView = (TextView)view.findViewById(R.id.textView5_detail_audio);
         
-//        //创建一个音乐播放器   
-//        player = new MediaPlayer();   
-//        //进度条监听器   
-//        seekBar.setOnSeekBarChangeListener(new MySeekBarListener());  
-//        //播放器监听器   
-//        player.setOnCompletionListener(new MyPlayerListener());
-//        //意图过滤器   
-//        IntentFilter filter = new IntentFilter();   
-//        //播出电话暂停音乐播放   
-//        filter.addAction("Android.intent.action.NEW_OUTGOING_CALL");  
-//        ctx.registerReceiver(new PhoneListener(), filter);
-//        //创建一个电话服务   
-//        TelephonyManager manager = (TelephonyManager) ctx.getSystemService(ctx.TELEPHONY_SERVICE);
-//        //监听电话状态，接电话时停止播放   
-//        manager.listen(new MyPhoneStateListener(), PhoneStateListener.LISTEN_CALL_STATE);  
+        slashTextView.setVisibility(View.INVISIBLE);
+        curTimeTextView.setVisibility(View.INVISIBLE);
+        totalTimeTextView.setVisibility(View.INVISIBLE);
+        downloadProgressTextView.setVisibility(View.VISIBLE);
+          
+        //进度条监听器   
+//        seekBar.setOnSeekBarChangeListener(new MySeekBarListener());   
         
         return view;
     }
@@ -98,11 +74,23 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 				SPFile curFile = model.getFileArr().get(i);
 				if (curFile.getSeq() == 1) {
 					file = curFile;
-//					url = "file://"+file.getPath();
-//					Log.v("sp", ""+url);
-//					webView.loadUrl(url);
+					titleTextView.setText(ctx.getItem().getCaption());
+			        slashTextView.setVisibility(View.VISIBLE);
+			        curTimeTextView.setVisibility(View.VISIBLE);
+			        totalTimeTextView.setVisibility(View.VISIBLE);
+			        downloadProgressTextView.setVisibility(View.INVISIBLE);
+					ctx.musicPlayer.prepareFile(file);
+					curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
+					totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
 				}
 			}
+		}
+	}
+	
+	public void refreshLoadProgress(int count) {
+		downloadProgressTextView.setText(ctx.getString(R.string.detail_note_audio_cacheProgress, count));
+		if (count == 100) {
+	        seekBar.setProgress(1);
 		}
 	}
 	
@@ -113,41 +101,23 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 		}
 	}
 	
-	private final class MySeekBarListener implements OnSeekBarChangeListener {  
-        //移动触发   
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {  
-        }  
-  
-        //起始触发   
-        public void onStartTrackingTouch(SeekBar seekBar) {  
-            isStartTrackingTouch = true;  
-        }  
-  
-        //结束触发   
-        public void onStopTrackingTouch(SeekBar seekBar) {  
-            player.seekTo(seekBar.getProgress());  
-            isStartTrackingTouch = false;  
-        }  
-    }
-	
-//	private final class MyPlayerListener implements OnCompletionListener {  
-//        //歌曲播放完后自动播放下一首歌曲   
-//        public void onCompletion(MediaPlayer mp) {  
-//            next();  
+//	private final class MySeekBarListener implements OnSeekBarChangeListener {  
+//        //移动触发   
+//        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {  
+//        }  
+//  
+//        //起始触发   
+//        public void onStartTrackingTouch(SeekBar seekBar) {  
+//            isStartTrackingTouch = true;  
+//        }  
+//  
+//        //结束触发   
+//        public void onStopTrackingTouch(SeekBar seekBar) {  
+//            player.seekTo(seekBar.getProgress());  
+//            isStartTrackingTouch = false;  
 //        }  
 //    }
 	
-//	private final class PhoneListener extends BroadcastReceiver {  
-//        public void onReceive(Context context, Intent intent) {  
-//            pause();  
-//        }  
-//    } 
-//
-//	private final class MyPhoneStateListener extends PhoneStateListener {  
-//        public void onCallStateChanged(int state, String incomingNumber) {  
-//            pause();  
-//        }  
-//    } 
 	
 //	private void previous() {  
 //        current = current - 1 < 0 ? data.size() - 1 : current - 1;  
@@ -164,18 +134,17 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
     	ctx.musicPlayer.playFile(file);
     }
     
-	 private void resume() {  
-        if (isPause) {  
-            player.start();  
-            isPause = false;  
-        }  
-	 }  
-	  
-	      
-	 private void pause() {  
-	     if (player != null && player.isPlaying()) {  
-	         player.pause();  
-	         isPause = true;  
-	     }  
-     } 
+//	 private void resume() {  
+//        if (isPause) {  
+//            player.start();  
+//            isPause = false;  
+//        }  
+//	 }  
+//	      
+//	 private void pause() {  
+//	     if (player != null && player.isPlaying()) {  
+//	         player.pause();  
+//	         isPause = true;  
+//	     }  
+//     } 
 }

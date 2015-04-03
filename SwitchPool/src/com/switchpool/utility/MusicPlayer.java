@@ -27,16 +27,6 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	public MusicPlayer() {
 	}
 	
-//	public static MusicPlayer shareInstance(){
-//    	if(singleton==null){
-//        	synchronized(MusicPlayer.class){
-//        	    if(singleton==null){
-//        	    singleton=new MusicPlayer();
-//        	    }
-//    	    }
-//    	}
-//    	return singleton; 
-//	}
 	/** 
      * 当Audio播放完的时候触发该动作 
      */  
@@ -82,8 +72,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	}
 
 	public String getFileName(String pathandname){  
-        int start=pathandname.lastIndexOf("/");  
-//        int end=pathandname.lastIndexOf(".");  
+        int start=pathandname.lastIndexOf("/");   
         if(start!=-1){  
             return pathandname.substring(start+1);    
         }else{  
@@ -91,14 +80,33 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
         }
     } 
 	
+	public void prepareFile(SPFile file) {
+		String fileParh = getString(R.string.SPAudioFilePrefix)+file.getFid();
+		for (int i = 0; i < data.size(); i++) {
+			String pathString = data.get(i);
+			if (getFileName(pathString).equals(fileParh)) {
+				curIndex = i;
+		        try {   
+		            player.reset();    
+		            curPath = data.get(curIndex);
+		            player.setDataSource(curPath);     
+		            player.prepare();
+		            return;
+		        } catch (Exception e) {  
+		            e.printStackTrace();  
+		        } 
+			}
+		}
+	}
+	
 	public void playFile(SPFile file) {
-		player.stop();
 		String fileParh = getString(R.string.SPAudioFilePrefix)+file.getFid();
 		for (int i = 0; i < data.size(); i++) {
 			String pathString = data.get(i);
 			if (getFileName(pathString).equals(fileParh)) {
 				curIndex = i;
 				play();
+				return;
 			}
 		}
 	}

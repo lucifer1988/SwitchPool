@@ -20,9 +20,11 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
+        android:max="100"
         android:maxHeight="10dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
+        android:progress="0"
         android:progressDrawable="@drawable/detail_audio_seekbar_style"
         android:thumb="@drawable/detail_audio_progress_point" />
 
@@ -59,7 +61,7 @@
         android:layout_below="@id/seekBar_detail_audio"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />     
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
      <ImageButton
          android:id="@+id/imageButton_detail_audio_play"

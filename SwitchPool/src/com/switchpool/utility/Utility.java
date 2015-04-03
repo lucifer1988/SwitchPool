@@ -228,6 +228,19 @@ public class Utility extends Activity {
 		return format.format(new Date(time * 1000L));
 	}
 	
+	public String paserTimeToHMS(int time) {
+		String result = new String();
+		time = time/1000;
+		int hour = time/3600;
+		int min = (time-hour*3600)/60;
+		int sec = (time-hour*3600-min*60);
+		result = String.format("%s%d:%s%d:%s%d", (hour<10?"0":""), hour, (min<10?"0":""), min, (sec<10?"0":""), sec);
+		if (hour == 0) {
+			result = result.substring(3);
+		}
+		return result;
+	}
+	
 	//bulid Directory
 	/*¸ùÄ¿Â¼*/
 	public String getAppRootPath() {
