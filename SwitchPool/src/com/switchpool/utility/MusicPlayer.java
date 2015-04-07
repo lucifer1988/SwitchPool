@@ -8,7 +8,9 @@ import com.switchpool.model.SPFile;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
@@ -23,6 +25,11 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	private int curIndex;
 	private Boolean isPause;
 	public String curPath;
+	
+	private int maxVolume = 50; // 最大音量值  
+    private int curVolume = 20; // 当前音量值  
+    private int stepVolume = 0; // 每次调整的音量幅度
+    private AudioManager audioMgr = null; // Audio管理器，用了控制音量 
 	
 	public MusicPlayer() {
 	}
@@ -43,6 +50,14 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
         curIndex = 0;
         isPause = false;  
         player.setOnCompletionListener(this);  
+        
+        audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);  
+        // 获取最大音乐音量  
+        maxVolume = audioMgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);  
+        // 初始化音量大概为最大音量的1/2  
+        curVolume = maxVolume / 2;  
+        // 每次调整的音量大概为最大音量的1/6  
+        stepVolume = maxVolume / 6;
     }  
      
     public int onStartCommand(Intent intent, int flags, int startId){   
@@ -141,15 +156,48 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
         }  
     }
 	
-    public void previous() {  
-    	curIndex = curIndex - 1 < 0 ? data.size() - 1 : curIndex - 1;  
-        play();  
+    public void previous() {   
+    	if (curIndex - 1 < 0 ) {
+			player.stop();
+		}
+    	else {
+    		curIndex = curIndex - 1;
+    		play(); 
+		} 
     }  
       
     public void next() {
-    	curIndex = (curIndex + 1) % data.size();  
-        play();  
+    	if (curIndex + 1 > data.size()) {
+    		player.stop();
+		}
+    	else {
+    		curIndex = curIndex + 1;
+    		play();
+		} 
     }
+    
+    public void volumeUp() {
+    	curVolume += stepVolume;  
+        if (curVolume >= maxVolume) {  
+            curVolume = maxVolume;  
+        } 
+        adjustVolume(); 
+	}
+    
+    public void volumeDown() {
+    	curVolume -= stepVolume;  
+        if (curVolume <= 0) {  
+            curVolume = 0;  
+        } 
+        adjustVolume(); 
+	}
+    
+    /** 
+     * 调整音量 
+     */  
+    private void adjustVolume() {  
+        audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);  
+    } 
 
 	@Override
 	public IBinder onBind(Intent intent) {

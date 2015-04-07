@@ -1,11 +1,17 @@
 package com.switchpool.detail;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class DetailAudioFragment extends Fragment implements OnClickListener {
@@ -25,10 +32,27 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 	ImageButton playbButton, forwardButton, nextButton, volumeupButton, volumedownButton;
 	TextView curTimeTextView, totalTimeTextView, downloadProgressTextView, titleTextView, slashTextView;
 	public SeekBar seekBar;
+	    
+    private boolean isPause; 
+    private boolean isStartTrackingTouch;
 	
-	private int current;    
-    private boolean isPause;  
-	
+    //处理进度条更新
+    Handler mHandler = new Handler(){
+      @Override  
+	    public void handleMessage(Message msg){  
+	        switch (msg.what){
+	        case 0: 
+	        	if (!isStartTrackingTouch) {
+	                seekBar.setProgress(ctx.musicPlayer.player.getCurrentPosition());  
+	                curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
+				} 
+	          break;
+	      default:
+	          break;
+	        }
+	    }  
+    };
+    
 	public DetailAudioFragment() {
 	}
 	
@@ -62,7 +86,10 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
         downloadProgressTextView.setVisibility(View.VISIBLE);
           
         //进度条监听器   
-//        seekBar.setOnSeekBarChangeListener(new MySeekBarListener());   
+        seekBar.setOnSeekBarChangeListener(new MySeekBarListener());   
+        
+        isStartTrackingTouch = false;
+        isPause = false;
         
         return view;
     }
@@ -82,6 +109,22 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 					ctx.musicPlayer.prepareFile(file);
 					curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
 					totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
+					seekBar.setMax(ctx.musicPlayer.player.getDuration());
+					
+					final int milliseconds = 100;
+				      new Thread(){
+				        @Override
+				        public void run(){
+				          while(true){  
+					        try {  
+					            sleep(milliseconds);  
+					        } catch (InterruptedException e) {  
+					            e.printStackTrace();  
+					        }
+					        mHandler.sendEmptyMessage(0);  
+				          }  
+				        }
+				      }.start();
 				}
 			}
 		}
@@ -99,52 +142,53 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 		if (v.getId() == R.id.imageButton_detail_audio_play) {
 			playOrPause();
 		}
+		else if (v.getId() == R.id.imageButton_detail_audio_forward) {
+			ctx.musicPlayer.previous();
+		}
+		else if (v.getId() == R.id.imageButton_detail_audio_next) {
+			ctx.musicPlayer.next();
+		}
+		else if (v.getId() == R.id.imageButton_detail_audio_volumeup) {
+			ctx.musicPlayer.volumeUp();
+		}
+		else if (v.getId() == R.id.imageButton_detail_audio_volumedown) {
+			ctx.musicPlayer.volumeDown();
+		}
 	}
 	
-//	private final class MySeekBarListener implements OnSeekBarChangeListener {  
-//        //移动触发   
-//        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {  
-//        }  
-//  
-//        //起始触发   
-//        public void onStartTrackingTouch(SeekBar seekBar) {  
-//            isStartTrackingTouch = true;  
-//        }  
-//  
-//        //结束触发   
-//        public void onStopTrackingTouch(SeekBar seekBar) {  
-//            player.seekTo(seekBar.getProgress());  
-//            isStartTrackingTouch = false;  
-//        }  
-//    }
-	
-	
-//	private void previous() {  
-//        current = current - 1 < 0 ? data.size() - 1 : current - 1;  
-//        play();  
-//    }  
-//  
-//      
-//    private void next() {  
-//        current = (current + 1) % data.size();  
-//        play();  
-//    } 
-    
-    private void playOrPause() {  
-    	ctx.musicPlayer.playFile(file);
+	private final class MySeekBarListener implements OnSeekBarChangeListener {  
+        //移动触发   
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {  
+        }  
+  
+        //起始触发   
+        public void onStartTrackingTouch(SeekBar seekBar) {  
+            isStartTrackingTouch = true;  
+        }  
+  
+        //结束触发   
+        public void onStopTrackingTouch(SeekBar seekBar) {  
+            ctx.musicPlayer.player.seekTo(seekBar.getProgress());  
+            isStartTrackingTouch = false;  
+        }  
     }
     
-//	 private void resume() {  
-//        if (isPause) {  
-//            player.start();  
-//            isPause = false;  
-//        }  
-//	 }  
-//	      
-//	 private void pause() {  
-//	     if (player != null && player.isPlaying()) {  
-//	         player.pause();  
-//	         isPause = true;  
-//	     }  
-//     } 
+    private void playOrPause() { 
+    	if (ctx.musicPlayer.player.isPlaying()) {
+    		ctx.musicPlayer.pause();  
+	         isPause = true; 
+	         playbButton.setImageResource(R.drawable.detail_audio_play_selector);
+		}
+    	else {
+			if (isPause) {
+				ctx.musicPlayer.resume();
+				isPause = false;
+				playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
+			}
+			else {
+				ctx.musicPlayer.playFile(file);
+				playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
+			}
+		}
+    }
 }
