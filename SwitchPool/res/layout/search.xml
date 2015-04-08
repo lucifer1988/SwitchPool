@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout_search"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/search_bg" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_search_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/imageView_search_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav_bg" />
+
+        <TextView
+            android:id="@+id/textView_search_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="0dp"
+            android:text="@string/search_nav_title"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout_search_field"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:layout_below="@+id/relativeLayout_search_nav"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/search_fieldbg" >
+
+        <ImageView
+            android:id="@+id/imageView_search_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@color/translucent"
+            android:src="@drawable/search_fieldicon"
+            android:contentDescription="@string/app_name" />
+
+        <EditText
+            android:id="@+id/editText_search_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="60dp"
+            android:layout_toRightOf="@id/imageView_search_field"
+            android:background="@null"
+            android:ems="10"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="@string/search_field_hit"
+            android:inputType="text"
+            android:textSize="13sp" />
+                
+        <Button
+            android:id="@+id/button_search_field"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/search_button"
+            android:text="@string/search_nav_title"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+    </RelativeLayout>
+    
+    <ExpandableListView
+        android:id="@+id/expandableListView_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/relativeLayout_search_field"
+        android:layout_marginBottom="88dp"
+        android:layout_marginTop="10dp" >
+
+    </ExpandableListView>
+    
+    <LinearLayout
+        android:id="@+id/linearLayout_search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/toolbar_sec_bg" >
+
+        <Button
+            android:id="@+id/button1_search_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/translucent"
+            android:text="@string/home_item_grid1"
+            android:textColor="@color/detail_toolbutton_color"
+            android:textSize="15sp" />
+        
+         <Button
+            android:id="@+id/button2_search_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/translucent"
+            android:text="@string/home_item_grid2"
+            android:textColor="@color/detail_toolbutton_color"
+            android:textSize="15sp" />
+                
+         <Button
+            android:id="@+id/button3_search_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/translucent"
+            android:text="@string/home_item_grid3"
+            android:textColor="@color/detail_toolbutton_color"
+            android:textSize="15sp" />
+         <Button
+            android:id="@+id/button4_search_toolbar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/translucent"
+            android:text="@string/home_item_grid4"
+            android:textColor="@color/detail_toolbutton_color"
+            android:textSize="15sp" />         
+
+    </LinearLayout>
+    
+    <fragment
+        android:id="@+id/search_toolbar"
+        android:name="com.switchpool.utility.ToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_alignParentBottom="true" />
+
+    <TextView
+        android:id="@+id/textView_search_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/search_welcome_tip"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

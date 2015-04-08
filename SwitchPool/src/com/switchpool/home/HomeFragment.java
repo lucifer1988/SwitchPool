@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.switchpool.model.Subject;
+import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
@@ -117,13 +118,22 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			{
 //				Log.v("sp", ""+position);
 //				Log.v("sp", ""+curSubject.subjectid+"x"+(position+1));
-				Intent onItemClickIntent = new Intent();
-				onItemClickIntent.putExtra("poolId", curSubject.subjectid+"x"+(position+1));
-				onItemClickIntent.putExtra("subjectId", curSubject.subjectid);
-				onItemClickIntent.putExtra("poolName", getActivity().getString(itemNameIds[position]));
-				onItemClickIntent.setClass(getActivity(), TopListActivity.class);
-				getActivity().startActivity(onItemClickIntent);
-				getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				if (position < 4) {
+					Intent onItemClickIntent = new Intent();
+					onItemClickIntent.putExtra("poolId", curSubject.subjectid+"x"+(position+1));
+					onItemClickIntent.putExtra("subjectId", curSubject.subjectid);
+					onItemClickIntent.putExtra("poolName", getActivity().getString(itemNameIds[position]));
+					onItemClickIntent.setClass(getActivity(), TopListActivity.class);
+					getActivity().startActivity(onItemClickIntent);
+					getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
+				else if (position == 5) {
+					Intent onItemClickIntent = new Intent();
+					onItemClickIntent.putExtra("subjectId", curSubject.subjectid);
+					onItemClickIntent.setClass(getActivity(), SearchActivity.class);
+					getActivity().startActivity(onItemClickIntent);
+					getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 		});
         
