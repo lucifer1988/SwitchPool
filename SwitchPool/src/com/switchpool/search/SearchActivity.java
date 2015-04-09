@@ -1,5 +1,6 @@
 package com.switchpool.search;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,9 +8,11 @@ import com.loopj.android.http.RequestParams;
 import com.switchpool.home.MainActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.SearchKey;
+import com.switchpool.model.User;
 import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Activity;
@@ -19,6 +22,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -32,6 +36,7 @@ import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SearchActivity extends FragmentActivity implements OnClickListener {
 
@@ -48,7 +53,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 	
 	private RequestParams params;
 	List<String> poolidArr;
-	HashMap<String, String> sarchVerDict;
+	HashMap<String, String> searchVerDict;
 	List<Item> resultArr;
 	String curPoolid;
 	String curSearchStr;
@@ -57,6 +62,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 	//History
 	List<String> searchHistoryArr;
 	String searchHistoryCachePath;
+	String searchVerCachePath;
 	int searchHistoryIndex;
 	
 	public SearchActivity() {
@@ -81,6 +87,39 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		
 		Intent intent = getIntent();
 		subjectid=intent.getStringExtra("subjectId");
+		
+		searchHistoryCachePath = Utility.shareInstance().cacheUserHistory()+subjectid;
+		List<String> tempHistoryList = (List<String>)Utility.shareInstance().getObject(searchHistoryCachePath);
+		if (tempHistoryList == null) {
+			searchHistoryArr = new ArrayList<String>();
+		}
+		else {
+			searchHistoryArr = tempHistoryList;
+			searchField.setText(searchHistoryArr.get(0));
+			searchHistoryIndex = 0;
+		}
+		
+		poolidArr = new ArrayList<String>();
+		for (int i = 1; i < 5; i++) {
+			poolidArr.add(String.format("%sx%d", subjectid, i));
+		}
+		searchVerCachePath = Utility.shareInstance().cacheUserHistory()+getString(R.string.SPPoolSearchDict);
+		searchVerDict = (HashMap<String, String>)Utility.shareInstance().getObject(searchVerCachePath);
+		if (!searchVerDict.containsKey(poolidArr.get(0))) {
+			searchVerDict.put(poolidArr.get(0), "0");
+			Utility.shareInstance().saveObject(searchVerCachePath, searchVerDict);
+		}
+		curPoolid = poolidArr.get(0);
+		//request params
+		User userInfo = (User)Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile());
+		params = new RequestParams();
+		params.put("uid", userInfo.getUid());
+		params.put("token", userInfo.getToken());
+		params.put("subjectid", subjectid);
+		params.put("poolid", curPoolid);
+		params.put("version", "0");
+		
+		searchKeyList = new ArrayList<List<SearchKey>>();
 		
 		toolbarLayout.setVisibility(View.INVISIBLE);
 		searchExpandableListView.setVisibility(View.INVISIBLE);
@@ -127,6 +166,10 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 				// TODO Auto-generated method stub
 			}
 		});
+		
+		if (!TextUtils.isEmpty(searchField.getText().toString())) {
+			search();
+		}
 	}
 	
 	@Override
@@ -148,6 +191,43 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 	         InputMethodManager imm = (InputMethodManager)  
              getSystemService(Context.INPUT_METHOD_SERVICE);  
              imm.hideSoftInputFromWindow(v.getWindowToken(), 0); 
+		}
+	}
+	
+	private void search() {
+		String searchString = searchField.getText().toString().trim();  
+        if (TextUtils.isEmpty(searchString)) {  
+            Toast.makeText(this, "搜索关键词不能为空", Toast.LENGTH_LONG).show(); 
+            return;
+        }
+		startSearch(searchString);
+        curSearchStr = searchString;
+        addHistoryKey(searchString);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);  
+        imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0); 
+        toolbarLayout.setVisibility(View.VISIBLE);
+	}
+	
+	private void startSearch(String searchString) {
+		List<SearchKey> curKeyList = searchKeyList.get(curIndex);
+		if (curKeyList == null || curKeyList.size() == 0) {
+			
+		}
+	}
+	
+	private void addHistoryKey(String searchString) {
+		if (searchHistoryArr != null) {
+			if (searchHistoryArr.size() > 0) {
+				for (int i = 0; i < searchHistoryArr.size(); i++) {
+					String hisKry = searchHistoryArr.get(i);
+					if (hisKry.equals(searchString)) {
+						searchHistoryArr.remove(i);
+						break;
+					}
+				}
+			}
+			searchHistoryArr.add(0, searchString);
+			Utility.shareInstance().saveObject(searchHistoryCachePath, searchHistoryArr);
 		}
 	}
 
