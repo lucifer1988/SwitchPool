@@ -349,7 +349,7 @@ public class TopListActivity extends FragmentActivity {
 			
 			for (int i = 0; i < topInfoArray.length(); i++) {
 				JSONObject topInfo = topInfoArray.getJSONObject(i);
-				if (topInfo.getString(kSPItemOptype) == kSPItemOptypeAdd) {
+				if (topInfo.getString(kSPItemOptype).equals(kSPItemOptypeAdd)) {
 					Item aTopItem = new Item();
 					aTopItem.setCaption(topInfo.getString("caption"));
 					aTopItem.setId(topInfo.getString("id"));
@@ -359,11 +359,11 @@ public class TopListActivity extends FragmentActivity {
 				else {
 					for (int j = 0; j < cacheArr.size(); j++) {
 						Item topItem = (Item) cacheArr.get(j);
-						if (topItem.getId() == topInfo.getString("id")) {
-							if (topInfo.getString(kSPItemOptype) == kSPItemOptypeDelete) {
+						if (topItem.getId().equals(topInfo.getString("id"))) {
+							if (topInfo.getString(kSPItemOptype).equals(kSPItemOptypeDelete)) {
 								cacheArr.remove(topItem);
 							}
-							else if (topInfo.getString(kSPItemOptype) == kSPItemOptypeUpdate) {
+							else if (topInfo.getString(kSPItemOptype).equals(kSPItemOptypeUpdate)) {
 								topItem.setCaption(topInfo.getString("caption"));
 								topItem.setOrder(topInfo.getInt("order"));
 							}
@@ -376,9 +376,9 @@ public class TopListActivity extends FragmentActivity {
 				JSONObject firInfo = firstInfoArray.getJSONObject(i);
 				for (int j = 0; j < cacheArr.size(); j++) {
 					Item topItem = (Item) cacheArr.get(j);
-					if (topItem.getId() == firInfo.getJSONObject(kSPItemParent).getString("id")) {
+					if (topItem.getId().equals(firInfo.getJSONObject(kSPItemParent).getString("id"))) {
 						List<Item> topChildArr = new ArrayList<Item>(topItem.getItemArr());
-						if (firInfo.getString(kSPItemOptype) == kSPItemOptypeAdd) {
+						if (firInfo.getString(kSPItemOptype).equals(kSPItemOptypeAdd)) {
 							Item aFirItem = new Item();
 							aFirItem.setCaption(firInfo.getString("caption"));
 							aFirItem.setId(firInfo.getString("id"));
@@ -388,11 +388,11 @@ public class TopListActivity extends FragmentActivity {
 						else {
 							for (int k = 0; k < topChildArr.size(); k++) {
 								Item firItem = (Item) topChildArr.get(k);
-								if (firItem.getId() == firInfo.getString("id")) {
-									if (firInfo.getString(kSPItemOptype) == kSPItemOptypeDelete) {
+								if (firItem.getId().equals(firInfo.getString("id"))) {
+									if (firInfo.getString(kSPItemOptype).equals(kSPItemOptypeDelete)) {
 										topChildArr.remove(topItem);
 									}
-									else if (firInfo.getString(kSPItemOptype) == kSPItemOptypeUpdate) {
+									else if (firInfo.getString(kSPItemOptype).equals(kSPItemOptypeUpdate)) {
 										firItem.setCaption(firInfo.getString("caption"));
 										firItem.setOrder(firInfo.getInt("order"));
 									}
@@ -408,13 +408,13 @@ public class TopListActivity extends FragmentActivity {
 				JSONObject secInfo = secondInfoArray.getJSONObject(i);
 				for (int j = 0; j < cacheArr.size(); j++) {
 					Item topItem = (Item) cacheArr.get(j);
-					if (topItem.getId() == secInfo.getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getString("id")) {
+					if (topItem.getId().equals(secInfo.getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getString("id"))) {
 						List<Item> topChildArr = new ArrayList<Item>(topItem.getItemArr());
 						for (int k = 0; k < topChildArr.size(); k++) {
 							Item firItem = (Item) topChildArr.get(j);
-							if (firItem.getId() == secInfo.getJSONObject(kSPItemParent).getString("id")) {
+							if (firItem.getId().equals(secInfo.getJSONObject(kSPItemParent).getString("id"))) {
 								List<Item> firChildArr = new ArrayList<Item>(firItem.getItemArr());
-								if (secInfo.getString(kSPItemOptype) == kSPItemOptypeAdd) {
+								if (secInfo.getString(kSPItemOptype).equals(kSPItemOptypeAdd)) {
 									Item aSecItem = new Item();
 									aSecItem.setCaption(secInfo.getString("caption"));
 									aSecItem.setId(secInfo.getString("id"));
@@ -424,11 +424,11 @@ public class TopListActivity extends FragmentActivity {
 								else {
 									for (int l = 0; l < firChildArr.size(); l++) {
 										Item secItem = (Item) firChildArr.get(l);
-										if (secItem.getId() == secInfo.getString("id")) {
-											if (secInfo.getString(kSPItemOptype) == kSPItemOptypeDelete) {
+										if (secItem.getId().equals(secInfo.getString("id"))) {
+											if (secInfo.getString(kSPItemOptype).equals(kSPItemOptypeDelete)) {
 												firChildArr.remove(secItem);
 											}
-											else if (secInfo.getString(kSPItemOptype) == kSPItemOptypeUpdate) {
+											else if (secInfo.getString(kSPItemOptype).equals(kSPItemOptypeUpdate)) {
 												secItem.setCaption(secInfo.getString("caption"));
 												secItem.setOrder(secInfo.getInt("order"));
 											}
@@ -447,17 +447,17 @@ public class TopListActivity extends FragmentActivity {
 				JSONObject itemInfo = itemInfoArray.getJSONObject(i);
 				for (int j = 0; j < cacheArr.size(); j++) {
 					Item topItem = (Item) cacheArr.get(j);
-					if (topItem.getId() == itemInfo.getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getString("id")) {
+					if (topItem.getId().equals(itemInfo.getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getString("id"))) {
 						List<Item> topChildArr = new ArrayList<Item>(topItem.getItemArr());
 						for (int k = 0; k < topChildArr.size(); k++) {
 							Item firItem = (Item) topChildArr.get(j);
-							if (firItem.getId() == itemInfo.getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getString("id")) {
+							if (firItem.getId().equals(itemInfo.getJSONObject(kSPItemParent).getJSONObject(kSPItemParent).getString("id"))) {
 								List<Item> firChildArr = new ArrayList<Item>(firItem.getItemArr());
 								for (int l = 0; l < firChildArr.size(); l++) {
 									Item secItem = (Item) firChildArr.get(j);
-									if (secItem.getId() == itemInfo.getJSONObject(kSPItemParent).getString("id")) {
+									if (secItem.getId().equals(itemInfo.getJSONObject(kSPItemParent).getString("id"))) {
 										List<Item> secChildArr = new ArrayList<Item>(secItem.getItemArr());
-										if (itemInfo.getString(kSPItemOptype) == kSPItemOptypeAdd) {
+										if (itemInfo.getString(kSPItemOptype).equals(kSPItemOptypeAdd)) {
 											Item aItemItem = new Item();
 											aItemItem.setCaption(itemInfo.getString("caption"));
 											aItemItem.setId(itemInfo.getString("id"));
@@ -467,11 +467,11 @@ public class TopListActivity extends FragmentActivity {
 										else {
 											for (int m = 0; m < firChildArr.size(); m++) {
 												Item itemItem = (Item) firChildArr.get(m);
-												if (itemItem.getId() == itemInfo.getString("id")) {
-													if (itemInfo.getString(kSPItemOptype) == kSPItemOptypeDelete) {
+												if (itemItem.getId().equals(itemInfo.getString("id"))) {
+													if (itemInfo.getString(kSPItemOptype).equals(kSPItemOptypeDelete)) {
 														firChildArr.remove(itemItem);
 													}
-													else if (itemInfo.getString(kSPItemOptype) == kSPItemOptypeUpdate) {
+													else if (itemInfo.getString(kSPItemOptype).equals(kSPItemOptypeUpdate)) {
 														itemItem.setCaption(itemInfo.getString("caption"));
 														itemItem.setOrder(itemInfo.getInt("order"));
 													}

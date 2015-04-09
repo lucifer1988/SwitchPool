@@ -4,9 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.http.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.switchpool.home.MainActivity;
+import com.switchpool.home.TopListActivity;
 import com.switchpool.model.Item;
+import com.switchpool.model.Model;
+import com.switchpool.model.SPFile;
 import com.switchpool.model.SearchKey;
 import com.switchpool.model.User;
 import com.switchpool.utility.NoContnetFragment;
@@ -23,6 +33,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -58,6 +69,10 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 	String curPoolid;
 	String curSearchStr;
 	List<List<SearchKey>> searchKeyList;
+	
+	//searchKeyCache
+	List<SearchKey> curSearchKeyCacheList;
+	String curSearchKeyCachePath;
 	
 	//History
 	List<String> searchHistoryArr;
@@ -208,10 +223,176 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
         toolbarLayout.setVisibility(View.VISIBLE);
 	}
 	
-	private void startSearch(String searchString) {
+	private void startSearch(final String searchString) {
 		List<SearchKey> curKeyList = searchKeyList.get(curIndex);
 		if (curKeyList == null || curKeyList.size() == 0) {
+			curSearchKeyCachePath = Utility.shareInstance().cachPoolDir(curPoolid, subjectid)+getString(R.string.SPSearchKeyList);
+			curSearchKeyCacheList = (List<SearchKey>)Utility.shareInstance().getObject(curSearchKeyCachePath);
+			if (Utility.shareInstance().isNetworkAvailable(this)) {
+				AsyncHttpClient client = new AsyncHttpClient();
+				String url = new String(this.getString(R.string.host) + "search/keywd");
+				Log.v("sp", ""+url);
+				Log.v("sp", ""+params);
+				try {  
+					client.post(url, params, new JsonHttpResponseHandler() {  
+
+		                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
+		                	Log.v("sp", "" + jsonObject); 
+		                	if (statusCode == 200) {
+		                		try {
+		                			Model curModel;
+		                			String curVer = jsonObject.getString("version");
+		                			boolean isUpdate = jsonObject.getBoolean("isUpdate");
+		                			List<SearchKey> resultArrKeys = new ArrayList<SearchKey>();
+		                			if (!isUpdate) {
+	                					if (curSearchKeyCacheList != null) {
+	                						searchResult(searchString, curSearchKeyCacheList);
+	                					}
+	                					else {
+											JSONArray itemArr = jsonObject.getJSONArray("item");
+											if (itemArr != null && itemArr.length() > 0) {
+												for (int i = 0; i < itemArr.length(); i++) {
+													JSONObject item = (JSONObject) itemArr.opt(i);
+													SearchKey searchKey = new SearchKey();
+													searchKey.setItemid(item.getString("itemid"));
+													searchKey.setKeywords(item.getString("keyword").split(";"));
+													resultArrKeys.add(searchKey);
+												}
+												Utility.shareInstance().saveObject(curSearchKeyCachePath, resultArrKeys);
+												searchResult(searchString, resultArrKeys);
+											}
+										}
+									}
+		                			else {
+		                				if (curSearchKeyCacheList != null) {
+											resultArrKeys = new ArrayList<SearchKey>(updateSearchKeyCache(curSearchKeyCacheList, jsonObject.getJSONArray("dynamic"), curSearchKeyCachePath));
+											searchResult(searchString, resultArrKeys);
+										}
+		                			}
+								} catch (JSONException e) {
+									if (curSearchKeyCacheList != null) {
+										searchResult(searchString, curSearchKeyCacheList);
+									}
+									Log.e("sp", "" + Log.getStackTraceString(e));
+								}
+							}
+		                	else {
+		        				if (curSearchKeyCacheList != null) {
+		        					searchResult(searchString, curSearchKeyCacheList);
+		        				}
+							}
+		                }  
+		                
+		                public void onFailure(int statusCode, Header[] headers,String responseString, Throwable throwable) {
+		    				if (curSearchKeyCacheList != null) {
+		    					searchResult(searchString, curSearchKeyCacheList);
+		    				}
+		                }
+		                   
+		            });  
+				} catch (Exception e) {
+					if (curSearchKeyCacheList != null) {
+						searchResult(searchString, curSearchKeyCacheList);
+					}
+					Log.e("sp", "" + Log.getStackTraceString(e));
+				}
+			}
+			else {
+				if (curSearchKeyCacheList != null) {
+					searchResult(searchString, curSearchKeyCacheList);
+				}
+			}
+		}
+		else {
+			searchResult(searchString, curKeyList);
+		}
+	}
+	
+	private List<SearchKey> updateSearchKeyCache(List<SearchKey> cacheArr, JSONArray updateArr, String cachePath) {
+		try {
+			String kSPItemOptype = "optype";
+			String kSPItemOptypeAdd = "A";
+			String kSPItemOptypeDelete = "D";
+			String kSPItemOptypeUpdate = "U";
 			
+			if (updateArr != null && updateArr.length() > 0) {
+				for (int i = 0; i < updateArr.length(); i++) {
+					JSONObject topInfo = updateArr.getJSONObject(i);
+					if (topInfo.getString(kSPItemOptype).equals(kSPItemOptypeAdd)) {
+						SearchKey aSearchKey = new SearchKey();
+						aSearchKey.setItemid(topInfo.getString("itemid"));
+						aSearchKey.setKeywords(topInfo.getString("keyword").split(";"));
+						cacheArr.add(aSearchKey);
+					}
+					else {
+						for (int j = 0; j < cacheArr.size(); j++) {
+							SearchKey searchKey = cacheArr.get(j);
+							if (searchKey.getItemid().equals(topInfo.getString("itemid"))) {
+								if (topInfo.getString(kSPItemOptype).equals(kSPItemOptypeDelete)) {
+									cacheArr.remove(j);
+								}
+								else if (topInfo.getString(kSPItemOptype).equals(kSPItemOptypeUpdate)) {
+									searchKey.setKeywords(topInfo.getString("keyword").split(";"));
+								}
+							}
+						}
+					}
+				}
+			}
+			Utility.shareInstance().saveObject(cachePath, cacheArr);
+			
+		} catch (Exception e) {
+			return cacheArr;
+		}
+		return cacheArr;
+	}
+	
+	private void searchResult(String searchStr, List<SearchKey> keyList) {
+		String cachePathString = Utility.shareInstance().cachPoolDir(curPoolid, subjectid)+ getString(R.string.SPItemList);
+		List<Item> poolCacheArr = (List<Item>)Utility.shareInstance().getObject(cachePathString);
+		List<String> itemidResultList = new ArrayList<String>();
+		List<Item> resultItemList = new ArrayList<Item>();
+		for (int i = 0; i < keyList.size(); i++) {
+			SearchKey searchKey = keyList.get(i);
+			for (int j = 0; j < searchKey.getKeywords().length; j++) {
+				String key = searchKey.getKeywords()[j];
+				if (key.equals(searchStr)) {
+					itemidResultList.add(searchKey.getItemid());
+				}
+			}
+		}
+		
+		for (int i = 0; i < poolCacheArr.size(); i++) {
+			Item topItem = poolCacheArr.get(i);
+			if (topItem.getItemArr().size() > 0) {
+				for (int j = 0; j < topItem.getItemArr().size(); j++) {
+					Item secItem = topItem.getItemArr().get(j);
+					if (secItem.getItemArr().size() > 0) {
+						for (int k = 0; k < secItem.getItemArr().size(); k++) {
+							Item resultItem = secItem.getItemArr().get(k);
+							List<Item> tempItemArr = resultItem.getItemArr();
+							for (int l = 0; l < tempItemArr.size(); l++) {
+								Item forItem = tempItemArr.get(l);
+								if (!itemidResultList.contains(forItem.getId())) {
+									tempItemArr.remove(l);
+								}
+							}
+							if (tempItemArr.size() > 0) {
+								resultItem.setItemArr(tempItemArr);
+								resultItemList.add(resultItem);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		if (resultItemList.size() > 0) {
+			resultArr.clear();
+			resultArr = new ArrayList<Item>(resultItemList);
+			adapter = new ExpandableListViewaAdapter(SearchActivity.this);
+			searchExpandableListView.setAdapter(adapter);
+			searchExpandableListView.setVisibility(View.VISIBLE);
 		}
 	}
 	

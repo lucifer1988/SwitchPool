@@ -1,7 +1,6 @@
 package com.switchpool.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class SearchKey implements Serializable {
 
@@ -14,7 +13,7 @@ public class SearchKey implements Serializable {
 	}
 
 	String itemid;
-	List<String> keywords;
+	String[] keywords;
 
 	public String getItemid() {
 		return itemid;
@@ -22,10 +21,10 @@ public class SearchKey implements Serializable {
 	public void setItemid(String itemid) {
 		this.itemid = itemid;
 	}
-	public List<String> getKeywords() {
+	public String[] getKeywords() {
 		return keywords;
 	}
-	public void setKeywords(List<String> keywords) {
+	public void setKeywords(String[] keywords) {
 		this.keywords = keywords;
 	}
 	

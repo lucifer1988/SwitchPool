@@ -1913,6 +1913,7 @@ containing a value of this type.
         public static final int SPAudioFilePrefix=0x7f0a002a;
         public static final int SPItemList=0x7f0a0046;
         public static final int SPPoolSearchDict=0x7f0a0047;
+        public static final int SPSearchKeyList=0x7f0a0048;
         public static final int Username_will_not_be_nil=0x7f0a0012;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */

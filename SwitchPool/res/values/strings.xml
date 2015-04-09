@@ -79,5 +79,6 @@
     <string name="host">http://115.29.146.245/resourceManager/</string>
     <string name="SPItemList">kSPItemList</string>
     <string name="SPPoolSearchDict">kSPPoolSearchDict</string>
+    <string name="SPSearchKeyList">kSPSearchKeyList</string>
     
 </resources>
