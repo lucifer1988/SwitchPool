@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.switchpool.detail.DetailActivity;
+import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.model.Subject;
 import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.Utility;
@@ -133,6 +135,24 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 					onItemClickIntent.setClass(getActivity(), SearchActivity.class);
 					getActivity().startActivity(onItemClickIntent);
 					getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
+				else if (position == 6) {
+					if (DetailActivity.staticMusicPlayer.player.isPlaying()) {
+						String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
+						String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
+						String curItemid = DetailActivity.staticMusicPlayer.curItemid();
+						
+		            	Intent intent=new Intent();
+		            	intent.setClass(getActivity(), DetailActivity.class);
+		            	Bundle bundle = new Bundle();
+		            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, getActivity()));
+		            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
+		            	intent.putExtras(bundle);
+		            	intent.putExtra("poolId", curPoolid);
+		            	intent.putExtra("subjectId", curSubjectid);
+		            	getActivity().startActivity(intent); 
+		            	getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+					}
 				}
 			}
 		});

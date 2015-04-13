@@ -25,6 +25,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	private int curIndex;
 	private Boolean isPause;
 	public String curPath;
+	public Boolean isItemAudio;
 	
 	private int maxVolume = 50; // 最大音量值  
     private int curVolume = 20; // 当前音量值  
@@ -49,6 +50,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
         data = new ArrayList<String>();
         curIndex = 0;
         isPause = false;  
+        isItemAudio = true;
         player.setOnCompletionListener(this);  
         
         audioMgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);  
@@ -116,6 +118,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	
 	public void playFile(SPFile file) {
 		String fileParh = getString(R.string.SPAudioFilePrefix)+file.getFid();
+		isItemAudio = true;
 		for (int i = 0; i < data.size(); i++) {
 			String pathString = data.get(i);
 			if (getFileName(pathString).equals(fileParh)) {
@@ -199,9 +202,36 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
         audioMgr.setStreamVolume(AudioManager.STREAM_MUSIC, curVolume, AudioManager.FLAG_PLAY_SOUND);  
     } 
 
+    public String curSubjectid() {
+    	if (curPath !=null) {
+    		String fileName = getFileName(curPath);
+    		String curSubjectid = fileName.split("_")[0];
+    		curSubjectid = curSubjectid.substring(0, 6);
+    		return curSubjectid;
+		}
+    	return null;
+	}
+    
+    public String curPoolid() {
+    	if (curPath !=null) {
+    		String fileName = getFileName(curPath);
+    		String curPoolid = fileName.split("_")[0];
+    		return curPoolid;
+		}
+    	return null;
+	}
+    
+    public String curItemid() {
+    	if (curPath !=null) {
+    		String fileName = getFileName(curPath);
+    		String curItemid = fileName.split("_")[1];
+    		return curItemid;
+		}
+    	return null;
+	}
+    
 	@Override
 	public IBinder onBind(Intent intent) {
-		// TODO Auto-generated method stub
 		return binder; 
 	}  
 	

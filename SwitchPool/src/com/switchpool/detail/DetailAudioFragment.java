@@ -95,37 +95,68 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
     }
 
 	public void reload(Model resModel) {
-		model = resModel;
-		if (model != null) {
-			for (int i = 0; i < model.getFileArr().size(); i++) {
-				SPFile curFile = model.getFileArr().get(i);
-				if (curFile.getSeq() == 1) {
-					file = curFile;
-					titleTextView.setText(ctx.getItem().getCaption());
-			        slashTextView.setVisibility(View.VISIBLE);
-			        curTimeTextView.setVisibility(View.VISIBLE);
-			        totalTimeTextView.setVisibility(View.VISIBLE);
-			        downloadProgressTextView.setVisibility(View.INVISIBLE);
-					ctx.musicPlayer.prepareFile(file);
-					curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
-					totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
-					seekBar.setMax(ctx.musicPlayer.player.getDuration());
-					
-					final int milliseconds = 100;
-				      new Thread(){
-				        @Override
-				        public void run(){
-				          while(true){  
-					        try {  
-					            sleep(milliseconds);  
-					        } catch (InterruptedException e) {  
-					            e.printStackTrace();  
+		if (resModel != null) {
+			model = resModel;
+			if (model != null) {
+				for (int i = 0; i < model.getFileArr().size(); i++) {
+					SPFile curFile = model.getFileArr().get(i);
+					if (curFile.getSeq() == 1) {
+						file = curFile;
+						titleTextView.setText(ctx.getItem().getCaption());
+				        slashTextView.setVisibility(View.VISIBLE);
+				        curTimeTextView.setVisibility(View.VISIBLE);
+				        totalTimeTextView.setVisibility(View.VISIBLE);
+				        downloadProgressTextView.setVisibility(View.INVISIBLE);
+						ctx.musicPlayer.prepareFile(file);
+						curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
+						totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
+						seekBar.setMax(ctx.musicPlayer.player.getDuration());
+						
+						final int milliseconds = 100;
+					      new Thread(){
+					        @Override
+					        public void run(){
+					          while(true){  
+						        try {  
+						            sleep(milliseconds);  
+						        } catch (InterruptedException e) {  
+						            e.printStackTrace();  
+						        }
+						        mHandler.sendEmptyMessage(0);  
+					          }  
 					        }
-					        mHandler.sendEmptyMessage(0);  
-				          }  
-				        }
-				      }.start();
+					      }.start();
+					}
 				}
+			}
+		}
+		else {
+			if (ctx.musicPlayer.player.isPlaying() && ctx.musicPlayer.isItemAudio) {
+				titleTextView.setText(ctx.getItem().getCaption());
+		        slashTextView.setVisibility(View.VISIBLE);
+		        curTimeTextView.setVisibility(View.VISIBLE);
+		        totalTimeTextView.setVisibility(View.VISIBLE);
+		        downloadProgressTextView.setVisibility(View.INVISIBLE);
+				curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
+				totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
+				seekBar.setMax(ctx.musicPlayer.player.getDuration());
+                seekBar.setProgress(ctx.musicPlayer.player.getCurrentPosition());  
+                curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
+				
+				final int milliseconds = 100;
+			      new Thread(){
+			        @Override
+			        public void run(){
+			          while(true){  
+				        try {  
+				            sleep(milliseconds);  
+				        } catch (InterruptedException e) {  
+				            e.printStackTrace();  
+				        }
+				        mHandler.sendEmptyMessage(0);  
+			          }  
+			        }
+			      }.start();
 			}
 		}
 	}

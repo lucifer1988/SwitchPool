@@ -107,7 +107,8 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	FragmentManager fManager;
 	AsyncHttpClient client;
 	
-	 public MusicPlayer musicPlayer;  
+	public MusicPlayer musicPlayer; 
+	public static MusicPlayer staticMusicPlayer;
      
     //使用ServiceConnection来监听Service状态的变化  
     private ServiceConnection conn = new ServiceConnection() {  
@@ -115,13 +116,14 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
         @Override  
         public void onServiceDisconnected(ComponentName name) {    
         	musicPlayer = null;  
+        	staticMusicPlayer = null;
         }  
           
         @Override  
         public void onServiceConnected(ComponentName name, IBinder binder) {  
             //这里我们实例化audioService,通过binder来实现  
         	musicPlayer = ((MusicPlayer.AudioBinder)binder).getService();  
-              
+        	staticMusicPlayer = ((MusicPlayer.AudioBinder)binder).getService();
         }  
     }; 
 	    
@@ -257,7 +259,16 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 		});
 		
+		Intent playIntentntent = new Intent();  
+		playIntentntent.setClass(this, MusicPlayer.class); 
+	    startService(playIntentntent);  
+        bindService(playIntentntent, conn, Context.BIND_AUTO_CREATE); 
+        
 		if (deatilType == DeatilType.DeatilTypeOrigin) {
+			if (musicPlayer != null && musicPlayer.player.isPlaying()) {
+				musicPlayer.player.stop();
+			}
+			
 			summaryButton.setTextColor(Color.WHITE);
 			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable summary_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_summary_hig);
@@ -282,14 +293,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.hide(noteFragment);
 			transaction.hide(summaryFragment);
 			transaction.commit();
-			requestModel("40", 3);
 			curTabIndex = 3;
+			audioFragment.reload(null);
 		}
-		
-		Intent playIntentntent = new Intent();  
-		playIntentntent.setClass(this, MusicPlayer.class); 
-	    startService(playIntentntent);  
-        bindService(playIntentntent, conn, Context.BIND_AUTO_CREATE); 
 	}
 	
 	public void tabTopBar(View sourceButton) {

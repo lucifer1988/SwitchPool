@@ -81,4 +81,7 @@
     <string name="SPPoolSearchDict">kSPPoolSearchDict</string>
     <string name="SPSearchKeyList">kSPSearchKeyList</string>
     
+    <string name="SPItemSelectHistoryTop">SPItemSelectHistoryTop</string>
+    <string name="SPItemSelectHistorySec">SPItemSelectHistorySec</string>
+    
 </resources>

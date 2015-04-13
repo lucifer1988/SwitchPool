@@ -9,8 +9,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.TimeZone;
 
+import com.switchpool.model.Item;
 import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -239,6 +242,92 @@ public class Utility extends Activity {
 			result = result.substring(3);
 		}
 		return result;
+	}
+	
+	static HashMap<String, HashMap<String, Item>> itemSelectHistoryMap = new HashMap<String, HashMap<String, Item>>();
+	
+	public void setTopSelectItem(String subjectid, String poolid, Item item, Context ctx) {
+		HashMap<String, Item> hashMap;
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
+			hashMap = itemSelectHistoryMap.get(poolid);
+		}
+		else {
+			hashMap = new HashMap<String, Item>();
+		}
+		hashMap.put(ctx.getString(R.string.SPItemSelectHistoryTop), item);
+		itemSelectHistoryMap.put(poolid, hashMap);
+	}
+	
+	public Item topSelectItem(String subjectid, String poolid, Context ctx) {
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
+			HashMap<String, Item> hashMap = itemSelectHistoryMap.get(poolid);
+			if (hashMap.containsKey(ctx.getString(R.string.SPItemSelectHistoryTop))) {
+				return hashMap.get(ctx.getString(R.string.SPItemSelectHistoryTop));
+			}
+		}
+		return null;
+	}
+	
+	public void setSecSelectItem(String subjectid, String poolid, Item item, Context ctx) {
+		HashMap<String, Item> hashMap;
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
+			hashMap = itemSelectHistoryMap.get(poolid);
+		}
+		else {
+			hashMap = new HashMap<String, Item>();
+		}
+		hashMap.put(ctx.getString(R.string.SPItemSelectHistorySec), item);
+		itemSelectHistoryMap.put(poolid, hashMap);
+	}
+	
+	public Item secSelectItem(String subjectid, String poolid, Context ctx) {
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
+			HashMap<String, Item> hashMap = itemSelectHistoryMap.get(poolid);
+			if (hashMap.containsKey(ctx.getString(R.string.SPItemSelectHistorySec))) {
+				return hashMap.get(ctx.getString(R.string.SPItemSelectHistorySec));
+			}
+		}
+		return null;
+	}
+	
+	public Item findItem(String subjectid, String poolid, String itemid, Context ctx) {
+		Log.v("sp", "subjectid"+subjectid);
+		Log.v("sp", "poolid"+poolid);
+		Log.v("sp", "itemid"+itemid);
+		Item resultItem = null;
+		String cachePathString = cachPoolDir(poolid, subjectid)+ ctx.getString(R.string.SPItemList);
+		List<Item> cacheArr = (List<Item>)getObject(cachePathString);
+		Log.v("sp", "cacheArr:"+ cacheArr);
+		if (cacheArr != null && cacheArr.size() > 0) {
+		  loop:for (int i = 0; i < cacheArr.size(); i++) {
+				Item topItem = cacheArr.get(i);
+//				if (topItem.getItemArr() != null && topItem.getItemArr().size() > 0) {
+					for (int j = 0; j < topItem.getItemArr().size(); j++) {
+						Item secItem = topItem.getItemArr().get(j);
+//						if (secItem.getItemArr() != null && secItem.getItemArr().size() > 0) {
+							for (int k = 0; k < secItem.getItemArr().size(); k++) {
+								Item thrItem = secItem.getItemArr().get(k);
+//								if (thrItem.getItemArr() != null && thrItem.getItemArr().size() > 0) {
+									for (int l = 0; l < thrItem.getItemArr().size(); l++) {
+										Log.v("sp", "thrItem.getItemArr():"+thrItem.getItemArr());
+										Item forItem = thrItem.getItemArr().get(l);
+										if (forItem.getId().equals(itemid)) {
+											resultItem = forItem;
+											Log.v("sp", "forItem.getId():"+forItem.getId());
+											break loop;
+										}
+										else {
+											continue;
+										}
+									}
+//								}
+							}
+//						}
+					}
+//				}
+			}
+		}
+		return resultItem;
 	}
 	
 	//bulid Directory

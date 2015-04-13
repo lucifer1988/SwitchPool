@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
@@ -95,8 +96,11 @@ public class TopListActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton3() {
-				// TODO Auto-generated method stub
-				
+				Intent onItemClickIntent = new Intent();
+				onItemClickIntent.putExtra("subjectId", subjectId);
+				onItemClickIntent.setClass(TopListActivity.this, SearchActivity.class);
+				TopListActivity.this.startActivity(onItemClickIntent);
+				TopListActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override

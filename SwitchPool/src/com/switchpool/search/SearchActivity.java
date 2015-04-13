@@ -12,11 +12,11 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.detail.DetailActivity;
+import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.home.MainActivity;
-import com.switchpool.home.TopListActivity;
+import com.switchpool.home.SecListActivity;
 import com.switchpool.model.Item;
-import com.switchpool.model.Model;
-import com.switchpool.model.SPFile;
 import com.switchpool.model.SearchKey;
 import com.switchpool.model.User;
 import com.switchpool.utility.NoContnetFragment;
@@ -42,12 +42,12 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 public class SearchActivity extends FragmentActivity implements OnClickListener {
 
@@ -92,8 +92,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		toolbarLayout = (LinearLayout)findViewById(R.id.linearLayout_search_toolbar);
 		searchExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_search);
 		
-		Button searchButton = (Button)findViewById(R.id.button_search_field);
-		searchButton.setOnClickListener(this);
+		findViewById(R.id.button_search_field).setOnClickListener(this);
 		findViewById(R.id.button1_search_toolbar).setOnClickListener(this);
 		findViewById(R.id.button2_search_toolbar).setOnClickListener(this);
 		findViewById(R.id.button3_search_toolbar).setOnClickListener(this);
@@ -120,7 +119,12 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 		searchVerCachePath = Utility.shareInstance().cacheUserHistory()+getString(R.string.SPPoolSearchDict);
 		searchVerDict = (HashMap<String, String>)Utility.shareInstance().getObject(searchVerCachePath);
-		if (!searchVerDict.containsKey(poolidArr.get(0))) {
+		if (searchVerDict == null) {
+			searchVerDict = new HashMap<String, String>();
+			searchVerDict.put(poolidArr.get(0), "0");
+			Utility.shareInstance().saveObject(searchVerCachePath, searchVerDict);
+		}
+		else if (!searchVerDict.containsKey(poolidArr.get(0))) {
 			searchVerDict.put(poolidArr.get(0), "0");
 			Utility.shareInstance().saveObject(searchVerCachePath, searchVerDict);
 		}
@@ -132,9 +136,14 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		params.put("token", userInfo.getToken());
 		params.put("subjectid", subjectid);
 		params.put("poolid", curPoolid);
-		params.put("version", "0");
+//		params.put("version", "0");
+		params.put("version", searchVerDict.get(curPoolid));
 		
 		searchKeyList = new ArrayList<List<SearchKey>>();
+		for (int i = 0; i < 4; i++) {
+			List<SearchKey> list = new ArrayList<SearchKey>();
+			searchKeyList.add(list);
+		}
 		
 		toolbarLayout.setVisibility(View.INVISIBLE);
 		searchExpandableListView.setVisibility(View.INVISIBLE);
@@ -182,6 +191,27 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			}
 		});
 		
+		//ÉèÖÃitemµã»÷µÄ¼àÌýÆ÷
+		searchExpandableListView.setOnChildClickListener(new OnChildClickListener() {
+			
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                    int groupPosition, int childPosition, long id) {
+            	
+            	Intent intent=new Intent();
+            	intent.setClass(SearchActivity.this, DetailActivity.class);
+            	Bundle bundle = new Bundle();
+            	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	bundle.putSerializable("type", DeatilType.DeatilTypeOrigin);
+            	intent.putExtras(bundle);
+            	intent.putExtra("poolId", curPoolid);
+            	intent.putExtra("subjectId", subjectid);
+            	startActivity(intent); 
+            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return true;
+            }
+        });
+		
 		if (!TextUtils.isEmpty(searchField.getText().toString())) {
 			search();
 		}
@@ -207,6 +237,52 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
              getSystemService(Context.INPUT_METHOD_SERVICE);  
              imm.hideSoftInputFromWindow(v.getWindowToken(), 0); 
 		}
+		else if (v.getId() == R.id.button1_search_toolbar) {
+			curIndex = 0;
+			reloadParam();
+			if (curSearchStr != null) {
+				startSearch(curSearchStr);
+			}
+		}
+		else if (v.getId() == R.id.button2_search_toolbar) {
+			curIndex = 1;
+			reloadParam();
+			if (curSearchStr != null) {
+				startSearch(curSearchStr);
+			}
+		}
+		else if (v.getId() == R.id.button3_search_toolbar) {
+			curIndex = 2;
+			reloadParam();
+			if (curSearchStr != null) {
+				startSearch(curSearchStr);
+			}
+		}
+		else if (v.getId() == R.id.button4_search_toolbar) {
+			curIndex = 3;
+			reloadParam();
+			if (curSearchStr != null) {
+				startSearch(curSearchStr);
+			}
+		}
+		else if (v.getId() == R.id.button_search_field) {
+			search();
+		}
+	}
+	
+	private void reloadParam() {
+		curPoolid = poolidArr.get(curIndex);
+		if (!searchVerDict.containsKey(curPoolid)) {
+			searchVerDict.put(curPoolid, "0");
+			Utility.shareInstance().saveObject(searchVerCachePath, searchVerDict);
+		}
+		params.put("poolid", curPoolid);
+		params.put("version", searchVerDict.get(curPoolid));
+	}
+	
+	private void noResultTip() {
+		searchExpandableListView.setVisibility(View.INVISIBLE);
+		tipTextView.setText(getString(R.string.search_nocontent_tip));
 	}
 	
 	private void search() {
@@ -228,6 +304,9 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		if (curKeyList == null || curKeyList.size() == 0) {
 			curSearchKeyCachePath = Utility.shareInstance().cachPoolDir(curPoolid, subjectid)+getString(R.string.SPSearchKeyList);
 			curSearchKeyCacheList = (List<SearchKey>)Utility.shareInstance().getObject(curSearchKeyCachePath);
+			if (curSearchKeyCacheList != null) {
+				searchKeyList.get(curIndex).addAll(curSearchKeyCacheList);
+			}
 			if (Utility.shareInstance().isNetworkAvailable(this)) {
 				AsyncHttpClient client = new AsyncHttpClient();
 				String url = new String(this.getString(R.string.host) + "search/keywd");
@@ -240,11 +319,10 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		                	Log.v("sp", "" + jsonObject); 
 		                	if (statusCode == 200) {
 		                		try {
-		                			Model curModel;
-		                			String curVer = jsonObject.getString("version");
-		                			boolean isUpdate = jsonObject.getBoolean("isUpdate");
+		                			searchVerDict.put(curPoolid, jsonObject.getString("version"));
+		                			Utility.shareInstance().saveObject(searchVerCachePath, searchVerDict);
 		                			List<SearchKey> resultArrKeys = new ArrayList<SearchKey>();
-		                			if (!isUpdate) {
+		                			if (jsonObject.getInt("isUpdate") == 0 ) {
 	                					if (curSearchKeyCacheList != null) {
 	                						searchResult(searchString, curSearchKeyCacheList);
 	                					}
@@ -258,6 +336,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 													searchKey.setKeywords(item.getString("keyword").split(";"));
 													resultArrKeys.add(searchKey);
 												}
+												searchKeyList.get(curIndex).clear();
+												searchKeyList.get(curIndex).addAll(resultArrKeys);
 												Utility.shareInstance().saveObject(curSearchKeyCachePath, resultArrKeys);
 												searchResult(searchString, resultArrKeys);
 											}
@@ -266,8 +346,13 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		                			else {
 		                				if (curSearchKeyCacheList != null) {
 											resultArrKeys = new ArrayList<SearchKey>(updateSearchKeyCache(curSearchKeyCacheList, jsonObject.getJSONArray("dynamic"), curSearchKeyCachePath));
+											searchKeyList.get(curIndex).clear();
+											searchKeyList.get(curIndex).addAll(resultArrKeys);
 											searchResult(searchString, resultArrKeys);
 										}
+		    		    				else {
+		    		    					noResultTip();
+		    							}
 		                			}
 								} catch (JSONException e) {
 									if (curSearchKeyCacheList != null) {
@@ -287,6 +372,9 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		    				if (curSearchKeyCacheList != null) {
 		    					searchResult(searchString, curSearchKeyCacheList);
 		    				}
+		    				else {
+		    					noResultTip();
+							}
 		                }
 		                   
 		            });  
@@ -362,24 +450,26 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			}
 		}
 		
-		for (int i = 0; i < poolCacheArr.size(); i++) {
-			Item topItem = poolCacheArr.get(i);
-			if (topItem.getItemArr().size() > 0) {
-				for (int j = 0; j < topItem.getItemArr().size(); j++) {
-					Item secItem = topItem.getItemArr().get(j);
-					if (secItem.getItemArr().size() > 0) {
-						for (int k = 0; k < secItem.getItemArr().size(); k++) {
-							Item resultItem = secItem.getItemArr().get(k);
-							List<Item> tempItemArr = resultItem.getItemArr();
-							for (int l = 0; l < tempItemArr.size(); l++) {
-								Item forItem = tempItemArr.get(l);
-								if (!itemidResultList.contains(forItem.getId())) {
-									tempItemArr.remove(l);
+		if (poolCacheArr != null && poolCacheArr.size() > 0) {
+			for (int i = 0; i < poolCacheArr.size(); i++) {
+				Item topItem = poolCacheArr.get(i);
+				if (topItem.getItemArr().size() > 0) {
+					for (int j = 0; j < topItem.getItemArr().size(); j++) {
+						Item secItem = topItem.getItemArr().get(j);
+						if (secItem.getItemArr().size() > 0) {
+							for (int k = 0; k < secItem.getItemArr().size(); k++) {
+								Item resultItem = secItem.getItemArr().get(k);
+								List<Item> tempItemArr = resultItem.getItemArr();
+								for (int l = 0; l < tempItemArr.size(); l++) {
+									Item forItem = tempItemArr.get(l);
+									if (!itemidResultList.contains(forItem.getId())) {
+										tempItemArr.remove(l);
+									}
 								}
-							}
-							if (tempItemArr.size() > 0) {
-								resultItem.setItemArr(tempItemArr);
-								resultItemList.add(resultItem);
+								if (tempItemArr.size() > 0) {
+									resultItem.setItemArr(tempItemArr);
+									resultItemList.add(resultItem);
+								}
 							}
 						}
 					}
@@ -388,11 +478,16 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 		
 		if (resultItemList.size() > 0) {
-			resultArr.clear();
+			if (resultArr != null && resultArr.size() > 0) {
+				resultArr.clear();
+			}
 			resultArr = new ArrayList<Item>(resultItemList);
 			adapter = new ExpandableListViewaAdapter(SearchActivity.this);
 			searchExpandableListView.setAdapter(adapter);
 			searchExpandableListView.setVisibility(View.VISIBLE);
+		}
+		else {
+			noResultTip();
 		}
 	}
 	
@@ -495,7 +590,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
              textView.setTextSize(17);
              textView.setTextColor(Color.BLACK);
              textView.setText(item.getCaption());
-	         if (item.getParentid() == null) {
+	         if (item.getItemArr() != null) {
 	        	 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.toplist_parenticon), null, null, null);
 	        	 textView.setPadding(30, 0, 0, 0);
 			 }

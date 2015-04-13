@@ -84,7 +84,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/relativeLayout_search_field"
         android:layout_marginBottom="88dp"
-        android:layout_marginTop="10dp" >
+        android:layout_marginTop="10dp"
+        android:background="@color/white" >
 
     </ExpandableListView>
     
