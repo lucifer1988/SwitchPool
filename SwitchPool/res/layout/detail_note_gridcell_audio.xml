@@ -35,5 +35,17 @@
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="12sp" />
+     
+     <ImageButton
+        android:id="@+id/imageButton_detail_note_gridcell_audio"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignLeft="@id/imageView_detail_note_gridcell_audio"
+        android:layout_alignTop="@id/imageView_detail_note_gridcell_audio"
+        android:background="@color/translucent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        android:src="@drawable/detail_audio_pause_hig"
+        android:visibility="invisible" />
 
 </RelativeLayout>

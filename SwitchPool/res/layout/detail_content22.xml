@@ -3,13 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ImageView
-        android:id="@+id/imageView_detail_content22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="@string/app_name"
-        android:scaleType="centerInside" />
+    <ListView
+        android:id="@+id/listView_detail_content22"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+    </ListView>
 
 </RelativeLayout>

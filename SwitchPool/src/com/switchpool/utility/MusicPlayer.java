@@ -39,8 +39,18 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
      * 当Audio播放完的时候触发该动作 
      */  
     @Override  
-    public void onCompletion(MediaPlayer player) {   
-        next();  
+    public void onCompletion(MediaPlayer player) { 
+    	if (isItemAudio) {
+    		next(); 
+		} 
+    	else {
+    		isItemAudio = true;
+    		Intent intent = new Intent("com.xiaoshuye.audioNoteFinished.broadcast");
+    		//要发送的内容
+    		intent.putExtra("isAudioNoteFinished", true);
+    		//发送 一个无序广播
+    		sendBroadcast(intent);
+		}
     }  
       
     //在这里我们需要实例化MediaPlayer对象  
@@ -114,6 +124,35 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 		        } 
 			}
 		}
+	}
+	
+	public void stop() {
+		player.stop();
+		curIndex = 0;
+		if (isItemAudio) {
+    		isItemAudio = true;
+    		Intent intent = new Intent("com.xiaoshuye.audioNoteFinished.broadcast");
+    		//要发送的内容
+    		intent.putExtra("isAudioNoteFinished", true);
+    		//发送 一个无序广播
+    		sendBroadcast(intent);
+		}
+	}
+	
+	public void playAudioNote(String audioNotePath) {
+		player.stop();
+		isItemAudio = false;
+        try {  
+            //重播   
+            player.reset();  
+            player.setDataSource(audioNotePath);  
+            //缓冲   
+            player.prepare();
+            //开始播放   
+            player.start(); 
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
 	}
 	
 	public void playFile(SPFile file) {

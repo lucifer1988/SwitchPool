@@ -142,7 +142,8 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 				seekBar.setMax(ctx.musicPlayer.player.getDuration());
                 seekBar.setProgress(ctx.musicPlayer.player.getCurrentPosition());  
                 curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
-				
+                playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
+                
 				final int milliseconds = 100;
 			      new Thread(){
 			        @Override

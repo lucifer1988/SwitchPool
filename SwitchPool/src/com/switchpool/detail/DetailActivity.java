@@ -30,9 +30,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -124,6 +126,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
             //这里我们实例化audioService,通过binder来实现  
         	musicPlayer = ((MusicPlayer.AudioBinder)binder).getService();  
         	staticMusicPlayer = ((MusicPlayer.AudioBinder)binder).getService();
+        	if (deatilType == DeatilType.DeatilTypeAudio) {
+        		audioFragment.reload(null);
+			}
         }  
     }; 
 	    
@@ -259,10 +264,23 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 		});
 		
-		Intent playIntentntent = new Intent();  
-		playIntentntent.setClass(this, MusicPlayer.class); 
-	    startService(playIntentntent);  
-        bindService(playIntentntent, conn, Context.BIND_AUTO_CREATE); 
+		if (staticMusicPlayer == null) {
+			Intent playIntentntent = new Intent();  
+			playIntentntent.setClass(this, MusicPlayer.class); 
+		    startService(playIntentntent);  
+	        bindService(playIntentntent, conn, Context.BIND_AUTO_CREATE); 
+		}
+		else {
+			Intent playIntentntent = new Intent();  
+			playIntentntent.setClass(this, MusicPlayer.class); 
+	        bindService(playIntentntent, conn, Context.BIND_AUTO_CREATE);
+		}
+        
+		//动态注册广播接收器  
+        msgReceiver = new MsgReceiver();  
+        IntentFilter intentFilter = new IntentFilter();  
+        intentFilter.addAction("com.xiaoshuye.audioNoteFinished.broadcast");  
+        registerReceiver(msgReceiver, intentFilter); 
         
 		if (deatilType == DeatilType.DeatilTypeOrigin) {
 			if (musicPlayer != null && musicPlayer.player.isPlaying()) {
@@ -294,7 +312,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.hide(summaryFragment);
 			transaction.commit();
 			curTabIndex = 3;
-			audioFragment.reload(null);
 		}
 	}
 	
@@ -643,7 +660,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				else {
 					filePath = Utility.shareInstance().cachResPoolDir(poolId, subjectId, modelType)+file.getFid();
 				}
-				Utility.shareInstance().saveObject(filePath, binaryData);
+				if (file.getFid().endsWith("png")) {
+					Utility.shareInstance().savePicFile(filePath, binaryData);
+				}
+				else {
+					Utility.shareInstance().saveObject(filePath, binaryData);
+				}
 				SPFile tempFile = file;
 				tempFile.setPath(filePath);
 				callBack.downloadFinished(tempFile); 
@@ -762,9 +784,36 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 		}
 	} 
-	    
+	
+	public void deletePhotoItem(int index) {
+		noteFragment.notePhotoFragment.deleteItem(index);
+	}
+	
+	public void deleteAudioItem(int index) {
+		noteFragment.noteAudioFragment.deleteItem(index);
+	}
+	  
+    public class MsgReceiver extends BroadcastReceiver{  
+  
+        @Override  
+        public void onReceive(Context context, Intent intent) {   
+            if (intent.getBooleanExtra("isAudioNoteFinished", false)) {
+            	noteFragment.noteAudioFragment.receiveNoteFinishPlayCast();
+			}
+        }  
+          
+    }  
+    
+	private MsgReceiver msgReceiver; 
+	
+	@Override  
+    protected void onDestroy() {   
+        //注销广播  
+        unregisterReceiver(msgReceiver);  
+        super.onDestroy();  
+    }  
+	
     protected void onResume() {  
         super.onResume();  
-//        resume();  
     } 
 }

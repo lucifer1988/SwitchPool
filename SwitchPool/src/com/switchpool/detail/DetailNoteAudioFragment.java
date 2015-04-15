@@ -1,9 +1,5 @@
 package com.switchpool.detail;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,15 +17,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class DetailNoteAudioFragment extends Fragment {
 
 	private DetailActivity ctx;
+	private DetailNoteAudioGridAdapter audioGridAdapter;
 	private String noteAudioCachePath;
 	private List<Note> noteAudioArr;
 	private GridView noteGridView;
 	private static int section = 1;
+	private int curPlayIndex;
 	private Map<String, Integer> sectionMap = new HashMap<String, Integer>();
 	
 	public DetailNoteAudioFragment() {
@@ -49,6 +49,27 @@ public class DetailNoteAudioFragment extends Fragment {
 //        else {
 //			textNoteCacheMap = new HashMap<String, Note>();
 //		}
+		// 添加列表项被单击的监听器
+        noteGridView.setOnItemClickListener(new OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id)
+			{
+				Log.v("sp", ""+position);
+				Note note = noteAudioArr.get(position);
+				note.setIsPlaying(!note.getIsPlaying());
+				audioGridAdapter.notifyDataSetChanged();
+				if (note.getIsPlaying()) {
+					ctx.musicPlayer.playAudioNote(note.getPath());
+					curPlayIndex = position;
+				}
+				else {
+					ctx.musicPlayer.stop();
+				}
+				
+			}
+		});
         
         return view;
     }
@@ -66,6 +87,8 @@ public class DetailNoteAudioFragment extends Fragment {
 			
 			for(ListIterator<Note> it = noteAudioArr.listIterator(); it.hasNext();){
 				Note note = it.next();
+				note.setCanBeDeleted(false);
+				note.setIsPlaying(false);
 				String ym = Utility.shareInstance().paserTimeToYM(note.getTime());
 				if(!sectionMap.containsKey(ym)){
 					note.setSection(section);
@@ -76,7 +99,8 @@ public class DetailNoteAudioFragment extends Fragment {
 				}
 			}
 		}
-		noteGridView.setAdapter(new DetailNoteAudioGridAdapter(getActivity(), noteAudioArr, noteGridView));
+		audioGridAdapter = new DetailNoteAudioGridAdapter(getActivity(), noteAudioArr, noteGridView);
+		noteGridView.setAdapter(audioGridAdapter);
 	}
 	
 	public void addNewAudio(String path, int length) {
@@ -102,22 +126,39 @@ public class DetailNoteAudioFragment extends Fragment {
 		noteAudioArr.add(note);
 		Utility.shareInstance().saveObject(noteAudioCachePath, noteAudioArr);
 		
-		noteGridView.setAdapter(new DetailNoteAudioGridAdapter(getActivity(), noteAudioArr, noteGridView));
+//		noteGridView.setAdapter(new DetailNoteAudioGridAdapter(getActivity(), noteAudioArr, noteGridView));
+		audioGridAdapter.notifyDataSetChanged();
+	}
+	
+	public void deleteItem(int index) {
+		noteAudioArr.remove(index);
+		Utility.shareInstance().saveObject(noteAudioCachePath, noteAudioArr);
+		audioGridAdapter.notifyDataSetChanged();
+//		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), noteAudioArr, noteGridView));
+	}
+	
+	public void receiveNoteFinishPlayCast() {
+		Note note = noteAudioArr.get(curPlayIndex);
+		note.setIsPlaying(false);
+		audioGridAdapter.notifyDataSetChanged();
+//		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), noteAudioArr, noteGridView));
 	}
 	
 	public void edit() {
-		// TODO Auto-generated method stub
-		
+		for (int i = 0; i < noteAudioArr.size(); i++) {
+			Note note = noteAudioArr.get(i);
+			note.setCanBeDeleted(true);
+		}
+		audioGridAdapter.notifyDataSetChanged();
+//		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), noteAudioArr, noteGridView));
 	}
 
 	public void complete() {
-		// TODO Auto-generated method stub
-		
+		for (int i = 0; i < noteAudioArr.size(); i++) {
+			Note note = noteAudioArr.get(i);
+			note.setCanBeDeleted(false);
+		}
+		audioGridAdapter.notifyDataSetChanged();
+//		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), noteAudioArr, noteGridView));
 	}
-
-	public void startRecord() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

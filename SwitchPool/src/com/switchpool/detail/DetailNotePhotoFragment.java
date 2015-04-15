@@ -66,6 +66,7 @@ public class DetailNotePhotoFragment extends Fragment {
 			
 			for(ListIterator<Note> it = notePhotoArr.listIterator(); it.hasNext();){
 				Note note = it.next();
+				note.setCanBeDeleted(false);
 				String ym = Utility.shareInstance().paserTimeToYM(note.getTime());
 				if(!sectionMap.containsKey(ym)){
 					note.setSection(section);
@@ -115,17 +116,29 @@ public class DetailNotePhotoFragment extends Fragment {
 		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 	}
 	
+	public void deleteItem(int index) {
+		notePhotoArr.remove(index);
+		Utility.shareInstance().saveObject(notePhotoCachePath, notePhotoArr);
+		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
+	}
+	
 	public void takePhoto() {
 		ctx.takePhoto();
 	}
 
 	public void edit() {
-		// TODO Auto-generated method stub
-		
+		for (int i = 0; i < notePhotoArr.size(); i++) {
+			Note note = notePhotoArr.get(i);
+			note.setCanBeDeleted(true);
+		}
+		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 	}
 
 	public void complete() {
-		// TODO Auto-generated method stub
-		
+		for (int i = 0; i < notePhotoArr.size(); i++) {
+			Note note = notePhotoArr.get(i);
+			note.setCanBeDeleted(false);
+		}
+		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 	}
 }

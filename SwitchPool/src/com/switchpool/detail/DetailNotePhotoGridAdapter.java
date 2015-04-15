@@ -5,9 +5,11 @@ import java.util.List;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,9 +25,24 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 	private List<Note> list;
 	private LayoutInflater mInflater;
 	private GridView mGridView;
+	private DetailActivity ctx;
+	
+	class deleteClick implements OnClickListener {
+
+        private int index;
+        public deleteClick(int index) {
+        	this.index=index;
+        }
+        
+        @Override
+        public void onClick(View v) {
+        	ctx.deletePhotoItem(index);
+        }
+    }
 	
 	public DetailNotePhotoGridAdapter(Context context, List<Note> list,
 			GridView mGridView) {
+		ctx = (DetailActivity)context;
 		this.list = list;
 		mInflater = LayoutInflater.from(context);
 		this.mGridView = mGridView;
@@ -55,6 +72,7 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 			mViewHolder.mImageView = (ImageView) convertView
 					.findViewById(R.id.imageView_detail_note_gridcell);
 			mViewHolder.mTextView1 = (TextView) convertView.findViewById(R.id.textView1_detail_note_gridcell);
+			mViewHolder.mImageButton = (ImageButton) convertView.findViewById(R.id.imageButton_detail_note_gridcell);
 			convertView.setTag(mViewHolder);
 		} else {
 			mViewHolder = (ViewHolder) convertView.getTag();
@@ -62,9 +80,11 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 		Note note = list.get(position);
 		String path = list.get(position).getPath();
 		mViewHolder.mImageView.setTag(path);
+		mViewHolder.mImageButton.setOnClickListener(new deleteClick(position));
 		 
 		mViewHolder.mImageView.setImageResource(R.drawable.nocontent_tip);
 		mViewHolder.mTextView1.setText(Utility.shareInstance().paserTimeToHM(note.getTime()));
+		mViewHolder.mImageButton.setVisibility(note.getCanBeDeleted() ? View.VISIBLE : View.INVISIBLE);
 		
 		return convertView;
 	}
@@ -92,6 +112,7 @@ public class DetailNotePhotoGridAdapter extends BaseAdapter implements
 	public static class ViewHolder {
 		public ImageView mImageView;
 		public TextView mTextView1;
+		public ImageButton mImageButton;
 	}
 
 	public static class HeaderViewHolder {

@@ -1,5 +1,6 @@
 package com.switchpool.utility;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -102,12 +103,7 @@ public class Utility extends Activity {
     public boolean isFileExist(String path) {
     	File file = new File(path);
     	if (!file.exists()) {
-    		if (file.mkdir()) {
-    			return true;
-    		}
-    		else {
-    			return false;
-    		}
+			return false;
     	}
     	else {
     		return true;
@@ -158,6 +154,21 @@ public class Utility extends Activity {
             }  
         }  
     } 
+	
+	public void savePicFile(String name, byte[] data) {
+		Bitmap mBitmap = BitmapFactory.decodeByteArray(data, 0, data.length); 
+        File bitmapFile = new File(name);  
+        FileOutputStream bitmapWtriter = null;
+		if (!bitmapFile.getParentFile().exists()) {
+			bitmapFile.getParentFile().mkdirs();
+		}
+        try {
+        	bitmapWtriter = new FileOutputStream(bitmapFile);
+        } catch (FileNotFoundException e) {
+        	e.printStackTrace();
+        }
+        mBitmap.compress(Bitmap.CompressFormat.PNG, 90, bitmapWtriter);  
+	}
 	
 	public Object getObject(String name){  
 	        FileInputStream fis = null;  
