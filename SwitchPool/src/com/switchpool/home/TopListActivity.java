@@ -161,7 +161,7 @@ public class TopListActivity extends FragmentActivity {
     		FragmentTransaction transaction = fManager.beginTransaction();
     		transaction.add(R.id.relativeLayout_toplist_nocontent, ncFragment).commit();
         }
-        fManager.beginTransaction().show(ncFragment);
+        fManager.beginTransaction().show(ncFragment).commit();
 	}
 	
 	@Override

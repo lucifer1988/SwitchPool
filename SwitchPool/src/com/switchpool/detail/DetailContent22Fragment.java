@@ -2,6 +2,7 @@ package com.switchpool.detail;
 
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.content.Context;
@@ -28,8 +29,6 @@ public class DetailContent22Fragment extends Fragment {
 	private ListView listView; 
 	private Content22ListAdapter adapter;
 	public Model model;
-	private SPFile file;
-	private String url;
 	String[] filePaths;
 	
 	public DetailContent22Fragment() {
@@ -40,10 +39,6 @@ public class DetailContent22Fragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_content22, container,false);
         listView = (ListView) view.findViewById(R.id.listView_detail_content22); 
-//        if (url != null) {
-//            Bitmap bitmap = Utility.shareInstance().getLoacalBitmap(url);
-////            imageView .setImageBitmap(bitmap); 
-//		}
         listView.setOnItemClickListener(new OnItemClickListener() {
         	@Override  
     	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -51,10 +46,13 @@ public class DetailContent22Fragment extends Fragment {
     	    } 
 		});
         
+        Utility.shareInstance().showWaitingHUD(getActivity());
+        
         return view;
     }
 	
 	public void reload(Model resModel) {
+		Utility.shareInstance().hideWaitingHUD();
 		model = resModel;
 		if (model != null) {
 			// 获取到可用内存的最大值，使用内存超出这个值会引起OutOfMemory异常。  
@@ -73,17 +71,6 @@ public class DetailContent22Fragment extends Fragment {
 	        
 			adapter = new Content22ListAdapter(getActivity(), mMemoryCache);
 			listView.setAdapter(adapter);
-			
-//			for (int i = 0; i < model.getFileArr().size(); i++) {
-//				SPFile curFile = model.getFileArr().get(i);
-//				if (curFile.getSeq() == 1) {
-//					file = curFile;
-//					url = file.getPath();
-//					Log.v("sp", ""+url);
-//		            Bitmap bitmap = Utility.shareInstance().getLoacalBitmap(url);
-//		            imageView .setImageBitmap(bitmap); 
-//				}
-//			}
 		}
 	}
 	
@@ -119,18 +106,15 @@ public class DetailContent22Fragment extends Fragment {
 		}
 		
 		@Override
-		public int getCount() {   
-	        // TODO Auto-generated method stub   
+		public int getCount() {      
 	        return model.getFileArr().size();   
 	    }   
 	  
-	    public Object getItem(int arg0) {   
-	        // TODO Auto-generated method stub   
+	    public Object getItem(int arg0) {      
 	        return null;   
 	    }   
 	  
-	    public long getItemId(int arg0) {   
-	        // TODO Auto-generated method stub   
+	    public long getItemId(int arg0) {  
 	        return 0;   
 	    } 
 	    

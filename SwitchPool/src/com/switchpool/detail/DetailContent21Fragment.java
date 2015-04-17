@@ -2,6 +2,7 @@ package com.switchpool.detail;
 
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.os.Bundle;
@@ -36,10 +37,13 @@ public class DetailContent21Fragment extends Fragment {
 			webView.loadUrl(url);
 		}
         
+        Utility.shareInstance().showWaitingHUD(getActivity());
+        
         return view;
     }
 	
 	public void reload(Model resModel) {
+		Utility.shareInstance().hideWaitingHUD();
 		model = resModel;
 		if (model != null) {
 			for (int i = 0; i < model.getFileArr().size(); i++) {

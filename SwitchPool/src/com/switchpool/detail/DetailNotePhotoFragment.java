@@ -8,20 +8,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import com.switchpool.model.Note;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class DetailNotePhotoFragment extends Fragment {
 
@@ -31,6 +33,7 @@ public class DetailNotePhotoFragment extends Fragment {
 	private GridView noteGridView;
 	private static int section = 1;
 	private Map<String, Integer> sectionMap = new HashMap<String, Integer>();
+	List<String> filePaths;
 			
 	public DetailNotePhotoFragment() {
 	}
@@ -42,16 +45,33 @@ public class DetailNotePhotoFragment extends Fragment {
         noteGridView = (GridView)view.findViewById(R.id.gridView_detail_note_photo);
         
         ctx = (DetailActivity) getActivity();
-//        textNoteCachePath = Utility.shareInstance().cacheUserTextNote(ctx.getPoolId());
-//        if (Utility.shareInstance().isFileExist(textNoteCachePath)) {
-//        	textNoteCacheMap = (HashMap<String, Note>) Utility.shareInstance().getObject(textNoteCachePath);
-//		}
-//        else {
-//			textNoteCacheMap = new HashMap<String, Note>();
-//		}
+		// 添加列表项被单击的监听器
+        noteGridView.setOnItemClickListener(new OnItemClickListener()
+		{
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id)
+			{
+				Log.v("sp", ""+position);
+				imageBrower(position);
+			}
+		});
         
         return view;
     }
+	
+	private void imageBrower(int position) {
+		if (filePaths != null && filePaths.size() > 0) {
+			String[] urls = new String[filePaths.size()];
+			for (int i = 0; i < filePaths.size(); i++) {
+				urls[i] = filePaths.get(i);
+			}
+			Intent intent = new Intent(getActivity(), ImagePagerActivity.class);
+			intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urls);
+			intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+			getActivity().startActivity(intent);
+		}
+	}
 	
 	public void reload() {
 		notePhotoCachePath = Utility.shareInstance().cacheUserPhotoNote(ctx.getPoolId()) + ctx.getItem().getId();
@@ -63,11 +83,14 @@ public class DetailNotePhotoFragment extends Fragment {
 
 		if (notePhotoArr.size() > 0) {
 			Collections.sort(notePhotoArr, new DetailNoteComparator());
-			
-			for(ListIterator<Note> it = notePhotoArr.listIterator(); it.hasNext();){
-				Note note = it.next();
+	        filePaths = new ArrayList<String>();
+	        for (int i = 0; i < notePhotoArr.size(); i++) {
+	        	Note note = notePhotoArr.get(i);
 				note.setCanBeDeleted(false);
 				String ym = Utility.shareInstance().paserTimeToYM(note.getTime());
+				
+				filePaths.add(note.getPath());
+				
 				if(!sectionMap.containsKey(ym)){
 					note.setSection(section);
 					sectionMap.put(ym, section);
@@ -111,6 +134,7 @@ public class DetailNotePhotoFragment extends Fragment {
 			note.setSection(sectionMap.get(ym));
 		}
 		notePhotoArr.add(note);
+		filePaths.add(note.getPath());
 		Utility.shareInstance().saveObject(notePhotoCachePath, notePhotoArr);
 		
 		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
@@ -118,6 +142,7 @@ public class DetailNotePhotoFragment extends Fragment {
 	
 	public void deleteItem(int index) {
 		notePhotoArr.remove(index);
+		filePaths.remove(index);
 		Utility.shareInstance().saveObject(notePhotoCachePath, notePhotoArr);
 		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), notePhotoArr, noteGridView));
 	}

@@ -2,6 +2,7 @@ package com.switchpool.detail;
 
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.os.Bundle;
@@ -41,11 +42,14 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
         homeButton.setOnClickListener(this); 
         forwardButton.setOnClickListener(this); 
         
+        Utility.shareInstance().showWaitingHUD(getActivity());
+        
         return view;
     }
 	
 	public void reload(Model resModel) {
 		model = resModel;
+		Utility.shareInstance().hideWaitingHUD();
 		if (model != null) {
 			for (int i = 0; i < model.getFileArr().size(); i++) {
 				SPFile curFile = model.getFileArr().get(i);
