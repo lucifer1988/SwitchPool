@@ -1,2 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/com/switchpool/detail/DetailActivity.java=UTF-8
+encoding//src/com/switchpool/detail/HackyViewPager.java=UTF-8
+encoding//src/com/switchpool/detail/ImageDetailFragment.java=UTF-8
+encoding//src/com/switchpool/detail/ImagePagerActivity.java=UTF-8

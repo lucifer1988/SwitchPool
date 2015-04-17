@@ -5,6 +5,7 @@ import com.switchpool.model.SPFile;
 import com.xiaoshuye.switchpool.R;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +30,7 @@ public class DetailContent22Fragment extends Fragment {
 	public Model model;
 	private SPFile file;
 	private String url;
+	String[] filePaths;
 	
 	public DetailContent22Fragment() {
 	}
@@ -36,11 +40,16 @@ public class DetailContent22Fragment extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_content22, container,false);
         listView = (ListView) view.findViewById(R.id.listView_detail_content22); 
-        
 //        if (url != null) {
 //            Bitmap bitmap = Utility.shareInstance().getLoacalBitmap(url);
 ////            imageView .setImageBitmap(bitmap); 
 //		}
+        listView.setOnItemClickListener(new OnItemClickListener() {
+        	@Override  
+    	    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        		imageBrower(position, filePaths);
+    	    } 
+		});
         
         return view;
     }
@@ -56,6 +65,11 @@ public class DetailContent22Fragment extends Fragment {
 	        Log.v("sp", "cacheSize: " + cacheSize); 
 	        LruMemoryCache mMemoryCache = new LruMemoryCache(cacheSize); 
 	        Log.v("sp", "memoryCache: " + mMemoryCache.size() / 1024); 
+	        filePaths = new String[model.getFileArr().size()];
+	        for (int i = 0; i < model.getFileArr().size(); i++) {
+	        	SPFile file = model.getFileArr().get(i);
+	        	filePaths[i] = file.getPath();
+			}
 	        
 			adapter = new Content22ListAdapter(getActivity(), mMemoryCache);
 			listView.setAdapter(adapter);
@@ -79,6 +93,13 @@ public class DetailContent22Fragment extends Fragment {
 
 	public void setModel(Model model) {
 		this.model = model;
+	}
+	
+	private void imageBrower(int position, String[] urls) {
+		Intent intent = new Intent(getActivity(), ImagePagerActivity.class);
+		intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, urls);
+		intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+		getActivity().startActivity(intent);
 	}
 	
 	class Content22ListAdapter extends BaseAdapter {

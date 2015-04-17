@@ -84,4 +84,6 @@
     <string name="SPItemSelectHistoryTop">SPItemSelectHistoryTop</string>
     <string name="SPItemSelectHistorySec">SPItemSelectHistorySec</string>
     
+    <string name="viewpager_indicator">%1$d/%2$d</string>
+    
 </resources>
