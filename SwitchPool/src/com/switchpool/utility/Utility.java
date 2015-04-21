@@ -1,6 +1,5 @@
 package com.switchpool.utility;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -339,6 +338,39 @@ public class Utility extends Activity {
 			}
 		}
 		return resultItem;
+	}
+	
+	public Item findSecItem(String subjectid, String poolid, String itemid, Context ctx) {
+		Log.v("sp", "subjectid"+subjectid);
+		Log.v("sp", "poolid"+poolid);
+		Log.v("sp", "itemid"+itemid);
+		String cachePathString = cachPoolDir(poolid, subjectid)+ ctx.getString(R.string.SPItemList);
+		List<Item> cacheArr = (List<Item>)getObject(cachePathString);
+		Item curSecItem = null;
+		Log.v("sp", "cacheArr:"+ cacheArr);
+		if (cacheArr != null && cacheArr.size() > 0) {
+		  loop:for (int i = 0; i < cacheArr.size(); i++) {
+				Item topItem = cacheArr.get(i);
+					for (int j = 0; j < topItem.getItemArr().size(); j++) {
+						Item secItem = topItem.getItemArr().get(j);
+							for (int k = 0; k < secItem.getItemArr().size(); k++) {
+								Item thrItem = secItem.getItemArr().get(k);
+									for (int l = 0; l < thrItem.getItemArr().size(); l++) {
+										Log.v("sp", "thrItem.getItemArr():"+thrItem.getItemArr());
+										Item forItem = thrItem.getItemArr().get(l);
+										if (forItem.getId().equals(itemid)) {
+											curSecItem = secItem;
+											break loop;
+										}
+										else {
+											continue;
+										}
+									}
+							}
+					}
+			}
+		}
+		return curSecItem;
 	}
 	
 	//bulid Directory

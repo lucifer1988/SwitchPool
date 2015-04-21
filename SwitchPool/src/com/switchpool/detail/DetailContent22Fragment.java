@@ -46,8 +46,6 @@ public class DetailContent22Fragment extends Fragment {
     	    } 
 		});
         
-        Utility.shareInstance().showWaitingHUD(getActivity());
-        
         return view;
     }
 	

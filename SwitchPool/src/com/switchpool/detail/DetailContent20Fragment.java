@@ -37,8 +37,6 @@ public class DetailContent20Fragment extends Fragment {
 			webView.loadUrl(url);
 		}
         
-        Utility.shareInstance().showWaitingHUD(getActivity());
-        
         return view;
     }
 	

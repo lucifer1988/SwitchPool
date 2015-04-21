@@ -18,6 +18,8 @@ import android.widget.Button;
 
 public class DetailSummaryFragment extends Fragment implements OnClickListener {
 
+	private DetailActivity ctx;
+	
 	private WebView webView;
 	public Model model;
 	private SPFile file;
@@ -29,6 +31,8 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+		ctx = (DetailActivity)getActivity();
+		
         View view = inflater.inflate(R.layout.detail_summary, container,false);
         webView = (WebView) view.findViewById(R.id.webView_detail_summary);
         webView.setWebViewClient(new WebViewClient());
@@ -58,9 +62,12 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
 					url = "file://"+file.getPath();
 					Log.v("sp", ""+url);
 					webView.loadUrl(url);
+					ctx.hideNoContent();
+					return ;
 				}
 			}
 		}
+		ctx.showNoContent();
 	}
 	
     @Override

@@ -14,12 +14,16 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.switchpool.detail.DetailContentFragment.DetailContentHandler;
 import com.switchpool.home.MainActivity;
+import com.switchpool.home.SecListActivity;
+import com.switchpool.home.TopListActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
 import com.switchpool.model.User;
+import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.ImageTools;
 import com.switchpool.utility.MusicPlayer;
+import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
 import com.switchpool.utility.Utility;
@@ -30,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.R.bool;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -68,6 +73,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	public String poolId;
 	public String subjectId;
 	public Item item;
+	private String poolName;
 	
 	private Button summaryButton;
 	private Button contentButton;
@@ -112,9 +118,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	FragmentManager fManager;
 	AsyncHttpClient client;
+	NoContnetFragment ncFragment;
 	
 	public MusicPlayer musicPlayer; 
 	public static MusicPlayer staticMusicPlayer;
+	private Boolean isItemChanged = false; 
      
     //使用ServiceConnection来监听Service状态的变化  
     private ServiceConnection conn = new ServiceConnection() {  
@@ -168,6 +176,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		poolId = intent.getStringExtra("poolId");
 		subjectId = intent.getStringExtra("subjectId");
 		deatilType = (DeatilType)intent.getSerializableExtra("type");
+		poolName = intent.getStringExtra("poolName");
 		
 		String splitArr[] = item.getCaption().split(" ");
 		TextView textView = (TextView)findViewById(R.id.textView_detail_nav);
@@ -191,6 +200,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		audioFragment = (DetailAudioFragment)fManager.findFragmentById(R.id.detail_fragment_audio);
 		ImageButton actionButton = (ImageButton)findViewById(R.id.button_detail_note_action);  
 		actionButton.setOnTouchListener((OnTouchListener)noteFragment);
+		
+		ncFragment = (NoContnetFragment)fManager.findFragmentById(R.id.detail_nocontent);
+		ncFragment.initialize(getString(R.string.nocontenttip_detail_content));
+		fManager.beginTransaction().hide(ncFragment).commit();
 		
 		//initial Model Version
 		verPath = Utility.shareInstance().cachPoolDir(poolId, subjectId)+poolId;
@@ -249,7 +262,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			@Override
 			public void tapButton6() {
-				
+				if (curTabIndex < topTabBtnArr.size()) {
+					int index = curTabIndex+1;
+					Button button = topTabBtnArr.get(index);
+					tabTopBar(button);
+				}
 			}
 			
 			@Override
@@ -259,12 +276,25 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			@Override
 			public void tapButton4() {
-				
+            	Intent intent=new Intent();
+            	intent.setClass(DetailActivity.this, SecListActivity.class);
+            	Bundle bundle = new Bundle();
+            	bundle.putSerializable("item", Utility.shareInstance().findSecItem(subjectId, poolId, item.getId(), DetailActivity.this));
+            	intent.putExtras(bundle);
+            	intent.putExtra("poolId", poolId);
+            	intent.putExtra("subjectId", subjectId);
+            	intent.putExtra("poolName", poolName);
+            	startActivity(intent); 
+            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-				
+				Intent onItemClickIntent = new Intent();
+				onItemClickIntent.putExtra("subjectId", subjectId);
+				onItemClickIntent.setClass(DetailActivity.this, SearchActivity.class);
+				startActivity(onItemClickIntent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
@@ -279,8 +309,23 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			@Override
 			public void tapButton1() {
-				finish();
-				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				if (curTabIndex > 0) {
+					int index = curTabIndex-1;
+					Button button = topTabBtnArr.get(index);
+					tabTopBar(button);
+				}
+				else {
+	            	Intent intent=new Intent();
+	            	intent.setClass(DetailActivity.this, SecListActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", Utility.shareInstance().findSecItem(subjectId, poolId, item.getId(), DetailActivity.this));
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", poolId);
+	            	intent.putExtra("subjectId", subjectId);
+	            	intent.putExtra("poolName", poolName);
+	            	startActivity(intent); 
+	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 		});
 		
@@ -301,6 +346,16 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
         IntentFilter intentFilter = new IntentFilter();  
         intentFilter.addAction("com.xiaoshuye.audioNoteFinished.broadcast");  
         registerReceiver(msgReceiver, intentFilter); 
+        
+        audioFinishedMsgReceiver = new AudioFinishedMsgReceiver();
+        IntentFilter audioFinishedIntentFilter = new IntentFilter();  
+        audioFinishedIntentFilter.addAction("com.xiaoshuye.audioFileFinished.broadcast");  
+        registerReceiver(audioFinishedMsgReceiver, audioFinishedIntentFilter); 
+        
+        audioChangeReceiver = new AudioChangeMsgReceiver();
+        IntentFilter audioChangeIntentFilter = new IntentFilter();  
+        audioChangeIntentFilter.addAction("com.xiaoshuye.audioFileChanged.broadcast");  
+        registerReceiver(audioChangeReceiver, audioChangeIntentFilter); 
         
 		if (deatilType == DeatilType.DeatilTypeOrigin) {
 			if (musicPlayer != null && musicPlayer.player.isPlaying()) {
@@ -335,6 +390,24 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		}
 	}
 	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
+	
+	public void showNoContent() {
+        if (ncFragment != null) {  
+        	fManager.beginTransaction().show(ncFragment).commit();
+        }
+	}
+	
+	public void hideNoContent() {
+        if (ncFragment != null) {  
+        	fManager.beginTransaction().hide(ncFragment).commit();
+        }
+	}
+	
 	public void tabTopBar(View sourceButton) {
 		int index = topTabBtnArr.indexOf(sourceButton);
 		if (index == curTabIndex) {
@@ -356,8 +429,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.hide(audioFragment);
 			transaction.commit();
 			
-			if (summaryFragment.getModel() == null) {
+			if (summaryFragment.getModel() == null || isItemChanged) {
 				requestModel("10", index);
+				isItemChanged = false;
 			}
 		}
 			break;
@@ -374,8 +448,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.hide(audioFragment);
 			transaction.commit();
 			
-			if (contentFragment.content20Fragment.getModel() == null) {
+			if (contentFragment.content20Fragment.getModel() == null || isItemChanged) {
 				requestModel("20", index);
+				isItemChanged = false;
 			}
 		}
 			break;
@@ -392,8 +467,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.hide(audioFragment);
 			transaction.commit();
 			
-			if (noteFragment.noteTextFragment.getNote() == null) {
+			hideNoContent();
+			
+			if (noteFragment.noteTextFragment.getNote() == null || isItemChanged) {
 				requestModel("30", index);
+				isItemChanged = false;
 			}
 		}
 			break;
@@ -410,8 +488,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.hide(noteFragment);
 			transaction.commit();
 			
-			if (audioFragment.model == null) {
+			hideNoContent();
+			
+			if (audioFragment.model == null || isItemChanged) {
 				requestModel("40", index);
+				isItemChanged = false;
 			}
 		}
 			break;
@@ -525,37 +606,27 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		                				handelModelFiles(index, curModel, modelType);
 		                			}
 								} catch (JSONException e) {
-									if (cacheModel != null) {
-										handelModelFiles(index, cacheModel, modelType);
-									}
+									handelModelFiles(index, cacheModel, modelType);
 									Log.e("sp", "" + Log.getStackTraceString(e));
 								}
 							}
 		                	else {
-								if (cacheModel != null) {
-									handelModelFiles(index, cacheModel, modelType);
-								}
+								handelModelFiles(index, cacheModel, modelType);
 							}
 		                }  
 		                
 		                public void onFailure(int statusCode, Header[] headers,String responseString, Throwable throwable) {
-							if (cacheModel != null) {
-								handelModelFiles(index, cacheModel, modelType);
-							}
+							handelModelFiles(index, cacheModel, modelType);
 		                }
 		                   
 		            });  
 				} catch (Exception e) {
-					if (cacheModel != null) {
-						handelModelFiles(index, cacheModel, modelType);
-					}
+					handelModelFiles(index, cacheModel, modelType);
 					Log.e("sp", "" + Log.getStackTraceString(e));
 				}
 			}
 			else {
-				if (cacheModel != null) {
-					handelModelFiles(index, cacheModel, modelType);
-				}
+				handelModelFiles(index, cacheModel, modelType);
 			}
 		}
 	}
@@ -611,6 +682,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 						}
 					}
 				}
+			}
+			else {
+				reloadChildFragment(index, model, type);
 			}
 		}
 	}
@@ -773,7 +847,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		        String timeString=format.format(new Date());
 		        Random md = new Random();
 		        int randomInt = 100 + md.nextInt(900);
-				String fileName = String.format("%s_%s_31_%s_%d", poolId, item.getId(), timeString, randomInt);
+				String fileName = String.format("%s_%s_31_%s_%d.png", poolId, item.getId(), timeString, randomInt);
 				String imgPath = Utility.shareInstance().cacheUserPhotoNote(poolId) + fileName;
 				ImageTools.savePhotoToSDCard(newBitmap, Utility.shareInstance().cacheUserPhotoNote(poolId), fileName);
 				
@@ -812,7 +886,8 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	public void deleteAudioItem(int index) {
 		noteFragment.noteAudioFragment.deleteItem(index);
 	}
-	  
+	
+	//BroadcastReceiver  
     public class MsgReceiver extends BroadcastReceiver{  
   
         @Override  
@@ -826,12 +901,58 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
     
 	private MsgReceiver msgReceiver; 
 	
+	
+    public class AudioFinishedMsgReceiver extends BroadcastReceiver{  
+    	  
+        @Override  
+        public void onReceive(Context context, Intent intent) {   
+            if (intent.getBooleanExtra("isAudioFileFinished", false)) {
+            	audioFragment.receiveAudioFinishPlayCast();
+			}
+        }  
+          
+    }  
+    
+	private AudioFinishedMsgReceiver audioFinishedMsgReceiver;
+	
+	
+    public class AudioChangeMsgReceiver extends BroadcastReceiver{  
+    	  
+        @Override  
+        public void onReceive(Context context, Intent intent) {   
+    		String curPoolid = intent.getStringExtra("poolid");
+    		String curSubjectid = intent.getStringExtra("subjectid");
+    		String curItemid = intent.getStringExtra("itemid");
+    		subjectId = curSubjectid;
+    		poolId = curPoolid;
+    		item = Utility.shareInstance().findItem(curSubjectid, curSubjectid, curItemid, DetailActivity.this);
+    		
+    		String splitArr[] = item.getCaption().split(" ");
+    		TextView textView = (TextView)findViewById(R.id.textView_detail_nav);
+    		textView.setText(getString(R.string.detail_nav_title, splitArr[0]));
+    		
+    		params.put("subjectid", subjectId);
+    		params.put("poolid", poolId);
+    		params.put("itemid", curItemid);
+    		
+    		isItemChanged = true;
+    		
+    		audioFragment.reload(null);
+        }  
+          
+    }  
+    
+	private AudioChangeMsgReceiver audioChangeReceiver;	
+	
 	@Override  
     protected void onDestroy() {   
         //注销广播  
-        unregisterReceiver(msgReceiver);  
+        unregisterReceiver(msgReceiver);
+        unregisterReceiver(audioFinishedMsgReceiver);
+        unregisterReceiver(audioChangeReceiver);
         super.onDestroy();  
     }  
+	//BroadcastReceiver 
 	
     protected void onResume() {  
         super.onResume();  

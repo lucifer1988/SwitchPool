@@ -325,7 +325,7 @@ public final class ImageTools {
 				dir.mkdirs();
 			}
 			
-			File photoFile = new File(path , photoName + ".png");
+			File photoFile = new File(path , photoName);
 			FileOutputStream fileOutputStream = null;
 			try {
 				fileOutputStream = new FileOutputStream(photoFile);

@@ -52,6 +52,29 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
     		sendBroadcast(intent);
 		}
     }  
+    
+    private void postAudioFinishIntent() {
+		Intent intent = new Intent("com.xiaoshuye.audioFileFinished.broadcast");
+		//要发送的内容
+		intent.putExtra("isAudioFileFinished", true);
+		//发送 一个无序广播
+		sendBroadcast(intent);
+	}
+    
+    private void postAudioChangeIntent() {
+		String fileName = getFileName(curPath);
+		String curPoolid = fileName.split("_")[0];
+		String curSubjectid = curPoolid.substring(0, 6);
+		String curItemid = fileName.split("_")[1];
+		
+		Intent intent = new Intent("com.xiaoshuye.audioFileChanged.broadcast");
+		//要发送的内容
+		intent.putExtra("subjectid", curSubjectid);
+		intent.putExtra("poolid", curPoolid);
+		intent.putExtra("itemid", curItemid);
+		//发送 一个无序广播
+		sendBroadcast(intent);
+	}
       
     //在这里我们需要实例化MediaPlayer对象  
     public void onCreate(){  
@@ -205,16 +228,19 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
     	else {
     		curIndex = curIndex - 1;
     		play(); 
+    		postAudioChangeIntent();
 		} 
     }  
       
     public void next() {
     	if (curIndex + 1 > data.size()) {
     		player.stop();
+    		postAudioFinishIntent();
 		}
     	else {
     		curIndex = curIndex + 1;
     		play();
+    		postAudioChangeIntent();
 		} 
     }
     

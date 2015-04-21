@@ -137,7 +137,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 					getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				}
 				else if (position == 6) {
-					if (DetailActivity.staticMusicPlayer.player.isPlaying()) {
+					if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
 						String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
 						String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
 						String curItemid = DetailActivity.staticMusicPlayer.curItemid();

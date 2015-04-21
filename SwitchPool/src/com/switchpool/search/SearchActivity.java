@@ -15,7 +15,7 @@ import com.loopj.android.http.RequestParams;
 import com.switchpool.detail.DetailActivity;
 import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.home.MainActivity;
-import com.switchpool.home.SecListActivity;
+import com.switchpool.home.TopListActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.SearchKey;
 import com.switchpool.model.User;
@@ -80,6 +80,13 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 	String searchVerCachePath;
 	int searchHistoryIndex;
 	
+	int[] itemNameIds = new int[]
+	{
+		R.string.home_item_grid1 , R.string.home_item_grid2 , R.string.home_item_grid3
+		, R.string.home_item_grid4 , R.string.home_item_grid5 , R.string.home_item_grid6
+		, R.string.home_item_grid7 , R.string.home_item_grid8
+	};
+	
 	public SearchActivity() {
 	}
 	public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		searchField = (EditText)findViewById(R.id.editText_search_field);
 		toolbarLayout = (LinearLayout)findViewById(R.id.linearLayout_search_toolbar);
 		searchExpandableListView = (ExpandableListView)findViewById(R.id.expandableListView_search);
+		searchExpandableListView.setGroupIndicator(null);
 		
 		findViewById(R.id.button_search_field).setOnClickListener(this);
 		findViewById(R.id.button1_search_toolbar).setOnClickListener(this);
@@ -153,26 +161,48 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			
 			@Override
 			public void tapButton6() {
-				// TODO Auto-generated method stub
-				
+				if (searchHistoryArr.size() > 0) {
+					if (searchHistoryIndex < searchHistoryArr.size()-1) {
+						searchHistoryIndex++;
+						searchField.setText(searchHistoryArr.get(searchHistoryIndex));
+					}
+				}
 			}
 			
 			@Override
 			public void tapButton5() {
-				// TODO Auto-generated method stub
-				
+				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
+					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
+					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
+					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
+					
+	            	Intent intent=new Intent();
+	            	intent.setClass(SearchActivity.this, DetailActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, SearchActivity.this));
+	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", curPoolid);
+	            	intent.putExtra("subjectId", curSubjectid);
+	            	intent.putExtra("poolName", getString(itemNameIds[curIndex]));
+	            	startActivity(intent); 
+	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 			
 			@Override
 			public void tapButton4() {
-				// TODO Auto-generated method stub
-				
+				Intent onItemClickIntent = new Intent();
+				onItemClickIntent.putExtra("poolId", curPoolid);
+				onItemClickIntent.putExtra("subjectId", subjectid);
+				onItemClickIntent.putExtra("poolName",getString(itemNameIds[curIndex]));
+				onItemClickIntent.setClass(SearchActivity.this, TopListActivity.class);
+				startActivity(onItemClickIntent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
@@ -187,7 +217,12 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			
 			@Override
 			public void tapButton1() {
-				// TODO Auto-generated method stub
+				if (searchHistoryArr.size() > 0) {
+					if (searchHistoryIndex > 0) {
+						searchHistoryIndex--;
+						searchField.setText(searchHistoryArr.get(searchHistoryIndex));
+					}
+				}
 			}
 		});
 		
@@ -217,19 +252,25 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 	}
 	
-	@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-            Intent myIntent = new Intent();
-            myIntent.setClass(SearchActivity.this, MainActivity.class);
-            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(myIntent);
-            SearchActivity.this.finish();
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//	@Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode == KeyEvent.KEYCODE_BACK){
+//            Intent myIntent = new Intent();
+//            myIntent.setClass(SearchActivity.this, MainActivity.class);
+//            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(myIntent);
+//            SearchActivity.this.finish();
+//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
+	
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.relativeLayout_search) {

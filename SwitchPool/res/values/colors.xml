@@ -152,5 +152,7 @@
 <color name="tab_highlight_color">#2DA1F5</color>
 <color name="detail_toolbutton_color">#CB2C65</color>
 <color name="lightgrey_hearder">#AAAAAA</color>
+<color name="expandableList_nor">#ffffff</color>
+<color name="expandableList_hig">#E7EBFE</color>
 
 </resources>

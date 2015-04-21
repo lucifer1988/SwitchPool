@@ -6,9 +6,11 @@ import java.util.List;
 import com.switchpool.detail.DetailActivity;
 import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.model.Item;
+import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Activity;
@@ -57,26 +59,61 @@ public class SecListActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton6() {
-				// TODO Auto-generated method stub
-				
+				Item item = Utility.shareInstance().secSelectItem(subjectId, poolId, SecListActivity.this);
+				if (item != null) {
+	            	Intent intent=new Intent();
+	            	intent.setClass(SecListActivity.this, DetailActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", item);
+	            	bundle.putSerializable("type", DeatilType.DeatilTypeOrigin);
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", poolId);
+	            	intent.putExtra("subjectId", subjectId);
+	            	intent.putExtra("poolName", poolName);
+	            	startActivity(intent); 
+	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 			
 			@Override
 			public void tapButton5() {
-				// TODO Auto-generated method stub
-				
+				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
+					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
+					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
+					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
+					
+	            	Intent intent=new Intent();
+	            	intent.setClass(SecListActivity.this, DetailActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, SecListActivity.this));
+	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", curPoolid);
+	            	intent.putExtra("subjectId", curSubjectid);
+	            	intent.putExtra("poolName", poolName);
+	            	startActivity(intent); 
+	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 			
 			@Override
 			public void tapButton4() {
-				// TODO Auto-generated method stub
-				
+				Intent onItemClickIntent = new Intent();
+				onItemClickIntent.putExtra("poolId", poolId);
+				onItemClickIntent.putExtra("subjectId", subjectId);
+				onItemClickIntent.putExtra("poolName", poolName);
+				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
+				startActivity(onItemClickIntent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-				// TODO Auto-generated method stub
-				
+				Intent onItemClickIntent = new Intent();
+				onItemClickIntent.putExtra("subjectId", subjectId);
+				onItemClickIntent.setClass(SecListActivity.this, SearchActivity.class);
+				startActivity(onItemClickIntent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
@@ -91,8 +128,15 @@ public class SecListActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton1() {
-				finish();
-				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//				finish();
+//				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				Intent onItemClickIntent = new Intent();
+				onItemClickIntent.putExtra("poolId", poolId);
+				onItemClickIntent.putExtra("subjectId", subjectId);
+				onItemClickIntent.putExtra("poolName", poolName);
+				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
+				startActivity(onItemClickIntent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 		});
 		
@@ -116,6 +160,7 @@ public class SecListActivity extends FragmentActivity {
 			secListItemArr = new ArrayList<Item>(secItem.getItemArr()); 
 			adapter = new ExpandableListViewaAdapter(SecListActivity.this);
 			secExpandableListView.setAdapter(adapter);
+			expendAllGroup();
 		}
 		
 		//ÉèÖÃitemµã»÷µÄ¼àÌýÆ÷
@@ -124,20 +169,31 @@ public class SecListActivity extends FragmentActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                     int groupPosition, int childPosition, long id) {
+            	Item item = adapter.getChild(groupPosition, childPosition);
+            	Utility.shareInstance().setSecSelectItem(subjectId, poolId, item, SecListActivity.this);
             	
             	Intent intent=new Intent();
             	intent.setClass(SecListActivity.this, DetailActivity.class);
             	Bundle bundle = new Bundle();
-            	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	bundle.putSerializable("item", item);
             	bundle.putSerializable("type", DeatilType.DeatilTypeOrigin);
             	intent.putExtras(bundle);
             	intent.putExtra("poolId", poolId);
             	intent.putExtra("subjectId", subjectId);
+            	intent.putExtra("poolName", poolName);
             	startActivity(intent); 
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             }
         });
+	}
+	
+	private void expendAllGroup() {
+		if (secListItemArr.size() > 0) {
+			for (int i = 0; i < secListItemArr.size(); i++) {
+				secExpandableListView.expandGroup(i);
+			}
+		}
 	}
 	
 	private void showNoContent() {
@@ -178,10 +234,18 @@ public class SecListActivity extends FragmentActivity {
         @Override
         public View getChildView(int groupPosition, int childPosition,
                 boolean isLastChild, View convertView, ViewGroup parent) {
-             
             Item item =secListItemArr.get(groupPosition).getItemArr().get(childPosition);
-             
-            return getGenericView(item);
+            View resultView = getGenericView(item);
+        	Item selectedItem = Utility.shareInstance().secSelectItem(subjectId, poolId, SecListActivity.this);
+        	
+			if (selectedItem !=null && item.getId().equals(selectedItem.getId())) {
+				resultView.setBackgroundResource(R.color.expandableList_hig);
+			}
+			else {
+				resultView.setBackgroundResource(R.color.expandableList_nor);
+			} 
+			
+            return resultView;
         }
  
         @Override
@@ -210,10 +274,12 @@ public class SecListActivity extends FragmentActivity {
  
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
-                View convertView, ViewGroup parent) {
-             
-           Item   item=secListItemArr.get(groupPosition);
-           return getGenericView(item);
+                View convertView, ViewGroup parent) {             
+           Item item=secListItemArr.get(groupPosition);
+           View resultView = getGenericView(item);
+           resultView.setBackgroundResource(R.color.expandableList_nor);
+           
+           return resultView;
         }
  
         @Override

@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 
+import com.switchpool.detail.DetailActivity;
+import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.model.Item;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -78,20 +80,56 @@ public class TopListActivity extends FragmentActivity {
 			
 			@Override
 			public void tapButton6() {
-				// TODO Auto-generated method stub
-				
+				Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
+				if (item != null) {
+	            	Intent intent=new Intent();
+	            	intent.setClass(TopListActivity.this, SecListActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", item);
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", poolId);
+	            	intent.putExtra("subjectId", subjectId);
+	            	intent.putExtra("poolName", poolName);
+	            	startActivity(intent); 
+	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 			
 			@Override
 			public void tapButton5() {
-				// TODO Auto-generated method stub
-				
+				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
+					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
+					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
+					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
+					
+	            	Intent intent=new Intent();
+	            	intent.setClass(TopListActivity.this, DetailActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, TopListActivity.this));
+	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", curPoolid);
+	            	intent.putExtra("subjectId", curSubjectid);
+	            	TopListActivity.this.startActivity(intent); 
+	            	TopListActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 			
 			@Override
 			public void tapButton4() {
-				// TODO Auto-generated method stub
-				
+				Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
+				if (item != null) {
+	            	Intent intent=new Intent();
+	            	intent.setClass(TopListActivity.this, SecListActivity.class);
+	            	Bundle bundle = new Bundle();
+	            	bundle.putSerializable("item", item);
+	            	intent.putExtras(bundle);
+	            	intent.putExtra("poolId", poolId);
+	            	intent.putExtra("subjectId", subjectId);
+	            	intent.putExtra("poolName", poolName);
+	            	startActivity(intent); 
+	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
 			}
 			
 			@Override
@@ -99,23 +137,22 @@ public class TopListActivity extends FragmentActivity {
 				Intent onItemClickIntent = new Intent();
 				onItemClickIntent.putExtra("subjectId", subjectId);
 				onItemClickIntent.setClass(TopListActivity.this, SearchActivity.class);
-				TopListActivity.this.startActivity(onItemClickIntent);
-				TopListActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				startActivity(onItemClickIntent);
+				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton2() {
-	            Intent myIntent = new Intent();
-	            myIntent.setClass(TopListActivity.this, MainActivity.class);
-	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(myIntent);
+	            Intent onItemClickIntent = new Intent();
+	            onItemClickIntent.setClass(TopListActivity.this, MainActivity.class);
+	            onItemClickIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	            startActivity(onItemClickIntent);
 	            TopListActivity.this.finish();
 	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			
 			@Override
 			public void tapButton1() {
-				// TODO Auto-generated method stub
 			}
 		});
 		
@@ -137,11 +174,13 @@ public class TopListActivity extends FragmentActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                     int groupPosition, int childPosition, long id) {
+            	Item item = adapter.getChild(groupPosition, childPosition);
+            	Utility.shareInstance().setTopSelectItem(subjectId, poolId, item, TopListActivity.this);
             	
             	Intent intent=new Intent();
             	intent.setClass(TopListActivity.this, SecListActivity.class);
             	Bundle bundle = new Bundle();
-            	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	bundle.putSerializable("item", item);
             	intent.putExtras(bundle);
             	intent.putExtra("poolId", poolId);
             	intent.putExtra("subjectId", subjectId);
@@ -152,6 +191,19 @@ public class TopListActivity extends FragmentActivity {
             }
         });
 		
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+	}
+	
+	private void expendAllGroup() {
+		if (topListItemArr.size() > 0) {
+			for (int i = 0; i < topListItemArr.size(); i++) {
+				topExpandableListView.expandGroup(i);
+			}
+		}
 	}
 	
 	private void showNoContent() {
@@ -209,6 +261,7 @@ public class TopListActivity extends FragmentActivity {
 	                					topListItemArr = new ArrayList<Item>(cacheArr); 
 	                					adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 	                					topExpandableListView.setAdapter(adapter);
+	                					expendAllGroup();
 	                				}
 	                				else {
 		                				JSONArray poolResultJsonArray = jsonObject.getJSONArray("item");
@@ -260,12 +313,14 @@ public class TopListActivity extends FragmentActivity {
 		                				Utility.shareInstance().saveObject(cachePathString, topItemArr);
 		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 		                				topExpandableListView.setAdapter(adapter);
+		                				expendAllGroup();
 	                				}
 								} else {
 									if (cacheArr != null) {
 										topListItemArr = new ArrayList<Item>(updatePoolCache(cacheArr, jsonObject.getJSONObject("dynamic"), cachePathString));
 		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 		                				topExpandableListView.setAdapter(adapter);
+		                				expendAllGroup();
 									}
 									else {
 										showNoContent();
@@ -281,6 +336,7 @@ public class TopListActivity extends FragmentActivity {
 									topListItemArr = new ArrayList<Item>(cacheArr); 
 									adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 									topExpandableListView.setAdapter(adapter);
+									expendAllGroup();
 								}
 								Log.e("sp", "" + Log.getStackTraceString(e));
 							}
@@ -294,6 +350,7 @@ public class TopListActivity extends FragmentActivity {
 								topListItemArr = new ArrayList<Item>(cacheArr); 
 								adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 								topExpandableListView.setAdapter(adapter);
+								expendAllGroup();
 							}
 						}
 	                }
@@ -308,6 +365,7 @@ public class TopListActivity extends FragmentActivity {
 							topListItemArr = new ArrayList<Item>(cacheArr); 
 							adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 							topExpandableListView.setAdapter(adapter);
+							expendAllGroup();
 						}
 	                }
 	            });  
@@ -321,6 +379,7 @@ public class TopListActivity extends FragmentActivity {
 					topListItemArr = new ArrayList<Item>(cacheArr); 
 					adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 					topExpandableListView.setAdapter(adapter);
+					expendAllGroup();
 				}
 				Log.e("sp", "" + Log.getStackTraceString(e));
 			}
@@ -334,6 +393,7 @@ public class TopListActivity extends FragmentActivity {
 				topListItemArr = new ArrayList<Item>(cacheArr); 
 				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 				topExpandableListView.setAdapter(adapter);
+				expendAllGroup();
 			}
 		}	
 	}
@@ -509,13 +569,11 @@ public class TopListActivity extends FragmentActivity {
        /*-----------------Child */
         @Override
         public Item getChild(int groupPosition, int childPosition) {
-            // TODO Auto-generated method stub
             return topListItemArr.get(groupPosition).getItemArr().get(childPosition);
         }
  
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            // TODO Auto-generated method stub
             return childPosition;
         }
  
@@ -524,57 +582,60 @@ public class TopListActivity extends FragmentActivity {
                 boolean isLastChild, View convertView, ViewGroup parent) {
              
             Item item =topListItemArr.get(groupPosition).getItemArr().get(childPosition);
-             
-            return getGenericView(item);
+            View resultView = getGenericView(item);
+        	Item selectedItem = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
+        	
+			if (selectedItem !=null && item.getId().equals(selectedItem.getId())) {
+				resultView.setBackgroundResource(R.color.expandableList_hig);
+			}
+			else {
+				resultView.setBackgroundResource(R.color.expandableList_nor);
+			}        	
+            return resultView;
         }
  
         @Override
         public int getChildrenCount(int groupPosition) {
-            // TODO Auto-generated method stub
             return topListItemArr.get(groupPosition).getItemArr().size();
         }
        /* ----------------------------Group */
         @Override
         public Item getGroup(int groupPosition) {
-            // TODO Auto-generated method stub
             return getGroup(groupPosition);
         }
  
         @Override
         public int getGroupCount() {
-            // TODO Auto-generated method stub
             return topListItemArr.size();
         }
  
         @Override
         public long getGroupId(int groupPosition) {
-            // TODO Auto-generated method stub
             return groupPosition;
         }
  
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded,
                 View convertView, ViewGroup parent) {
-             
-           Item   item=topListItemArr.get(groupPosition);
-           return getGenericView(item);
+           Item item=topListItemArr.get(groupPosition);
+           View resultView = getGenericView(item);
+           resultView.setBackgroundResource(R.color.expandableList_nor);
+           return resultView;
         }
  
         @Override
         public boolean hasStableIds() {
-            // TODO Auto-generated method stub
             return false;
         }
  
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) 
         {
-            // TODO Auto-generated method stub
             return true;
         }
          
         private View  getGenericView(Item item ) 
-        {
+        {	
         	// Layout parameters for the ExpandableListView    
         	 AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
                      ViewGroup.LayoutParams.MATCH_PARENT, 100);
@@ -592,6 +653,7 @@ public class TopListActivity extends FragmentActivity {
 	        	 textView.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.toplist_childicon), null, null, null);
 	        	 textView.setPadding(60, 0, 0, 0);
 			 }
+	         
              return textView;
          }		
 		

@@ -1,14 +1,10 @@
 package com.switchpool.detail;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -167,6 +163,15 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 		if (count == 100) {
 	        seekBar.setProgress(1);
 		}
+	}
+	
+	public void receiveAudioFinishPlayCast() {
+		seekBar.setProgress(0); 
+        slashTextView.setVisibility(View.VISIBLE);
+        curTimeTextView.setVisibility(View.VISIBLE);
+        totalTimeTextView.setVisibility(View.VISIBLE);
+        downloadProgressTextView.setVisibility(View.INVISIBLE);
+        playbButton.setImageResource(R.drawable.detail_audio_play_selector);
 	}
 	
 	@Override

@@ -57,6 +57,8 @@ public class DetailNotePhotoFragment extends Fragment {
 			}
 		});
         
+        filePaths = new ArrayList<String>();
+        
         return view;
     }
 	
@@ -83,7 +85,6 @@ public class DetailNotePhotoFragment extends Fragment {
 
 		if (notePhotoArr.size() > 0) {
 			Collections.sort(notePhotoArr, new DetailNoteComparator());
-	        filePaths = new ArrayList<String>();
 	        for (int i = 0; i < notePhotoArr.size(); i++) {
 	        	Note note = notePhotoArr.get(i);
 				note.setCanBeDeleted(false);

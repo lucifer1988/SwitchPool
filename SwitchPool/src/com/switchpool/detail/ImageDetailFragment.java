@@ -2,9 +2,11 @@ package com.switchpool.detail;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import uk.co.senab.photoview.log.Logger;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +64,7 @@ public class ImageDetailFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		
+		Log.v("sp", "mImageUrl:"+"file:///"+mImageUrl);
 		ImageLoader.getInstance().displayImage("file:///"+mImageUrl, mImageView, new SimpleImageLoadingListener() {
 			@Override
 			public void onLoadingStarted(String imageUri, View view) {
