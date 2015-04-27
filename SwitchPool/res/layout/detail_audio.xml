@@ -74,7 +74,7 @@
          android:background="@color/translucent"
          android:contentDescription="@string/app_name" />
      
-      <ImageButton
+<!--       <ImageButton
           android:id="@+id/imageButton_detail_audio_forward"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -84,21 +84,21 @@
           android:layout_toLeftOf="@id/imageButton_detail_audio_play"
           android:background="@color/translucent"
           android:contentDescription="@string/app_name"
-          android:src="@drawable/detail_audio_forward_selector" />
+          android:src="@drawable/detail_audio_forward_selector" /> -->
       
       <ImageButton
           android:id="@+id/imageButton_detail_audio_volumeup"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignTop="@id/imageButton_detail_audio_play"
-          android:layout_marginRight="20dp"
+          android:layout_marginRight="50dp"
           android:layout_marginTop="3dp"
-          android:layout_toLeftOf="@id/imageButton_detail_audio_forward"
+          android:layout_toLeftOf="@id/imageButton_detail_audio_play"
           android:background="@color/translucent"
           android:contentDescription="@string/app_name"
           android:src="@drawable/detail_audio_volumeup_selector" />
 
-      <ImageButton
+<!--       <ImageButton
           android:id="@+id/imageButton_detail_audio_next"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -108,16 +108,16 @@
           android:layout_toRightOf="@id/imageButton_detail_audio_play"
           android:background="@color/translucent"
           android:contentDescription="@string/app_name"
-          android:src="@drawable/detail_audio_next_selector" />
+          android:src="@drawable/detail_audio_next_selector" /> -->
       
       <ImageButton
           android:id="@+id/imageButton_detail_audio_volumedown"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignTop="@id/imageButton_detail_audio_play"
-          android:layout_marginLeft="20dp"
+          android:layout_marginLeft="50dp"
           android:layout_marginTop="3dp"
-          android:layout_toRightOf="@id/imageButton_detail_audio_next"
+          android:layout_toRightOf="@id/imageButton_detail_audio_play"
           android:background="@color/translucent"
           android:contentDescription="@string/app_name"
           android:src="@drawable/detail_audio_volumedown_selector" />

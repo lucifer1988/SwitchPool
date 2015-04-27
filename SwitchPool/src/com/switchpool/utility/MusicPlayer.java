@@ -107,7 +107,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
         player.release();  
     } 
     
-	public void loadMusicList(String poolid, String subjectid) {
+	public void loadMusicList(String poolid, String subjectid, String fid) {
 		String listPath = Utility.shareInstance().cachAudioDir(poolid, subjectid);
 		Log.v("sp", ""+listPath);
 		if (data.size() > 0) {
@@ -117,7 +117,9 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 		File[] files = mfile.listFiles();
 		for (int i = 0; i < files.length; i++) {
 		  File file = files[i];
-		  data.add(file.getPath());
+		  if (fid != null && file.getPath().endsWith(fid)) {
+			  data.add(file.getPath());
+		  }
 		}
 	}
 
@@ -223,7 +225,10 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	
     public void previous() {   
     	if (curIndex - 1 < 0 ) {
-			player.stop();
+//			player.stop();
+    		curIndex = 0;
+    		play();
+    		postAudioChangeIntent();
 		}
     	else {
     		curIndex = curIndex - 1;
@@ -234,13 +239,16 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
       
     public void next() {
     	if (curIndex + 1 > data.size()) {
-    		player.stop();
-    		postAudioFinishIntent();
+//    		player.stop();
+//    		postAudioFinishIntent();
+    		curIndex = 0;
+    		play();
+//    		postAudioChangeIntent();
 		}
     	else {
     		curIndex = curIndex + 1;
     		play();
-    		postAudioChangeIntent();
+//    		postAudioChangeIntent();
 		} 
     }
     

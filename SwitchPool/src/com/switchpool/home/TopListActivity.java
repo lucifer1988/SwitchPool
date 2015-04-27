@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
@@ -23,16 +22,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 
-import com.switchpool.detail.DetailActivity;
-import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.model.Item;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -41,7 +41,7 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.TextView;
 
-public class TopListActivity extends FragmentActivity {
+public class TopListActivity extends FragmentActivity implements OnGestureListener {
 
 	public TopListActivity() {
 	}
@@ -55,6 +55,8 @@ public class TopListActivity extends FragmentActivity {
 	
 	FragmentManager fManager;
 	NoContnetFragment ncFragment;
+	
+	GestureDetector mGestureDetector; 
 	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,55 +92,55 @@ public class TopListActivity extends FragmentActivity {
 	            	intent.putExtra("poolId", poolId);
 	            	intent.putExtra("subjectId", subjectId);
 	            	intent.putExtra("poolName", poolName);
-	            	startActivity(intent); 
+	            	startActivityForResult(intent, 0); 
 	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				}
 			}
 			
 			@Override
 			public void tapButton5() {
-				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
-					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
-					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
-					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
-					
-	            	Intent intent=new Intent();
-	            	intent.setClass(TopListActivity.this, DetailActivity.class);
-	            	Bundle bundle = new Bundle();
-	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, TopListActivity.this));
-	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
-	            	intent.putExtras(bundle);
-	            	intent.putExtra("poolId", curPoolid);
-	            	intent.putExtra("subjectId", curSubjectid);
-	            	TopListActivity.this.startActivity(intent); 
-	            	TopListActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-				}
+//				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
+//					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
+//					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
+//					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
+//					
+//	            	Intent intent=new Intent();
+//	            	intent.setClass(TopListActivity.this, DetailActivity.class);
+//	            	Bundle bundle = new Bundle();
+//	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, TopListActivity.this));
+//	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
+//	            	intent.putExtras(bundle);
+//	            	intent.putExtra("poolId", curPoolid);
+//	            	intent.putExtra("subjectId", curSubjectid);
+//	            	TopListActivity.this.startActivity(intent); 
+//	            	TopListActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				}
 			}
 			
 			@Override
 			public void tapButton4() {
-				Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
-				if (item != null) {
-	            	Intent intent=new Intent();
-	            	intent.setClass(TopListActivity.this, SecListActivity.class);
-	            	Bundle bundle = new Bundle();
-	            	bundle.putSerializable("item", item);
-	            	intent.putExtras(bundle);
-	            	intent.putExtra("poolId", poolId);
-	            	intent.putExtra("subjectId", subjectId);
-	            	intent.putExtra("poolName", poolName);
-	            	startActivity(intent); 
-	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-				}
+//				Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
+//				if (item != null) {
+//	            	Intent intent=new Intent();
+//	            	intent.setClass(TopListActivity.this, SecListActivity.class);
+//	            	Bundle bundle = new Bundle();
+//	            	bundle.putSerializable("item", item);
+//	            	intent.putExtras(bundle);
+//	            	intent.putExtra("poolId", poolId);
+//	            	intent.putExtra("subjectId", subjectId);
+//	            	intent.putExtra("poolName", poolName);
+//	            	startActivity(intent); 
+//	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				}
 			}
 			
 			@Override
 			public void tapButton3() {
-				Intent onItemClickIntent = new Intent();
-				onItemClickIntent.putExtra("subjectId", subjectId);
-				onItemClickIntent.setClass(TopListActivity.this, SearchActivity.class);
-				startActivity(onItemClickIntent);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				Intent onItemClickIntent = new Intent();
+//				onItemClickIntent.putExtra("subjectId", subjectId);
+//				onItemClickIntent.setClass(TopListActivity.this, SearchActivity.class);
+//				startActivity(onItemClickIntent);
+//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
@@ -185,18 +187,26 @@ public class TopListActivity extends FragmentActivity {
             	intent.putExtra("poolId", poolId);
             	intent.putExtra("subjectId", subjectId);
             	intent.putExtra("poolName", poolName);
-            	startActivity(intent); 
+            	startActivityForResult(intent, 0);  
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             }
-        });
+        }); 
 		
+		mGestureDetector = new GestureDetector(this, (OnGestureListener)this); 
 	}
 	
-	@Override
-	protected void onStart() {
-		super.onStart();
-	}
+	@Override  
+	public boolean dispatchTouchEvent(MotionEvent ev) {  
+		if (mGestureDetector.onTouchEvent(ev)) {
+			return mGestureDetector.onTouchEvent(ev);
+		}  
+	    return super.dispatchTouchEvent(ev);  
+	} 
+	
+	public boolean onTouch(MotionEvent event) {  
+	    return mGestureDetector.onTouchEvent(event);  
+	} 
 	
 	private void expendAllGroup() {
 		if (topListItemArr.size() > 0) {
@@ -218,8 +228,16 @@ public class TopListActivity extends FragmentActivity {
 	
 	@Override
 	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	  super.onActivityResult(requestCode, resultCode, data);
+		super.onActivityResult(requestCode, resultCode, data);
+		adapter.notifyDataSetChanged();
 	 }
+	
+//	@Override 
+//	protected void onStart() {
+//		if (adapter != null) {
+//			adapter.notifyDataSetChanged();
+//		}
+//	};
 	
 	@Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -658,6 +676,62 @@ public class TopListActivity extends FragmentActivity {
          }		
 		
     }
-	
 
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+    private int verticalMinDistance = 20;
+    private int minVelocity         = 50;
+
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+			Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
+			if (item != null) {
+            	Intent intent=new Intent();
+            	intent.setClass(TopListActivity.this, SecListActivity.class);
+            	Bundle bundle = new Bundle();
+            	bundle.putSerializable("item", item);
+            	intent.putExtras(bundle);
+            	intent.putExtra("poolId", poolId);
+            	intent.putExtra("subjectId", subjectId);
+            	intent.putExtra("poolName", poolName);
+            	startActivityForResult(intent, 0); 
+            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+			}
+//          Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
+        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+//          Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+        }
+
+        return false;
+    }
 }

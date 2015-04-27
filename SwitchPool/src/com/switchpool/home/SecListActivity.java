@@ -21,16 +21,19 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils.TruncateAt;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.GestureDetector.OnGestureListener;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
-public class SecListActivity extends FragmentActivity {
+public class SecListActivity extends FragmentActivity implements OnGestureListener {
 
 	public SecListActivity() {
 	}
@@ -46,6 +49,8 @@ public class SecListActivity extends FragmentActivity {
 	FragmentManager fManager;
 	NoContnetFragment ncFragment;
 	
+	GestureDetector mGestureDetector; 
+	
 	@Override	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,6 +60,7 @@ public class SecListActivity extends FragmentActivity {
 		fManager = getSupportFragmentManager();
 		
 		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.toplist_toolbar);
+		toolBar.button2.setImageResource(R.drawable.toolbar_tag);
 		toolBar.setCallBack(new ToolBarCallBack() {
 			
 			@Override
@@ -70,73 +76,76 @@ public class SecListActivity extends FragmentActivity {
 	            	intent.putExtra("poolId", poolId);
 	            	intent.putExtra("subjectId", subjectId);
 	            	intent.putExtra("poolName", poolName);
-	            	startActivity(intent); 
+	            	startActivityForResult(intent, 0); 
 	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				}
 			}
 			
 			@Override
 			public void tapButton5() {
-				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
-					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
-					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
-					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
-					
-	            	Intent intent=new Intent();
-	            	intent.setClass(SecListActivity.this, DetailActivity.class);
-	            	Bundle bundle = new Bundle();
-	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, SecListActivity.this));
-	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
-	            	intent.putExtras(bundle);
-	            	intent.putExtra("poolId", curPoolid);
-	            	intent.putExtra("subjectId", curSubjectid);
-	            	intent.putExtra("poolName", poolName);
-	            	startActivity(intent); 
-	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-				}
+//				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
+//					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
+//					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
+//					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
+//					
+//	            	Intent intent=new Intent();
+//	            	intent.setClass(SecListActivity.this, DetailActivity.class);
+//	            	Bundle bundle = new Bundle();
+//	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, SecListActivity.this));
+//	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
+//	            	intent.putExtras(bundle);
+//	            	intent.putExtra("poolId", curPoolid);
+//	            	intent.putExtra("subjectId", curSubjectid);
+//	            	intent.putExtra("poolName", poolName);
+//	            	startActivity(intent); 
+//	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				}
 			}
 			
 			@Override
 			public void tapButton4() {
-				Intent onItemClickIntent = new Intent();
-				onItemClickIntent.putExtra("poolId", poolId);
-				onItemClickIntent.putExtra("subjectId", subjectId);
-				onItemClickIntent.putExtra("poolName", poolName);
-				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
-				startActivity(onItemClickIntent);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				Intent onItemClickIntent = new Intent();
+//				onItemClickIntent.putExtra("poolId", poolId);
+//				onItemClickIntent.putExtra("subjectId", subjectId);
+//				onItemClickIntent.putExtra("poolName", poolName);
+//				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
+//				startActivity(onItemClickIntent);
+//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-				Intent onItemClickIntent = new Intent();
-				onItemClickIntent.putExtra("subjectId", subjectId);
-				onItemClickIntent.setClass(SecListActivity.this, SearchActivity.class);
-				startActivity(onItemClickIntent);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				Intent onItemClickIntent = new Intent();
+//				onItemClickIntent.putExtra("subjectId", subjectId);
+//				onItemClickIntent.setClass(SecListActivity.this, SearchActivity.class);
+//				startActivity(onItemClickIntent);
+//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton2() {
-	            Intent myIntent = new Intent();
-	            myIntent.setClass(SecListActivity.this, MainActivity.class);
-	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(myIntent);
-	            SecListActivity.this.finish();
-	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//	            Intent myIntent = new Intent();
+//	            myIntent.setClass(SecListActivity.this, MainActivity.class);
+//	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	            startActivity(myIntent);
+//	            SecListActivity.this.finish();
+//	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			
 			@Override
 			public void tapButton1() {
+				finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//				Intent onItemClickIntent = new Intent();
+//				onItemClickIntent.putExtra("poolId", poolId);
+//				onItemClickIntent.putExtra("subjectId", subjectId);
+//				onItemClickIntent.putExtra("poolName", poolName);
+//				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
+//				startActivity(onItemClickIntent);
 //				finish();
-//				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-				Intent onItemClickIntent = new Intent();
-				onItemClickIntent.putExtra("poolId", poolId);
-				onItemClickIntent.putExtra("subjectId", subjectId);
-				onItemClickIntent.putExtra("poolName", poolName);
-				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
-				startActivity(onItemClickIntent);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 			}
 		});
 		
@@ -181,12 +190,26 @@ public class SecListActivity extends FragmentActivity {
             	intent.putExtra("poolId", poolId);
             	intent.putExtra("subjectId", subjectId);
             	intent.putExtra("poolName", poolName);
-            	startActivity(intent); 
+            	startActivityForResult(intent, 0);  
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
             }
         });
+		
+		mGestureDetector = new GestureDetector(this, (OnGestureListener)this); 
 	}
+	
+	@Override  
+	public boolean dispatchTouchEvent(MotionEvent ev) {  
+		if (mGestureDetector.onTouchEvent(ev)) {
+			return mGestureDetector.onTouchEvent(ev);
+		}  
+	    return super.dispatchTouchEvent(ev);  
+	} 
+	
+	public boolean onTouch(MotionEvent event) {  
+	    return mGestureDetector.onTouchEvent(event);  
+	} 
 	
 	private void expendAllGroup() {
 		if (secListItemArr.size() > 0) {
@@ -211,6 +234,12 @@ public class SecListActivity extends FragmentActivity {
 		super.onBackPressed();
 		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 	}
+	
+	@Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		adapter.notifyDataSetChanged();
+	 }
 	
 	class ExpandableListViewaAdapter extends BaseExpandableListAdapter {
         Activity activity;
@@ -319,6 +348,67 @@ public class SecListActivity extends FragmentActivity {
              return textView;
          }		
 		
+    }
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+    private int verticalMinDistance = 20;
+    private int minVelocity         = 50;
+
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+			Item item = Utility.shareInstance().secSelectItem(subjectId, poolId, SecListActivity.this);
+			if (item != null) {
+            	Intent intent=new Intent();
+            	intent.setClass(SecListActivity.this, DetailActivity.class);
+            	Bundle bundle = new Bundle();
+            	bundle.putSerializable("item", item);
+            	bundle.putSerializable("type", DeatilType.DeatilTypeOrigin);
+            	intent.putExtras(bundle);
+            	intent.putExtra("poolId", poolId);
+            	intent.putExtra("subjectId", subjectId);
+            	intent.putExtra("poolName", poolName);
+            	startActivityForResult(intent, 0); 
+            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+			}
+//          Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
+        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+//          Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+			finish();
+			overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
+
+        return false;
     }
 
 }

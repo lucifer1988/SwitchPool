@@ -55,7 +55,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -66,7 +69,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class DetailActivity extends FragmentActivity implements DetailContentHandler  {
+public class DetailActivity extends FragmentActivity implements DetailContentHandler, OnGestureListener  {
 
 	static DetailActivity mContext;
 	
@@ -84,7 +87,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	private int curTabIndex;
 	
 	public enum DeatilType { 
-		DeatilTypeOrigin(0), DeatilTypeAudio(1); 
+		DeatilTypeOrigin(0), DeatilTypeAudio(1), DeatilTypeSearch(2); 
 	    private final int val; 
 	 
 	    private DeatilType(int value) { 
@@ -142,7 +145,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
         		audioFragment.reload(null);
 			}
         }  
-    }; 
+    };
+    
+    GestureDetector mGestureDetector; 
 	    
 	public DetailActivity() {
 	}
@@ -247,7 +252,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			modelMap = new HashMap<String, Model>();
 		}
 		
-		//request params
+		//request param
 		User userInfo = (User)Utility.shareInstance().getObject(Utility.shareInstance().userInfoFile());
 		params = new RequestParams();
 		params.put("uid", userInfo.getUid());
@@ -256,8 +261,17 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		params.put("poolid", poolId);
 		params.put("itemid", item.getId());
 		
-		//buttom toolbar
+		//bottom tool bar
 		ToolBar toolBar = (ToolBar)getSupportFragmentManager().findFragmentById(R.id.detail_toolbar);
+		if (deatilType == DeatilType.DeatilTypeOrigin) {
+			toolBar.button2.setImageResource(R.drawable.toolbar_tag);
+		}
+		else if (deatilType == DeatilType.DeatilTypeAudio) {
+			toolBar.button2.setImageResource(R.drawable.toolbar_home);
+		}
+		else if (deatilType == DeatilType.DeatilTypeSearch) {
+			toolBar.button2.setImageResource(R.drawable.toolbar_search);
+		}
 		toolBar.setCallBack(new ToolBarCallBack() {
 			
 			@Override
@@ -276,35 +290,37 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			@Override
 			public void tapButton4() {
-            	Intent intent=new Intent();
-            	intent.setClass(DetailActivity.this, SecListActivity.class);
-            	Bundle bundle = new Bundle();
-            	bundle.putSerializable("item", Utility.shareInstance().findSecItem(subjectId, poolId, item.getId(), DetailActivity.this));
-            	intent.putExtras(bundle);
-            	intent.putExtra("poolId", poolId);
-            	intent.putExtra("subjectId", subjectId);
-            	intent.putExtra("poolName", poolName);
-            	startActivity(intent); 
-            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//            	Intent intent=new Intent();
+//            	intent.setClass(DetailActivity.this, SecListActivity.class);
+//            	Bundle bundle = new Bundle();
+//            	bundle.putSerializable("item", Utility.shareInstance().findSecItem(subjectId, poolId, item.getId(), DetailActivity.this));
+//            	intent.putExtras(bundle);
+//            	intent.putExtra("poolId", poolId);
+//            	intent.putExtra("subjectId", subjectId);
+//            	intent.putExtra("poolName", poolName);
+//            	startActivity(intent); 
+//            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-				Intent onItemClickIntent = new Intent();
-				onItemClickIntent.putExtra("subjectId", subjectId);
-				onItemClickIntent.setClass(DetailActivity.this, SearchActivity.class);
-				startActivity(onItemClickIntent);
-				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//				Intent onItemClickIntent = new Intent();
+//				onItemClickIntent.putExtra("subjectId", subjectId);
+//				onItemClickIntent.setClass(DetailActivity.this, SearchActivity.class);
+//				startActivity(onItemClickIntent);
+//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton2() {
-	            Intent myIntent = new Intent();
-	            myIntent.setClass(DetailActivity.this, MainActivity.class);
-	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(myIntent);
-	            DetailActivity.this.finish();
-	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//	            Intent myIntent = new Intent();
+//	            myIntent.setClass(DetailActivity.this, MainActivity.class);
+//	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	            startActivity(myIntent);
+//	            DetailActivity.this.finish();
+//	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			
 			@Override
@@ -315,16 +331,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 					tabTopBar(button);
 				}
 				else {
-	            	Intent intent=new Intent();
-	            	intent.setClass(DetailActivity.this, SecListActivity.class);
-	            	Bundle bundle = new Bundle();
-	            	bundle.putSerializable("item", Utility.shareInstance().findSecItem(subjectId, poolId, item.getId(), DetailActivity.this));
-	            	intent.putExtras(bundle);
-	            	intent.putExtra("poolId", poolId);
-	            	intent.putExtra("subjectId", subjectId);
-	            	intent.putExtra("poolName", poolName);
-	            	startActivity(intent); 
-	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+					if (deatilType == DeatilType.DeatilTypeOrigin || deatilType == DeatilType.DeatilTypeSearch) {
+						finish();
+						overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+					}
 				}
 			}
 		});
@@ -388,7 +398,21 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			transaction.commit();
 			curTabIndex = 3;
 		}
+		
+		mGestureDetector = new GestureDetector(this, (OnGestureListener)this);
 	}
+	
+	@Override  
+	public boolean dispatchTouchEvent(MotionEvent ev) {  
+		if (mGestureDetector.onTouchEvent(ev)) {
+			return mGestureDetector.onTouchEvent(ev);
+		}  
+	    return super.dispatchTouchEvent(ev);  
+	} 
+	
+	public boolean onTouch(MotionEvent event) {  
+	    return mGestureDetector.onTouchEvent(event);  
+	} 
 	
 	@Override
 	public void onBackPressed() {
@@ -708,7 +732,15 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		}
 			break;	
 		case 3:{ 
-			musicPlayer.loadMusicList(poolId, subjectId);
+			String fidString = null;
+			for (int i = 0; i < model.getFileArr().size(); i++) {
+				SPFile file = model.getFileArr().get(i);
+				if (file.getSeq() == 1) {
+					fidString = file.getFid();
+					break;
+				}
+			}
+			musicPlayer.loadMusicList(poolId, subjectId, fidString);
 			audioFragment.reload(model);
 		}
 			break;
@@ -944,6 +976,67 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
     
 	private AudioChangeMsgReceiver audioChangeReceiver;	
 	
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+    private int verticalMinDistance = 20;
+    private int minVelocity         = 50;
+
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
+        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+			if (curTabIndex < topTabBtnArr.size()) {
+				int index = curTabIndex+1;
+				Button button = topTabBtnArr.get(index);
+				tabTopBar(button);
+			}
+//          Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
+        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+//          Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
+        	if (curTabIndex > 0) {
+				int index = curTabIndex-1;
+				Button button = topTabBtnArr.get(index);
+				tabTopBar(button);
+			}
+			else {
+				if (deatilType == DeatilType.DeatilTypeOrigin || deatilType == DeatilType.DeatilTypeSearch) {
+					finish();
+					overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				}
+			}
+        }
+
+        return false;
+    }
+    
 	@Override  
     protected void onDestroy() {   
         //注销广播  

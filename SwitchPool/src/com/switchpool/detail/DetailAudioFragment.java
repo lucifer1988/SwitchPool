@@ -59,14 +59,14 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
         ctx = (DetailActivity) getActivity();
         
         playbButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_play);
-        forwardButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_forward);
-        nextButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_next);
+//        forwardButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_forward);
+//        nextButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_next);
         volumeupButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_volumeup);
         volumedownButton = (ImageButton)view.findViewById(R.id.imageButton_detail_audio_volumedown);
         seekBar = (SeekBar)view.findViewById(R.id.seekBar_detail_audio);
         playbButton.setOnClickListener(this); 
-        forwardButton.setOnClickListener(this); 
-        nextButton.setOnClickListener(this); 
+//        forwardButton.setOnClickListener(this); 
+//        nextButton.setOnClickListener(this); 
         volumeupButton.setOnClickListener(this);
         volumedownButton.setOnClickListener(this);
         
@@ -179,12 +179,12 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 		if (v.getId() == R.id.imageButton_detail_audio_play) {
 			playOrPause();
 		}
-		else if (v.getId() == R.id.imageButton_detail_audio_forward) {
-			ctx.musicPlayer.previous();
-		}
-		else if (v.getId() == R.id.imageButton_detail_audio_next) {
-			ctx.musicPlayer.next();
-		}
+//		else if (v.getId() == R.id.imageButton_detail_audio_forward) {
+//			ctx.musicPlayer.previous();
+//		}
+//		else if (v.getId() == R.id.imageButton_detail_audio_next) {
+//			ctx.musicPlayer.next();
+//		}
 		else if (v.getId() == R.id.imageButton_detail_audio_volumeup) {
 			ctx.musicPlayer.volumeUp();
 		}
