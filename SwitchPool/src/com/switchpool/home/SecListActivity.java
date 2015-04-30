@@ -167,6 +167,7 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 		}
 		else {
 			secListItemArr = new ArrayList<Item>(secItem.getItemArr()); 
+			initialTrack();
 			adapter = new ExpandableListViewaAdapter(SecListActivity.this);
 			secExpandableListView.setAdapter(adapter);
 			expendAllGroup();
@@ -210,6 +211,17 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 	public boolean onTouch(MotionEvent event) {  
 	    return mGestureDetector.onTouchEvent(event);  
 	} 
+	
+	private void initialTrack() {
+		if (Utility.shareInstance().secSelectItem(subjectId, poolId, SecListActivity.this) == null) {
+			if (secListItemArr.size() > 0) {
+				Item item = secListItemArr.get(0);
+				if (item.getItemArr().size() > 0) {
+					Utility.shareInstance().setSecSelectItem(subjectId, poolId, item.getItemArr().get(0), SecListActivity.this);
+				}
+			}
+		}
+	}
 	
 	private void expendAllGroup() {
 		if (secListItemArr.size() > 0) {

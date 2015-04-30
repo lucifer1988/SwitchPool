@@ -208,6 +208,17 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 	    return mGestureDetector.onTouchEvent(event);  
 	} 
 	
+	private void initialTrack() {
+		if (Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this) == null) {
+			if (topListItemArr.size() > 0) {
+				Item item = topListItemArr.get(0);
+				if (item.getItemArr().size() > 0) {
+					Utility.shareInstance().setTopSelectItem(subjectId, poolId, item.getItemArr().get(0), TopListActivity.this);
+				}
+			}
+		}
+	}
+	
 	private void expendAllGroup() {
 		if (topListItemArr.size() > 0) {
 			for (int i = 0; i < topListItemArr.size(); i++) {
@@ -277,6 +288,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 	                			if ((jsonObject.getInt("isUpdate") == 0 ) ) {/*在服务器端返回的数据没有更新没有更新的情况*/
 	                				if (cacheArr != null) {
 	                					topListItemArr = new ArrayList<Item>(cacheArr); 
+	                					initialTrack();
 	                					adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 	                					topExpandableListView.setAdapter(adapter);
 	                					expendAllGroup();
@@ -328,6 +340,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 		                					topItemArr.add(topItem);                					
 		                				}
 		                				topListItemArr = new ArrayList<Item>(topItemArr); 
+		                				initialTrack();
 		                				Utility.shareInstance().saveObject(cachePathString, topItemArr);
 		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 		                				topExpandableListView.setAdapter(adapter);
@@ -336,7 +349,8 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 								} else {
 									if (cacheArr != null) {
 										topListItemArr = new ArrayList<Item>(updatePoolCache(cacheArr, jsonObject.getJSONObject("dynamic"), cachePathString));
-		                				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+										initialTrack();
+										adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 		                				topExpandableListView.setAdapter(adapter);
 		                				expendAllGroup();
 									}
@@ -352,6 +366,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 								}
 								else {
 									topListItemArr = new ArrayList<Item>(cacheArr); 
+									initialTrack();
 									adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 									topExpandableListView.setAdapter(adapter);
 									expendAllGroup();
@@ -366,6 +381,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 							}
 							else {
 								topListItemArr = new ArrayList<Item>(cacheArr); 
+								initialTrack();
 								adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 								topExpandableListView.setAdapter(adapter);
 								expendAllGroup();
@@ -381,6 +397,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 						}
 						else {
 							topListItemArr = new ArrayList<Item>(cacheArr); 
+							initialTrack();
 							adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 							topExpandableListView.setAdapter(adapter);
 							expendAllGroup();
@@ -395,6 +412,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 				}
 				else {
 					topListItemArr = new ArrayList<Item>(cacheArr); 
+					initialTrack();
 					adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 					topExpandableListView.setAdapter(adapter);
 					expendAllGroup();
@@ -409,6 +427,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 			}
 			else {
 				topListItemArr = new ArrayList<Item>(cacheArr); 
+				initialTrack();
 				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 				topExpandableListView.setAdapter(adapter);
 				expendAllGroup();

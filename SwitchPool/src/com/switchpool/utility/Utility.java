@@ -254,47 +254,71 @@ public class Utility extends Activity {
 		return result;
 	}
 	
-	static HashMap<String, HashMap<String, Item>> itemSelectHistoryMap = new HashMap<String, HashMap<String, Item>>();
+	static HashMap<String, HashMap<String, HashMap<String, Item>>> itemSelectHistoryMap = new HashMap<String, HashMap<String, HashMap<String, Item>>>();
 	
 	public void setTopSelectItem(String subjectid, String poolid, Item item, Context ctx) {
-		HashMap<String, Item> hashMap;
-		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
-			hashMap = itemSelectHistoryMap.get(poolid);
+		HashMap<String, HashMap<String, Item>> subHashMap = null;
+		HashMap<String, Item> poolHashMap = null;
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(subjectid) != null) {
+			subHashMap = itemSelectHistoryMap.get(subjectid);
+			if (subHashMap.get(poolid) != null) {
+				poolHashMap = subHashMap.get(poolid);
+			}
+			else {
+				poolHashMap = new HashMap<String, Item>();
+			}
 		}
 		else {
-			hashMap = new HashMap<String, Item>();
+			subHashMap = new HashMap<String, HashMap<String, Item>>();
+			poolHashMap = new HashMap<String, Item>();
 		}
-		hashMap.put(ctx.getString(R.string.SPItemSelectHistoryTop), item);
-		itemSelectHistoryMap.put(poolid, hashMap);
+		poolHashMap.put(ctx.getString(R.string.SPItemSelectHistoryTop), item);
+		subHashMap.put(poolid, poolHashMap);
+		itemSelectHistoryMap.put(subjectid, subHashMap);
 	}
 	
 	public Item topSelectItem(String subjectid, String poolid, Context ctx) {
-		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
-			HashMap<String, Item> hashMap = itemSelectHistoryMap.get(poolid);
-			if (hashMap.containsKey(ctx.getString(R.string.SPItemSelectHistoryTop))) {
-				return hashMap.get(ctx.getString(R.string.SPItemSelectHistoryTop));
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(subjectid) != null) {
+			HashMap<String, HashMap<String, Item>> subHashMap = itemSelectHistoryMap.get(subjectid);
+			if (subHashMap.get(poolid) != null) {
+				HashMap<String, Item> poolHashMap = subHashMap.get(poolid);
+				if (poolHashMap.containsKey(ctx.getString(R.string.SPItemSelectHistoryTop))) {
+					return poolHashMap.get(ctx.getString(R.string.SPItemSelectHistoryTop));
+				}
 			}
 		}
 		return null;
 	}
 	
 	public void setSecSelectItem(String subjectid, String poolid, Item item, Context ctx) {
-		HashMap<String, Item> hashMap;
-		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
-			hashMap = itemSelectHistoryMap.get(poolid);
+		HashMap<String, HashMap<String, Item>> subHashMap = null;
+		HashMap<String, Item> poolHashMap = null;
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(subjectid) != null) {
+			subHashMap = itemSelectHistoryMap.get(subjectid);
+			if (subHashMap.get(poolid) != null) {
+				poolHashMap = subHashMap.get(poolid);
+			}
+			else {
+				poolHashMap = new HashMap<String, Item>();
+				poolHashMap = new HashMap<String, Item>();
+			}
 		}
 		else {
-			hashMap = new HashMap<String, Item>();
+			subHashMap = new HashMap<String, HashMap<String, Item>>();
 		}
-		hashMap.put(ctx.getString(R.string.SPItemSelectHistorySec), item);
-		itemSelectHistoryMap.put(poolid, hashMap);
+		poolHashMap.put(ctx.getString(R.string.SPItemSelectHistorySec), item);
+		subHashMap.put(poolid, poolHashMap);
+		itemSelectHistoryMap.put(subjectid, subHashMap);
 	}
 	
 	public Item secSelectItem(String subjectid, String poolid, Context ctx) {
-		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(poolid) != null) {
-			HashMap<String, Item> hashMap = itemSelectHistoryMap.get(poolid);
-			if (hashMap.containsKey(ctx.getString(R.string.SPItemSelectHistorySec))) {
-				return hashMap.get(ctx.getString(R.string.SPItemSelectHistorySec));
+		if (itemSelectHistoryMap != null && itemSelectHistoryMap.get(subjectid) != null) {
+			HashMap<String, HashMap<String, Item>> subHashMap = itemSelectHistoryMap.get(subjectid);
+			if (subHashMap.get(poolid) != null) {
+				HashMap<String, Item> poolHashMap = subHashMap.get(poolid);
+				if (poolHashMap.containsKey(ctx.getString(R.string.SPItemSelectHistorySec))) {
+					return poolHashMap.get(ctx.getString(R.string.SPItemSelectHistorySec));
+				}
 			}
 		}
 		return null;

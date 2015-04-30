@@ -5,8 +5,13 @@
     
     <!-- login-->
     <string name="login_username_hint">请输入手机号/用户名</string>
+    <string name="login_phone_hint">请输入手机号/用户名</string>
     <string name="login_password_hint">请输入密码</string>
     <string name="login_login_btn">登录</string>
+    <string name="login_tab_phonelogin_btn">手机号登录</string>
+    <string name="login_tab_uidlogin_btn">用户号登录</string>
+    <string name="login_tab_phonelogin_selectCountry">请选择国家和地区</string>
+    
     <string name="Username_will_not_be_nil">用户名不能为空</string>
     <string name="Password_will_not_be_nil">密码不能为空</string>
     <string name="Login_failed">登录失败</string>
@@ -76,7 +81,7 @@
     <string name="nocontenttip_search">暂无您所搜索的内容</string>
     
     <!-- key-->
-    <string name="host">http://115.29.146.245/resourceManager/</string>
+    <string name="host">http://115.29.146.245:8080/</string>
     <string name="SPItemList">kSPItemList</string>
     <string name="SPPoolSearchDict">kSPPoolSearchDict</string>
     <string name="SPSearchKeyList">kSPSearchKeyList</string>

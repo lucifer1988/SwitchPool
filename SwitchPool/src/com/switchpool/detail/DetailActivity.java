@@ -111,7 +111,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	private RequestParams params;
 	
 	public interface downloadCallBack {  
-	   void downloadFinished(SPFile file);  
+	   void downloadFinished(SPFile file, Throwable error);  
 	} 
 	
 	private DetailSummaryFragment summaryFragment;
@@ -688,15 +688,22 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 							Log.v("sp", "finalDownloadCount:"+finalDownloadCount);
 							try {
 								downloadFile(type, file, new downloadCallBack(){
-									public void downloadFinished(SPFile file) {
-										resultFileArrFiles.add(file);
-										Log.v("sp", "finalDownloadCount:"+finalDownloadCount);
-										Log.v("sp", "modelFileArr.size:"+modelFileArr.size());
-										if (finalDownloadCount == modelFileArr.size()) {
-											model.setFileArr(resultFileArrFiles);
-											modelMap.put(type, model);
-											saveModel();
-											reloadChildFragment(index, model, type);
+									public void downloadFinished(SPFile file, Throwable error) {
+										if (error != null) {
+											if (finalDownloadCount == modelFileArr.size()) {
+												reloadChildFragment(index, null, type);
+											}
+										}
+										else {
+											resultFileArrFiles.add(file);
+											Log.v("sp", "finalDownloadCount:"+finalDownloadCount);
+											Log.v("sp", "modelFileArr.size:"+modelFileArr.size());
+											if (finalDownloadCount == modelFileArr.size()) {
+												model.setFileArr(resultFileArrFiles);
+												modelMap.put(type, model);
+												saveModel();
+												reloadChildFragment(index, model, type);
+											}
 										}
 									}
 								});
@@ -794,13 +801,13 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				}
 				SPFile tempFile = file;
 				tempFile.setPath(filePath);
-				callBack.downloadFinished(tempFile); 
+				callBack.downloadFinished(tempFile, null); 
 			}
 	
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					byte[] binaryData, Throwable error) {
-				callBack.downloadFinished(file); 
+				callBack.downloadFinished(file, error); 
 			}
 	
 			@Override
