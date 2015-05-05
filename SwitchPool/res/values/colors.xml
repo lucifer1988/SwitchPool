@@ -155,4 +155,7 @@
 <color name="expandableList_nor">#ffffff</color>
 <color name="expandableList_hig">#E7EBFE</color>
 
+<color name="list_bg">#F6F6F6</color>
+<color name="login_more_listtitle">#BF6D50</color>
+
 </resources>

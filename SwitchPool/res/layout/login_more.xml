@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/list_bg" >
+    
+     <RelativeLayout
+        android:id="@+id/relativeLayout_loginmore_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/imageView_loginmore_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav_bg"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/textView_loginmore_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/login_more"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button1_loginmore_nav"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@color/translucent"
+            android:text="@string/back"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+     <ListView
+         android:id="@+id/listView_loginmore"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/relativeLayout_loginmore_nav"
+         android:footerDividersEnabled="false"
+         android:headerDividersEnabled="false" >
+
+     </ListView>
+     
+     <Button
+         android:id="@+id/button2_loginmore"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/listView_loginmore"
+         android:layout_marginLeft="30dp"
+         android:layout_marginRight="30dp"
+         android:layout_marginTop="10dp"
+         android:background="@drawable/login_login_selecter"
+         android:onClick="login"
+         android:text="@string/login_register"
+         android:textColor="@color/white" />
+
+</RelativeLayout>

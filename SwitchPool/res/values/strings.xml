@@ -12,6 +12,13 @@
     <string name="login_tab_uidlogin_btn">用户号登录</string>
     <string name="login_tab_phonelogin_selectCountry">请选择国家和地区</string>
     
+    <string name="login_more">更多</string>
+    <string name="login_more_list1">登录（短信方式）</string>
+    <string name="login_more_list2">选择界面使用的语言（language）</string>
+    <string name="login_more_list3">访问网站</string>
+    
+    <string name="login_register">注册新用户</string>
+    
     <string name="Username_will_not_be_nil">用户名不能为空</string>
     <string name="Password_will_not_be_nil">密码不能为空</string>
     <string name="Login_failed">登录失败</string>
@@ -72,6 +79,8 @@
     <string name="OK">好的</string>
     <string name="loading">加载中</string>
     <string name="loadingandwait">加载中，请稍等</string>
+    <string name="back">返回</string>
+    <string name="cancel">取消</string>
     
     <string name="nocontenttip_list">本模块内容正在审核中，我们将尽快推出</string>
     <string name="nocontenttip_detail_content">本节内容正在审核中，我们将尽快推出</string>

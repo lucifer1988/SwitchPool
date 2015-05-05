@@ -88,10 +88,8 @@ public class LoginActivity extends Activity {
 	}
 	
 	public void more(View sourceView) {
-//		Intent intent = new Intent(this, MainActivity.class);    	
-//		this.startActivity(intent);
-//		User loginUser = (User)Utility.shareInstance().getObject(cache_user_filenameString);
-//		Toast.makeText(this, "ÓÃ»§Ãû"+loginUser.getCellphone(), Toast.LENGTH_LONG).show();
+		Intent intent = new Intent(this, LoginMoreActivity.class);    	
+		this.startActivity(intent);
 	}
 	
 	public void tab(View sourceView) {

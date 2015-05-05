@@ -34,6 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.switchpool.login.LoginActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.switchpool.login.LoginMoreActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.home.MainActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.home.TopListActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.switchpool.home.SecListActivity" android:screenOrientation="portrait"></activity>

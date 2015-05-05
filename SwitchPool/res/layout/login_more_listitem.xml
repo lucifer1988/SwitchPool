@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/white" >
+
+    <ImageView
+        android:id="@+id/imageView1_loginmore_listitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/toplist_childicon"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textView1_loginmore_listitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/imageView1_loginmore_listitem"
+        android:text=""
+        android:textColor="@color/login_more_listtitle" />
+
+    <ImageView
+        android:id="@+id/imageView2_loginmore_listitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/login_selectcountry_arrow"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:id="@+id/textView2_loginmore_listitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"
+        android:layout_toLeftOf="@+id/imageView2_loginmore_listitem"
+        android:text=""
+        android:textColor="@color/tab_normal_color" />
+
+</RelativeLayout>
