@@ -48,9 +48,6 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 	        }
 	    }  
     };
-    
-	public DetailAudioFragment() {
-	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,7 +105,7 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 						totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
 						seekBar.setMax(ctx.musicPlayer.player.getDuration());
 						
-						final int milliseconds = 100;
+						final int milliseconds = 1000;
 					      new Thread(){
 					        @Override
 					        public void run(){
@@ -217,14 +214,16 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 	         playbButton.setImageResource(R.drawable.detail_audio_play_selector);
 		}
     	else {
-			if (isPause) {
-				ctx.musicPlayer.resume();
-				isPause = false;
-				playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
-			}
-			else {
-				ctx.musicPlayer.playFile(file);
-				playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
+    		if (file != null) {
+    			if (isPause) {
+    				ctx.musicPlayer.resume();
+    				isPause = false;
+    				playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
+    			}
+    			else {
+    				ctx.musicPlayer.playFile(file);
+    				playbButton.setImageResource(R.drawable.detail_audio_pause_selector);
+    			}
 			}
 		}
     }

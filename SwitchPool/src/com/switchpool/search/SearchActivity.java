@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.text.TextUtils.TruncateAt;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -41,6 +42,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -54,6 +56,11 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 	NoContnetFragment ncFragment;
 	TextView tipTextView;
 	EditText searchField;
+	Button tabButton1;
+	Button tabButton2;
+	Button tabButton3;
+	Button tabButton4;
+	
 	LinearLayout toolbarLayout;
 	private  ExpandableListView  searchExpandableListView;
 	private  ExpandableListViewaAdapter adapter;
@@ -100,10 +107,14 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		searchExpandableListView.setGroupIndicator(null);
 		
 		findViewById(R.id.button_search_field).setOnClickListener(this);
-		findViewById(R.id.button1_search_toolbar).setOnClickListener(this);
-		findViewById(R.id.button2_search_toolbar).setOnClickListener(this);
-		findViewById(R.id.button3_search_toolbar).setOnClickListener(this);
-		findViewById(R.id.button4_search_toolbar).setOnClickListener(this);
+		tabButton1 = (Button)findViewById(R.id.button1_search_toolbar);
+		tabButton1.setOnClickListener(this);
+		tabButton2 = (Button)findViewById(R.id.button2_search_toolbar);
+		tabButton2.setOnClickListener(this);
+		tabButton3 = (Button)findViewById(R.id.button3_search_toolbar);
+		tabButton3.setOnClickListener(this);
+		tabButton4 = (Button)findViewById(R.id.button4_search_toolbar);
+		tabButton4.setOnClickListener(this);
 		findViewById(R.id.relativeLayout_search).setOnClickListener(this);
 		
 		Intent intent = getIntent();
@@ -206,10 +217,6 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			
 			@Override
 			public void tapButton2() {
-	            Intent myIntent = new Intent();
-	            myIntent.setClass(SearchActivity.this, MainActivity.class);
-	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(myIntent);
 	            SearchActivity.this.finish();
 	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
@@ -247,6 +254,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
         });
 		
 		if (!TextUtils.isEmpty(searchField.getText().toString())) {
+			curIndex = 0;
+			tabButton1.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_hig));
 			search();
 		}
 	}
@@ -279,6 +288,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 		else if (v.getId() == R.id.button1_search_toolbar) {
 			curIndex = 0;
+			refreshTabButtons();
+			tabButton1.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_hig));
 			reloadParam();
 			if (curSearchStr != null) {
 				startSearch(curSearchStr);
@@ -286,6 +297,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 		else if (v.getId() == R.id.button2_search_toolbar) {
 			curIndex = 1;
+			refreshTabButtons();
+			tabButton2.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_hig));
 			reloadParam();
 			if (curSearchStr != null) {
 				startSearch(curSearchStr);
@@ -293,6 +306,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 		else if (v.getId() == R.id.button3_search_toolbar) {
 			curIndex = 2;
+			refreshTabButtons();
+			tabButton3.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_hig));
 			reloadParam();
 			if (curSearchStr != null) {
 				startSearch(curSearchStr);
@@ -300,6 +315,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		}
 		else if (v.getId() == R.id.button4_search_toolbar) {
 			curIndex = 3;
+			refreshTabButtons();
+			tabButton4.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_hig));
 			reloadParam();
 			if (curSearchStr != null) {
 				startSearch(curSearchStr);
@@ -308,6 +325,13 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		else if (v.getId() == R.id.button_search_field) {
 			search();
 		}
+	}
+	
+	private void refreshTabButtons() {
+		tabButton1.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_nor));
+		tabButton2.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_nor));
+		tabButton3.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_nor));
+		tabButton4.setTextColor(getResources().getColor(R.color.detail_toolbutton_color_nor));
 	}
 	
 	private void reloadParam() {
@@ -524,10 +548,19 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			resultArr = new ArrayList<Item>(resultItemList);
 			adapter = new ExpandableListViewaAdapter(SearchActivity.this);
 			searchExpandableListView.setAdapter(adapter);
+			expendAllGroup();
 			searchExpandableListView.setVisibility(View.VISIBLE);
 		}
 		else {
 			noResultTip();
+		}
+	}
+	
+	private void expendAllGroup() {
+		if (resultArr.size() > 0) {
+			for (int i = 0; i < resultArr.size(); i++) {
+				searchExpandableListView.expandGroup(i);
+			}
 		}
 	}
 	
@@ -627,6 +660,8 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
              TextView textView = new TextView(activity);
              textView.setLayoutParams(lp);
              textView.setGravity(Gravity.CENTER_VERTICAL);
+             textView.setSingleLine(true);
+             textView.setEllipsize(TruncateAt.END);
              textView.setTextSize(17);
              textView.setTextColor(Color.BLACK);
              textView.setText(item.getCaption());

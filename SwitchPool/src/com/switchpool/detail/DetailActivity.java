@@ -148,9 +148,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
     };
     
     GestureDetector mGestureDetector; 
-	    
-	public DetailActivity() {
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -386,6 +383,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			curTabIndex = 0;
 		}
 		else {
+			Utility.shareInstance().hideWaitingHUD();
 			audioButton.setTextColor(Color.WHITE);
 			audioButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable audio_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_audio_hig);
@@ -591,6 +589,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		else {
 			final Model cacheModel = modelMap.get(modelType);
 			if (Utility.shareInstance().isNetworkAvailable(this)) {
+				
+				if (modelType.equals("10") || modelType.equals("20") || modelType.equals("21") || modelType.equals("22")) {
+					Utility.shareInstance().showWaitingHUD(this);
+				}
+				
 				AsyncHttpClient client = new AsyncHttpClient();
 				String url = new String(this.getString(R.string.host) + "model/item");
 				Log.v("sp", ""+url);
@@ -1014,7 +1017,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		
 	}
 
-    private int verticalMinDistance = 20;
+    private int verticalMinDistance = 100;
     private int minVelocity         = 50;
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {

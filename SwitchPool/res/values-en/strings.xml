@@ -18,6 +18,17 @@
     <string name="login_more_list3">访问网站</string>
     
     <string name="login_register">注册新用户</string>
+    <string name="login_register_title">请确认你的国家和地区，并填写手机号</string>
+    <string name="login_register_rule">轻触上面的“注册”按钮，即表示你同意《软件许可及服务协议》</string>
+    <string name="login_verify_title">我们已发送验证码短信到这个号码</string>
+    <string name="login_verify_edittext_hit">请输入验证码</string>
+    <string name="login_verify_time"><xliff:g>接收短信大约需要</xliff:g>%d<xliff:g>秒</xliff:g></string>
+    <string name="login_verify_notreceive">收不到验证码</string>
+    <string name="login_verify">提交</string>
+    <string name="login_verify_resend">重新获取验证码？</string>
+    <string name="login_verify_fail">验证码不正确，请重新输入</string>
+    <string name="login_verify_during">验证码短信可能略有延迟，确定要返回并重新开始吗？</string>
+    <string name="login_verify_succeed"><xliff:g>注册成功，为您分配的用户号为</xliff:g>%s<xliff:g>，现在可以直接登录系统</xliff:g></string>
     
     <string name="Username_will_not_be_nil">Username will not be nil</string>
     <string name="Password_will_not_be_nil">Password will not be nil</string>
@@ -81,6 +92,7 @@
     <string name="loadingandwait">加载中，请稍等</string>
     <string name="back">返回</string>
     <string name="cancel">取消</string>
+    <string name="wait">等待</string>
     
     <string name="nocontenttip_list">本模块内容正在审核中，我们将尽快推出</string>
     <string name="nocontenttip_detail_content">本节内容正在审核中，我们将尽快推出</string>

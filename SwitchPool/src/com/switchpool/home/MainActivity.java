@@ -55,7 +55,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	};
 	
 	FragmentManager fManager;
-
+	
+	public static Boolean isLogin = false;
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +82,11 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		if (isLogin) {
+			return ;
+		}
 		Intent intent = getIntent();
-		if (intent.getStringExtra("isFromLoadingActivity") != null) {
+		if (intent != null && intent.getStringExtra("isFromLoadingActivity") != null) {
 	        Log.v("sp", ""+intent.getStringExtra("isFromLoadingActivity"));
 	        if (intent.getStringExtra("isFromLoadingActivity").equals("true")) {
 	        	
@@ -178,6 +183,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		else {
 			ctx.homeFragment.refreshHeader();
 		}
+		isLogin = true;
 	}
 	
 	private void initialize() {

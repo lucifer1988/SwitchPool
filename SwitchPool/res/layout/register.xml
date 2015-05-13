@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/list_bg" >
+    
+     <RelativeLayout
+        android:id="@+id/relativeLayout_register_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/imageView_register_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav_bg"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/textView_register_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/login_register"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button1_register_nav"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@color/translucent"
+            android:text="@string/back"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:onClick="back" />
+
+    </RelativeLayout>
+
+     <TextView
+         android:id="@+id/textView1_register"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/relativeLayout_register_nav"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="60dp"
+         android:text="@string/login_register_title"
+         android:textColor="@color/register_title" />
+     
+     <RelativeLayout
+         android:id="@+id/relativeLayout_register_field"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/textView1_register"
+         android:layout_marginLeft="15dp"
+         android:layout_marginRight="15dp"
+         android:layout_marginTop="50dp" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/login_field_bg"
+                android:id="@+id/relativeLayout_register_selectCountry_bg" >
+
+                <Button
+                    android:id="@+id/button_register_phone_selectCountry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/translucent"
+                    android:onClick="selectCountry" />
+
+                <TextView
+                    android:id="@+id/textView1_register_phone_selectCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/button_register_phone_selectCountry"
+                    android:layout_alignBottom="@+id/button_register_phone_selectCountry"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/login_tab_phonelogin_selectCountry"
+                    android:textColor="@color/lightgrey_hearder" />
+
+                <ImageView
+                    android:id="@+id/imageView_register_phone_selectCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/login_selectcountry_arrow"
+                    android:contentDescription="@string/app_name" />
+
+                <TextView
+                    android:id="@+id/textView2_register_phone_selectCountry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/button_register_phone_selectCountry"
+                    android:layout_alignBottom="@+id/button_register_phone_selectCountry"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/imageView_register_phone_selectCountry"
+                    android:text="中国" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/relativeLayout_register_selectCountry_bg"
+                android:layout_marginTop="10dp"
+                android:id="@+id/relativeLayout_register_phone_bg" >
+
+                <RelativeLayout
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/login_field_bg"
+                    android:id="@+id/relativeLayout_register_phoneheader_bg" >
+
+                    <TextView
+                        android:id="@+id/textView1_register_phoneheader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="+86" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/relativeLayout_register_phoneheader_bg"
+                    android:background="@drawable/login_field_bg"
+                    android:id="@+id/relativeLayout_register_phoneNumber_bg" >
+                    
+	                <EditText
+	                    android:id="@+id/editText_register_phoneNumber"
+	                    android:layout_width="match_parent"
+	                    android:layout_height="wrap_content"
+	                    android:layout_centerVertical="true"
+	                    android:layout_marginLeft="10dp"
+	                    android:layout_marginRight="10dp"
+	                    android:background="@null"
+	                    android:ems="10"
+	                    android:focusable="true"
+	                    android:focusableInTouchMode="true"
+	                    android:hint="@string/login_phone_hint"
+	                    android:inputType="phone"
+	                    android:text="" >
+	                    <requestFocus />
+	                </EditText>	                    
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout> 
+
+      <Button
+          android:id="@+id/button2_register"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/relativeLayout_register_field"
+          android:layout_marginLeft="30dp"
+          android:layout_marginRight="30dp"
+          android:layout_marginTop="30dp"
+          android:background="@drawable/login_login_selecter"
+          android:text="@string/login_register"
+          android:textColor="@color/white"
+          android:onClick="verify" />
+
+      <TextView
+          android:id="@+id/textView2_register"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/button2_register"
+          android:layout_centerHorizontal="true"
+          android:layout_marginLeft="50dp"
+          android:layout_marginTop="30dp"
+          android:text="@string/login_register_rule"
+          android:textColor="@color/register_rule"
+          android:textSize="12sp" />
+
+</RelativeLayout>

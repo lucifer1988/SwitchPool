@@ -104,7 +104,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/home_item_grid1"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
         
          <Button
@@ -114,7 +114,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/home_item_grid2"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
                 
          <Button
@@ -124,7 +124,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/home_item_grid3"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
          <Button
             android:id="@+id/button4_search_toolbar"
@@ -133,7 +133,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/home_item_grid4"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />         
 
     </LinearLayout>

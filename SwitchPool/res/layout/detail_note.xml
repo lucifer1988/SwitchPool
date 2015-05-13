@@ -25,7 +25,7 @@
             android:layout_weight="0.5"
             android:background="@color/translucent"
             android:text="@string/detail_note_tab"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
 
          <ImageButton
@@ -44,7 +44,7 @@
             android:layout_weight="0.5"
             android:background="@color/translucent"
             android:text="@string/detail_note_edit"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
 
     </LinearLayout>

@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/detail_content_tab"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
                 
           <Button
@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/detail_content_content1"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
 
     </LinearLayout>

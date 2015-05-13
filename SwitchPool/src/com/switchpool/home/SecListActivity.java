@@ -393,7 +393,7 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 		
 	}
 
-    private int verticalMinDistance = 20;
+    private int verticalMinDistance = 100;
     private int minVelocity         = 50;
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {

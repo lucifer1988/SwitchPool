@@ -145,10 +145,10 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 			
 			@Override
 			public void tapButton2() {
-	            Intent onItemClickIntent = new Intent();
-	            onItemClickIntent.setClass(TopListActivity.this, MainActivity.class);
-	            onItemClickIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(onItemClickIntent);
+//	            Intent onItemClickIntent = new Intent();
+//	            onItemClickIntent.setClass(TopListActivity.this, MainActivity.class);
+//	            onItemClickIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//	            startActivity(onItemClickIntent);
 	            TopListActivity.this.finish();
 	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
@@ -727,7 +727,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 		
 	}
 
-    private int verticalMinDistance = 20;
+    private int verticalMinDistance = 100;
     private int minVelocity         = 50;
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {

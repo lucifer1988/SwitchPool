@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+     <RelativeLayout
+        android:id="@+id/relativeLayout_verify_nav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" >
+
+        <ImageView
+            android:id="@+id/imageView_verify_nav"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/nav_bg"
+            android:contentDescription="@string/app_name" />
+
+        <TextView
+            android:id="@+id/textView_verify_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/login_register"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/button1_verify_nav"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="@color/translucent"
+            android:text="@string/back"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:onClick="back" />
+
+    </RelativeLayout>
+
+     <TextView
+         android:id="@+id/textView1_verify"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/relativeLayout_verify_nav"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="60dp"
+         android:text="@string/login_verify_title"
+         android:textColor="@color/verify_title" />
+     
+     <TextView
+         android:id="@+id/textView2_verify"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/textView1_verify"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="30dp"
+         android:text=""
+         android:textColor="@color/verify_title" />
+     
+     <EditText
+         android:id="@+id/editText1_verify"
+         android:layout_width="140dp"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/textView2_verify"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="30dp"
+         android:ems="10"
+         android:focusable="true"
+         android:focusableInTouchMode="true"
+         android:gravity="center"
+         android:hint="@string/login_verify_edittext_hit"
+         android:inputType="phone"
+         android:text="" >
+
+         <requestFocus />
+     </EditText>
+     
+     <TextView
+         android:id="@+id/textView3_verify"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/editText1_verify"
+         android:layout_centerHorizontal="true"
+         android:layout_marginTop="20dp"
+         android:text="@string/login_verify_time"
+         android:textColor="@color/verify_title" />
+
+     <Button
+         android:id="@+id/button1_verify"
+         style="?android:attr/buttonStyleSmall"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/textView3_verify"
+         android:layout_centerHorizontal="true"
+         android:background="@color/translucent"
+         android:text="@string/login_verify_notreceive"
+         android:textColor="@color/verify_noreceive"
+         android:visibility="invisible"
+         android:onClick="notReceive" />
+     
+      <Button
+          android:id="@+id/button2_verify"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:layout_below="@id/textView3_verify"
+          android:layout_marginLeft="30dp"
+          android:layout_marginRight="30dp"
+          android:layout_marginTop="40dp"
+          android:background="@drawable/login_login_selecter"
+          android:text="@string/login_verify"
+          android:textColor="@color/white"
+          android:onClick="submit" />
+     
+</RelativeLayout>

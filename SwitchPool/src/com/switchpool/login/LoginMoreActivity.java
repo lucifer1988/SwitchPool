@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,23 @@ public class LoginMoreActivity extends Activity {
 		adapter = new GroupListAdapter(this, itemList);
 		listView = (ListView)findViewById(R.id.listView_loginmore);
 		listView.setAdapter(adapter);
+	}
+	
+	public void back(View sourceView) {
+		finish();
+		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
+	
+	public void register(View sourceView) {
+		Intent intent = new Intent(this, RegisterActivity.class);    	
+		this.startActivity(intent);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 	}
 
 	private static class GroupListAdapter extends ArrayAdapter<String>{

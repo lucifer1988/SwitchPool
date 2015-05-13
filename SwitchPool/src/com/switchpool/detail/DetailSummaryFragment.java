@@ -46,8 +46,6 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
         homeButton.setOnClickListener(this); 
         forwardButton.setOnClickListener(this); 
         
-        Utility.shareInstance().showWaitingHUD(getActivity());
-        
         return view;
     }
 	

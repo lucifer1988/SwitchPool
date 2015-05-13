@@ -23,7 +23,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/detail_summary_tool_back"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
         
          <Button
@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/detail_summary_tool_home"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
                 
          <Button
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:background="@color/translucent"
             android:text="@string/detail_summary_tool_forward"
-            android:textColor="@color/detail_toolbutton_color"
+            android:textColor="@color/detail_toolbutton_color_nor"
             android:textSize="15sp" />
 
     </LinearLayout>

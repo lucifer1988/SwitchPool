@@ -36,7 +36,8 @@
             android:background="@color/translucent"
             android:text="@string/back"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:onClick="back" />
 
     </RelativeLayout>
 
@@ -59,8 +60,8 @@
          android:layout_marginRight="30dp"
          android:layout_marginTop="10dp"
          android:background="@drawable/login_login_selecter"
-         android:onClick="login"
          android:text="@string/login_register"
-         android:textColor="@color/white" />
+         android:textColor="@color/white"
+         android:onClick="register"/>
 
 </RelativeLayout>

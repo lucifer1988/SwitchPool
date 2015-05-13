@@ -90,6 +90,7 @@ public class LoginActivity extends Activity {
 	public void more(View sourceView) {
 		Intent intent = new Intent(this, LoginMoreActivity.class);    	
 		this.startActivity(intent);
+		overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 	}
 	
 	public void tab(View sourceView) {
