@@ -18,6 +18,7 @@ import com.xiaoshuye.switchpool.R;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -56,6 +57,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	
 	FragmentManager fManager;
 	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
+	
 	public static Boolean isLogin = false;
 	
 	@Override
@@ -64,6 +68,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         setContentView(R.layout.main);
         fManager = getSupportFragmentManager();
         
+		preferences = getSharedPreferences("switchpool", 0x0001);
+		editor = preferences.edit();
+		
         ctx = this;
         
         homeButton = (RadioButton)findViewById(R.id.radio_home_home);
@@ -135,6 +142,9 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		    							user.setInreg(jsonObject.getInt("inreg"));
 		    							user.setTopic(jsonObject.getInt("topic"));  
 		    							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
+		    							
+		    							editor.putLong(getString(R.string.SPQueryGap), (long)jsonObject.getInt("querygap"));
+		    							editor.commit();
 		    							
 		    							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
 		    							List<Subject> subjectArr = new ArrayList<Subject>();

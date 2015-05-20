@@ -14,8 +14,6 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.switchpool.detail.DetailActivity;
 import com.switchpool.detail.DetailActivity.DeatilType;
-import com.switchpool.home.MainActivity;
-import com.switchpool.home.TopListActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.SearchKey;
 import com.switchpool.model.User;
@@ -28,6 +26,7 @@ import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -93,11 +92,15 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		, R.string.home_item_grid7 , R.string.home_item_grid8
 	};
 	
+	SharedPreferences preferences;
+	
 	public SearchActivity() {
 	}
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
+		
+		preferences = getSharedPreferences("switchpool", 0x0001);
 		
 		fManager = getSupportFragmentManager();
 		tipTextView = (TextView)findViewById(R.id.textView_search_tip);
@@ -371,7 +374,24 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			if (curSearchKeyCacheList != null) {
 				searchKeyList.get(curIndex).addAll(curSearchKeyCacheList);
 			}
+			
+			final String datePathString = Utility.shareInstance().resRootDir()+this.getString(R.string.SPPoolDateSearchDict);
+			Log.v("sp", "datePathString:"+datePathString);
+			HashMap<String, Long> dateMap = (HashMap<String, Long>)Utility.shareInstance().getObject(datePathString);
+			Log.v("sp", "dateMap:"+dateMap);
+			Long lastDate = dateMap.get(curPoolid);
+			long gap = preferences.getLong("SPQueryGap", 0);
+			
 			if (Utility.shareInstance().isNetworkAvailable(this)) {
+				final long curDate = System.currentTimeMillis()/1000;
+				Log.v("sp", "poolid:"+curPoolid);
+				Log.v("sp", "lastDate:"+lastDate);
+				Log.v("sp", "curDate:"+curDate);
+				Log.v("sp", "gap:"+gap);
+				if (lastDate != null && curDate-lastDate.longValue() < gap && curSearchKeyCacheList.size() > 0) {
+					searchResult(searchString, curSearchKeyCacheList);
+				}
+				
 				AsyncHttpClient client = new AsyncHttpClient();
 				String url = new String(this.getString(R.string.host) + "search/keywd");
 				Log.v("sp", ""+url);
@@ -382,6 +402,10 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 		                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
 		                	Log.v("sp", "" + jsonObject); 
 		                	if (statusCode == 200) {
+		                		HashMap<String, Long> dateMap = (HashMap<String, Long>)Utility.shareInstance().getObject(datePathString);
+		                		dateMap.put(curPoolid, new Long(curDate));
+		                		Utility.shareInstance().saveObject(datePathString, dateMap);
+		                		
 		                		try {
 		                			searchVerDict.put(curPoolid, jsonObject.getString("version"));
 		                			Utility.shareInstance().saveObject(searchVerCachePath, searchVerDict);

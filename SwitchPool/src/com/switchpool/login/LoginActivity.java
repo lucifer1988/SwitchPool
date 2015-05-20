@@ -1,6 +1,7 @@
 package com.switchpool.login;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.xiaoshuye.switchpool.R;
@@ -50,6 +51,10 @@ public class LoginActivity extends Activity {
 		
 		preferences = getSharedPreferences("switchpool", 0x0001);
 		editor = preferences.edit();
+		if (preferences.getString(getString(R.string.SPQueryGap), null) == null) {
+			editor.putLong(getString(R.string.SPQueryGap), 0);
+			editor.commit();
+		}
 		
 		uid_name = (EditText) findViewById(R.id.editText_login_username);
 		uid_passwd = (EditText) findViewById(R.id.editText_login_password);
@@ -166,6 +171,8 @@ public class LoginActivity extends Activity {
 							user.setInreg(jsonObject.getInt("inreg"));
 							user.setTopic(jsonObject.getInt("topic"));  
 							
+							editor.putLong(getString(R.string.SPQueryGap), (long)jsonObject.getInt("querygap"));
+							
 							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
 							
 							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
@@ -183,14 +190,23 @@ public class LoginActivity extends Activity {
 			                    }
 							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
 							 
+							 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+							 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
+							 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
+							 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
 							 for (int i=0; i<subjectArr.size(); i++) {
 								 Subject subject = subjectArr.get(i);
 								 for (int j = 1; j < 9; j++) {
 									 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
 									 editor.putString(poolID, "0");
+									 poolDateMap.put(poolID, new Long(100));
+									 searchDateMap.put(poolID, new Long(100));
 								}
-							}
+							 }
 							 editor.commit();
+							 Log.v("sp", "dateMap:"+poolDateMap);
+							 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+							 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
 							
 							Intent intent = new Intent(ctx, MainActivity.class);    	
 							ctx.startActivity(intent);
@@ -287,14 +303,23 @@ public class LoginActivity extends Activity {
 			                    }
 							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
 							 
+							 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+							 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
+							 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
+							 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
 							 for (int i=0; i<subjectArr.size(); i++) {
 								 Subject subject = subjectArr.get(i);
 								 for (int j = 1; j < 9; j++) {
 									 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
 									 editor.putString(poolID, "0");
+									 poolDateMap.put(poolID, new Long(100));
+									 searchDateMap.put(poolID, new Long(100));
 								}
-							}
+							 }
 							 editor.commit();
+							 Log.v("sp", "dateMap:"+poolDateMap);
+							 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+							 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
 							
 							Intent intent = new Intent(ctx, MainActivity.class);    	
 							ctx.startActivity(intent);

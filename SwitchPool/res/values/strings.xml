@@ -112,4 +112,8 @@
     
     <string name="viewpager_indicator">%1$d/%2$d</string>
     
+    <string name="SPQueryGap">SPQueryGap</string>
+    <string name="SPPoolDateDict">SPPoolDateDict</string>
+    <string name="SPPoolDateSearchDict">SPPoolDateSearchDict</string>
+    
 </resources>

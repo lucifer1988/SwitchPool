@@ -335,13 +335,10 @@ public class Utility extends Activity {
 		if (cacheArr != null && cacheArr.size() > 0) {
 		  loop:for (int i = 0; i < cacheArr.size(); i++) {
 				Item topItem = cacheArr.get(i);
-//				if (topItem.getItemArr() != null && topItem.getItemArr().size() > 0) {
 					for (int j = 0; j < topItem.getItemArr().size(); j++) {
 						Item secItem = topItem.getItemArr().get(j);
-//						if (secItem.getItemArr() != null && secItem.getItemArr().size() > 0) {
 							for (int k = 0; k < secItem.getItemArr().size(); k++) {
 								Item thrItem = secItem.getItemArr().get(k);
-//								if (thrItem.getItemArr() != null && thrItem.getItemArr().size() > 0) {
 									for (int l = 0; l < thrItem.getItemArr().size(); l++) {
 										Log.v("sp", "thrItem.getItemArr():"+thrItem.getItemArr());
 										Item forItem = thrItem.getItemArr().get(l);
@@ -354,11 +351,8 @@ public class Utility extends Activity {
 											continue;
 										}
 									}
-//								}
 							}
-//						}
 					}
-//				}
 			}
 		}
 		return resultItem;

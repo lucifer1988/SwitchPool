@@ -1990,7 +1990,10 @@ containing a value of this type.
         public static final int SPItemList=0x7f0a005d;
         public static final int SPItemSelectHistorySec=0x7f0a0061;
         public static final int SPItemSelectHistoryTop=0x7f0a0060;
+        public static final int SPPoolDateDict=0x7f0a0064;
+        public static final int SPPoolDateSearchDict=0x7f0a0065;
         public static final int SPPoolSearchDict=0x7f0a005e;
+        public static final int SPQueryGap=0x7f0a0063;
         public static final int SPSearchKeyList=0x7f0a005f;
         public static final int Username_will_not_be_nil=0x7f0a0026;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 

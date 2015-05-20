@@ -1,6 +1,7 @@
 package com.switchpool.home;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -263,11 +264,31 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
         return super.onKeyDown(keyCode, event);
     }
 	
-	private void poolItemRequstPost(String poolid, String version) {
+	private void poolItemRequstPost(final String poolid, String version) {
 		final String cachePathString = Utility.shareInstance().cachPoolDir(poolId, subjectId)+this.getString(R.string.SPItemList);
 		final List<Item> cacheArr = (List<Item>) Utility.shareInstance().getObject(cachePathString);
 		
+		final String datePathString = Utility.shareInstance().resRootDir()+this.getString(R.string.SPPoolDateDict);
+		Log.v("sp", "datePathString:"+datePathString);
+		HashMap<String, Long> dateMap = (HashMap<String, Long>)Utility.shareInstance().getObject(datePathString);
+		Log.v("sp", "dateMap:"+dateMap);
+		Long lastDate = dateMap.get(poolid);
+		long gap = preferences.getLong("SPQueryGap", 0);
+		
 		if (Utility.shareInstance().isNetworkAvailable(this)) {
+			final long curDate = System.currentTimeMillis()/1000;
+			Log.v("sp", "poolid:"+poolid);
+			Log.v("sp", "lastDate:"+lastDate);
+			Log.v("sp", "curDate:"+curDate);
+			Log.v("sp", "gap:"+gap);
+			if (lastDate != null && curDate-lastDate.longValue() < gap && cacheArr.size() > 0) {
+				topListItemArr = new ArrayList<Item>(cacheArr); 
+				initialTrack();
+				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
+				topExpandableListView.setAdapter(adapter);
+				expendAllGroup();
+			}
+			
 			Utility.shareInstance().showWaitingHUD(this);
 			AsyncHttpClient client = new AsyncHttpClient();
 			String url = new String(this.getString(R.string.host) + "file/getSource");
@@ -282,6 +303,10 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 	                	Utility.shareInstance().hideWaitingHUD();
 	                	Log.v("sp", "" + jsonObject); 
 	                	if (statusCode == 200) {
+	                		HashMap<String, Long> dateMap = (HashMap<String, Long>)Utility.shareInstance().getObject(datePathString);
+	                		dateMap.put(poolid, new Long(curDate));
+	                		Utility.shareInstance().saveObject(datePathString, dateMap);
+	                		
 	                		try {
 	                			editor.putString(poolId, jsonObject.getString("version"));
 	                			List<Item> topItemArr = new ArrayList<Item>();
