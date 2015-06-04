@@ -12,7 +12,10 @@ import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -153,6 +156,9 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		            	getActivity().startActivity(intent); 
 		            	getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 					}
+					else {
+						showAD(100, getString(R.string.nocontenttip_audioplay));
+					}
 				}
 			}
 		});
@@ -174,21 +180,64 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
 		Log.v("sp", ""+arg0);
         curSubject = subjectArr.get(arg0);
         homeHeadTextView.setText(curSubject.title);
+	}
+	
+	//选择对话框
+	public void showAD(int flag, String title) {
+		AlertDialog.Builder builder  = new AlertDialog.Builder(getActivity()).setTitle(title);
+		setPositiveButton(builder, flag);
+		setNegativeButton(builder, flag)
+		.create()
+		.show();
+	}
+	
+	private AlertDialog.Builder setPositiveButton(
+			AlertDialog.Builder builder, final int flag)
+	{
+		// 调用setPositiveButton方法添加确定按钮
+		return builder.setPositiveButton(getString(R.string.OK), new OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				if (flag == 100) {
+					Intent onItemClickIntent = new Intent();
+					onItemClickIntent.putExtra("poolId", curSubject.subjectid+"x"+1);
+					onItemClickIntent.putExtra("subjectId", curSubject.subjectid);
+					onItemClickIntent.putExtra("poolName", getActivity().getString(itemNameIds[1]));
+					onItemClickIntent.setClass(getActivity(), TopListActivity.class);
+					getActivity().startActivity(onItemClickIntent);
+					getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+				}
+				else if (flag == 101) {
+					
+				}
+			}
+		});
+	}
+	
+	private AlertDialog.Builder setNegativeButton(
+			AlertDialog.Builder builder, final int flag)
+	{
+		// 调用setNegativeButton方法添加取消按钮
+		return builder.setNegativeButton(getString(R.string.cancel), new OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				return ;
+			}
+		});
 	}
 }

@@ -17,7 +17,6 @@ import com.xiaoshuye.switchpool.R;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +100,8 @@ public class DetailNoteTextFragment extends Fragment {
 					public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 						Log.v("sp", "" + jsonObject);
 						if (statusCode == 200) {
+							ctx.noteFragment.textNoteDate = Utility.shareInstance().paserTimeToYMDHMS(System.currentTimeMillis()/1000);
+							ctx.noteFragment.refreshActionButton();
 							try {
 								Note curNote;
 								JSONArray fileJsonArray = jsonObject.getJSONArray("notes");

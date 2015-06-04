@@ -30,7 +30,8 @@
         android:id="@+id/expandableListView_seclist_con"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/relativeLayout_seclist_nav" >
+        android:layout_below="@id/relativeLayout_seclist_nav"
+        android:layout_marginBottom="44dp" >
 
     </ExpandableListView>
         <fragment

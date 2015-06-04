@@ -29,14 +29,14 @@
             android:textSize="15sp" />
                 
           <Button
-            android:id="@+id/button_detail_content_content1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/translucent"
-            android:text="@string/detail_content_content1"
-            android:textColor="@color/detail_toolbutton_color_nor"
-            android:textSize="15sp" />
+              android:id="@+id/button_detail_content_content1"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:background="@color/translucent"
+              android:text="@string/detail_content_content1"
+              android:textColor="@color/grey"
+              android:textSize="15sp" />
 
     </LinearLayout>
 

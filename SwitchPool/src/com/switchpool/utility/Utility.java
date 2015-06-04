@@ -60,6 +60,18 @@ public class Utility extends Activity {
 		}
 	}
 	
+	
+	private static long lastClickTime;  
+    public boolean isFastDoubleClick() {  
+        long time = System.currentTimeMillis();  
+        long timeD = time - lastClickTime;  
+        if ( 0 < timeD && timeD < 3000) {     
+            return true;     
+        }     
+        lastClickTime = time;     
+        return false;     
+    } 
+    
 	 /**
      * 检查当前网络是否可用
      * 
@@ -230,6 +242,14 @@ public class Utility extends Activity {
 		TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
 		TimeZone.setDefault(tz);
 		SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+		return format.format(new Date(time * 1000L));
+	}
+	
+	public String paserTimeToYMDHMS(long time) {
+		System.setProperty("user.timezone", "Asia/Shanghai");
+		TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
+		TimeZone.setDefault(tz);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		return format.format(new Date(time * 1000L));
 	}
 	

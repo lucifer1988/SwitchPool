@@ -12,7 +12,6 @@ import com.xiaoshuye.switchpool.R;
 
 import android.app.Dialog;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,7 +29,6 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,7 +38,7 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 
 	private Button tabButton;
 	private Button editButton;
-	public ImageButton actionButton;
+	public Button actionButton;
 	
 	FragmentManager fManager;
 	private int index;
@@ -58,7 +56,6 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	
     private Dialog mRecordDialog;
     private AudioRecorder mAudioRecorder;
-    private MediaPlayer mMediaPlayer;
     private Thread mRecordThread;
     private TextView mTvRecordDialogTxt;
     private ImageView mIvRecPhone;
@@ -68,28 +65,25 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
     private int recordState = 0; // 录音状态
     private float recodeTime = 0.0f; // 录音时长
     private double voiceValue = 0.0; // 录音的音量值
-    private boolean playState = false; // 录音的播放状态
     private boolean moveState = false; // 手指是否移动
 
     private float downY;
     
-	public DetailNoteFragment() {
-		
-	}
+    public String textNoteDate;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_note, container,false);
         ctx = (DetailActivity) getActivity();
+        textNoteDate = "";
         
         tabButton = (Button)view.findViewById(R.id.button_detail_note_tab);
         editButton = (Button)view.findViewById(R.id.button_detail_note_edit);
-        actionButton = (ImageButton)view.findViewById(R.id.button_detail_note_action);
-        actionButton.setVisibility(View.INVISIBLE);
+        actionButton = (Button)view.findViewById(R.id.button_detail_note_action);
         tabButton.setOnClickListener(this);
         editButton.setOnClickListener(this);
-//        actionButton.setOnClickListener(this);
+        actionButton.setBackgroundResource(0);
         index = 0;
         
         fManager = getActivity().getSupportFragmentManager();
@@ -348,15 +342,15 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	        	transaction.hide(notePhotoFragment);
 	        	transaction.hide(noteAudioFragment);
 	        	transaction.show(noteTextFragment);
-	        	actionButton.setVisibility(View.INVISIBLE);
+//	        	actionButton.setVisibility(View.INVISIBLE);
 	        }
 	            break;
 	        case 1: {
 	        	transaction.hide(noteTextFragment);
 	        	transaction.hide(noteAudioFragment);
 	        	transaction.show(notePhotoFragment);
-	        	actionButton.setImageResource(R.drawable.detail_note_camera);
-	        	actionButton.setVisibility(View.VISIBLE);
+//	        	actionButton.setImageResource(R.drawable.detail_note_camera);
+//	        	actionButton.setVisibility(View.VISIBLE);
 	        	notePhotoFragment.reload();
 	        }
 	            break;
@@ -364,13 +358,15 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 	        	transaction.hide(noteTextFragment);
 	        	transaction.hide(notePhotoFragment);
 	        	transaction.show(noteAudioFragment);
-	        	actionButton.setImageResource(R.drawable.detail_note_record);
-	        	actionButton.setVisibility(View.VISIBLE);
+//	        	actionButton.setImageResource(R.drawable.detail_note_record);
+//	        	actionButton.setVisibility(View.VISIBLE);
 	        	noteAudioFragment.reload();
 	        }
 	            break;
 	        }
 	        transaction.commit();
+	        
+	        refreshActionButton();
 		}
 //		else if (v.getId() == R.id.button_detail_note_action) {
 //			switch (index) {
@@ -423,6 +419,32 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 			}
 		}
 
+	}
+	
+	public void refreshActionButton() {
+		switch (index) {
+		case 0:{
+			actionButton.setBackgroundResource(0);
+			Log.v("sp", "textNoteDate:"+textNoteDate);
+			actionButton.setTextColor(R.color.grey);
+			actionButton.setText(textNoteDate);
+		}
+			break;
+
+		case 1:{
+			actionButton.setBackgroundResource(R.drawable.detail_note_camera);
+			actionButton.setTextColor(R.color.white);
+			actionButton.setText(R.string.camera);
+		}
+			break;
+			
+		case 2:{
+			actionButton.setBackgroundResource(R.drawable.detail_note_record);
+			actionButton.setTextColor(R.color.white);
+			actionButton.setText(R.string.record);
+		}
+			break;
+		}
 	}
 
 }

@@ -11,16 +11,13 @@ import java.util.Random;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.switchpool.detail.DetailContentFragment.DetailContentHandler;
-import com.switchpool.home.MainActivity;
-import com.switchpool.home.SecListActivity;
-import com.switchpool.home.TopListActivity;
 import com.switchpool.model.Item;
 import com.switchpool.model.Model;
 import com.switchpool.model.SPFile;
 import com.switchpool.model.User;
-import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.ImageTools;
 import com.switchpool.utility.MusicPlayer;
 import com.switchpool.utility.NoContnetFragment;
@@ -34,7 +31,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.R.bool;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -61,7 +57,6 @@ import android.view.View;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,7 +71,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	public String poolId;
 	public String subjectId;
 	public Item item;
-	private String poolName;
+//	private String poolName;
 	
 	private Button summaryButton;
 	private Button contentButton;
@@ -116,11 +111,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	private DetailSummaryFragment summaryFragment;
 	private DetailContentFragment contentFragment;
-	private DetailNoteFragment noteFragment;
+	public DetailNoteFragment noteFragment;
 	private DetailAudioFragment audioFragment;
 	
 	FragmentManager fManager;
-	AsyncHttpClient client;
+	AsyncHttpClient downloadClient;
+	RequestHandle downloadRD;
 	NoContnetFragment ncFragment;
 	
 	public MusicPlayer musicPlayer; 
@@ -178,7 +174,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		poolId = intent.getStringExtra("poolId");
 		subjectId = intent.getStringExtra("subjectId");
 		deatilType = (DeatilType)intent.getSerializableExtra("type");
-		poolName = intent.getStringExtra("poolName");
+//		poolName = intent.getStringExtra("poolName");
 		
 		String splitArr[] = item.getCaption().split(" ");
 		TextView textView = (TextView)findViewById(R.id.textView_detail_nav);
@@ -200,7 +196,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		contentFragment = (DetailContentFragment)fManager.findFragmentById(R.id.detail_fragment_content);
 		noteFragment = (DetailNoteFragment)fManager.findFragmentById(R.id.detail_fragment_note);
 		audioFragment = (DetailAudioFragment)fManager.findFragmentById(R.id.detail_fragment_audio);
-		ImageButton actionButton = (ImageButton)findViewById(R.id.button_detail_note_action);  
+		Button actionButton = (Button)findViewById(R.id.button_detail_note_action);  
 		actionButton.setOnTouchListener((OnTouchListener)noteFragment);
 		
 		ncFragment = (NoContnetFragment)fManager.findFragmentById(R.id.detail_nocontent);
@@ -273,6 +269,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			@Override
 			public void tapButton6() {
+				if (Utility.shareInstance().isFastDoubleClick()) {  
+			        return;  
+			    }  
 				if (curTabIndex < topTabBtnArr.size()) {
 					int index = curTabIndex+1;
 					Button button = topTabBtnArr.get(index);
@@ -316,12 +315,19 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 //	            startActivity(myIntent);
 //	            DetailActivity.this.finish();
 //	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+				if (Utility.shareInstance().isFastDoubleClick()) {  
+			        return;  
+			    } 
+				stopDownload();
 				finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			
 			@Override
 			public void tapButton1() {
+				if (Utility.shareInstance().isFastDoubleClick()) {  
+			        return;  
+			    } 
 				if (curTabIndex > 0) {
 					int index = curTabIndex-1;
 					Button button = topTabBtnArr.get(index);
@@ -329,6 +335,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				}
 				else {
 					if (deatilType == DeatilType.DeatilTypeOrigin || deatilType == DeatilType.DeatilTypeSearch) {
+						stopDownload();
 						finish();
 						overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 					}
@@ -414,8 +421,15 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	@Override
 	public void onBackPressed() {
+		stopDownload();
 		super.onBackPressed();
 		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
+	
+	public void stopDownload() {
+		if (downloadRD != null) {
+			downloadRD.cancel(true);
+		}
 	}
 	
 	public void showNoContent() {
@@ -774,14 +788,19 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	 * @throws Exception
 	 */
 	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
-		 if (client == null) {
-			 client = new AsyncHttpClient();
+		stopDownload();
+		if (downloadClient == null) {
+			 downloadClient = new AsyncHttpClient();
+			 downloadClient.setEnableRedirects(true, true, true);
 		} 
+		if (modelType.equals("40")) {
+			audioFragment.seekBar.setProgress(0); 
+		}
 		new String();
 		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
 		String url = new String(this.getString(R.string.host) + paramString);
 		// 获取二进制数据如图片和其他文件
-		client.get(url, new BinaryHttpResponseHandler() {
+		downloadRD = downloadClient.get(url, new BinaryHttpResponseHandler() {
 	
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
@@ -828,7 +847,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			@Override
 			public void onRetry(int retryNo) {
 				super.onRetry(retryNo);
-				// 返回重试次数
+			}
+			
+			public void onCancel() {
+				Log.e("sp", "CANCEL"+"");
 			}
 	
 		});

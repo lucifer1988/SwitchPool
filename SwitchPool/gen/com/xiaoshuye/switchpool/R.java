@@ -1984,17 +1984,17 @@ containing a value of this type.
         /**  utility
  utility
          */
-        public static final int OK=0x7f0a0050;
+        public static final int OK=0x7f0a0052;
         public static final int Password_will_not_be_nil=0x7f0a0027;
-        public static final int SPAudioFilePrefix=0x7f0a003e;
-        public static final int SPItemList=0x7f0a005d;
-        public static final int SPItemSelectHistorySec=0x7f0a0061;
-        public static final int SPItemSelectHistoryTop=0x7f0a0060;
-        public static final int SPPoolDateDict=0x7f0a0064;
-        public static final int SPPoolDateSearchDict=0x7f0a0065;
-        public static final int SPPoolSearchDict=0x7f0a005e;
-        public static final int SPQueryGap=0x7f0a0063;
-        public static final int SPSearchKeyList=0x7f0a005f;
+        public static final int SPAudioFilePrefix=0x7f0a0040;
+        public static final int SPItemList=0x7f0a0060;
+        public static final int SPItemSelectHistorySec=0x7f0a0064;
+        public static final int SPItemSelectHistoryTop=0x7f0a0063;
+        public static final int SPPoolDateDict=0x7f0a0067;
+        public static final int SPPoolDateSearchDict=0x7f0a0068;
+        public static final int SPPoolSearchDict=0x7f0a0061;
+        public static final int SPQueryGap=0x7f0a0066;
+        public static final int SPSearchKeyList=0x7f0a0062;
         public static final int Username_will_not_be_nil=0x7f0a0026;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
@@ -2038,14 +2038,15 @@ containing a value of this type.
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int action_settings=0x7f0a000e;
         public static final int app_name=0x7f0a000d;
-        public static final int back=0x7f0a0053;
-        public static final int cancel=0x7f0a0054;
+        public static final int back=0x7f0a0055;
+        public static final int camera=0x7f0a003e;
+        public static final int cancel=0x7f0a0056;
         public static final int detail_content_content1=0x7f0a0037;
         public static final int detail_content_content2=0x7f0a0038;
         public static final int detail_content_content3=0x7f0a0039;
         public static final int detail_content_tab=0x7f0a0036;
-        public static final int detail_nav_title=0x7f0a004b;
-        public static final int detail_note_audio_cacheProgress=0x7f0a003f;
+        public static final int detail_nav_title=0x7f0a004d;
+        public static final int detail_note_audio_cacheProgress=0x7f0a0041;
         public static final int detail_note_complete=0x7f0a003c;
         public static final int detail_note_edit=0x7f0a003b;
         public static final int detail_note_tab=0x7f0a003a;
@@ -2064,20 +2065,20 @@ containing a value of this type.
         /**  home 
  home 
          */
-        public static final int hoem_nav_title=0x7f0a0040;
-        public static final int home_item_grid1=0x7f0a0041;
-        public static final int home_item_grid2=0x7f0a0042;
-        public static final int home_item_grid3=0x7f0a0043;
-        public static final int home_item_grid4=0x7f0a0044;
-        public static final int home_item_grid5=0x7f0a0045;
-        public static final int home_item_grid6=0x7f0a0046;
-        public static final int home_item_grid7=0x7f0a0047;
-        public static final int home_item_grid8=0x7f0a0048;
+        public static final int hoem_nav_title=0x7f0a0042;
+        public static final int home_item_grid1=0x7f0a0043;
+        public static final int home_item_grid2=0x7f0a0044;
+        public static final int home_item_grid3=0x7f0a0045;
+        public static final int home_item_grid4=0x7f0a0046;
+        public static final int home_item_grid5=0x7f0a0047;
+        public static final int home_item_grid6=0x7f0a0048;
+        public static final int home_item_grid7=0x7f0a0049;
+        public static final int home_item_grid8=0x7f0a004a;
         /**  key
          */
-        public static final int host=0x7f0a005c;
-        public static final int loading=0x7f0a0051;
-        public static final int loadingandwait=0x7f0a0052;
+        public static final int host=0x7f0a005f;
+        public static final int loading=0x7f0a0053;
+        public static final int loadingandwait=0x7f0a0054;
         public static final int login_login_btn=0x7f0a0012;
         public static final int login_more=0x7f0a0016;
         public static final int login_more_list1=0x7f0a0017;
@@ -2104,20 +2105,22 @@ login
         public static final int login_verify_succeed=0x7f0a0025;
         public static final int login_verify_time=0x7f0a001f;
         public static final int login_verify_title=0x7f0a001d;
-        public static final int nocontenttip_detail_audionote=0x7f0a005a;
-        public static final int nocontenttip_detail_content=0x7f0a0057;
-        public static final int nocontenttip_detail_imagenote=0x7f0a0059;
-        public static final int nocontenttip_detail_textnote=0x7f0a0058;
-        public static final int nocontenttip_list=0x7f0a0056;
-        public static final int nocontenttip_search=0x7f0a005b;
-        public static final int search_field_hit=0x7f0a004d;
+        public static final int nocontenttip_audioplay=0x7f0a005e;
+        public static final int nocontenttip_detail_audionote=0x7f0a005c;
+        public static final int nocontenttip_detail_content=0x7f0a0059;
+        public static final int nocontenttip_detail_imagenote=0x7f0a005b;
+        public static final int nocontenttip_detail_textnote=0x7f0a005a;
+        public static final int nocontenttip_list=0x7f0a0058;
+        public static final int nocontenttip_search=0x7f0a005d;
+        public static final int record=0x7f0a003f;
+        public static final int search_field_hit=0x7f0a004f;
         /**  search 
  search 
          */
-        public static final int search_nav_title=0x7f0a004c;
-        public static final int search_nocontent_tip=0x7f0a004e;
-        public static final int search_welcome_tip=0x7f0a004f;
-        public static final int seclist_nav_title=0x7f0a004a;
+        public static final int search_nav_title=0x7f0a004e;
+        public static final int search_nocontent_tip=0x7f0a0050;
+        public static final int search_welcome_tip=0x7f0a0051;
+        public static final int seclist_nav_title=0x7f0a004c;
         /**  tab 
  tab 
          */
@@ -2125,9 +2128,9 @@ login
         public static final int tabbar_item_more=0x7f0a002d;
         public static final int tabbar_item_news=0x7f0a002b;
         public static final int tabbar_item_setting=0x7f0a002c;
-        public static final int toplist_nav_title=0x7f0a0049;
-        public static final int viewpager_indicator=0x7f0a0062;
-        public static final int wait=0x7f0a0055;
+        public static final int toplist_nav_title=0x7f0a004b;
+        public static final int viewpager_indicator=0x7f0a0065;
+        public static final int wait=0x7f0a0057;
     }
     public static final class style {
         /** 

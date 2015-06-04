@@ -61,6 +61,8 @@
     <string name="detail_note_edit">编辑</string>
     <string name="detail_note_complete">完成</string>
     <string name="detail_note_text_hint">请输入您的笔记</string>
+    <string name="camera">拍&#160;&#160;&#160;照</string>
+    <string name="record">录&#160;&#160;&#160;音</string>
     
     <string name="SPAudioFilePrefix">001</string>
     <string name="detail_note_audio_cacheProgress"><xliff:g>已缓存 </xliff:g><xliff:g>%d</xliff:g><xliff:g>%%</xliff:g></string>
@@ -100,5 +102,6 @@
     <string name="nocontenttip_detail_imagenote">本节还没有图片笔记</string>
     <string name="nocontenttip_detail_audionote">本节还没有音频笔记</string>
     <string name="nocontenttip_search">暂无您所搜索的内容</string>
+    <string name="nocontenttip_audioplay">目前没有内容在播放，是否进入概览区选择播放的内容？</string>
     
 </resources>
