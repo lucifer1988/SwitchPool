@@ -1987,14 +1987,14 @@ containing a value of this type.
         public static final int OK=0x7f0a0052;
         public static final int Password_will_not_be_nil=0x7f0a0027;
         public static final int SPAudioFilePrefix=0x7f0a0040;
-        public static final int SPItemList=0x7f0a0060;
-        public static final int SPItemSelectHistorySec=0x7f0a0064;
-        public static final int SPItemSelectHistoryTop=0x7f0a0063;
-        public static final int SPPoolDateDict=0x7f0a0067;
-        public static final int SPPoolDateSearchDict=0x7f0a0068;
-        public static final int SPPoolSearchDict=0x7f0a0061;
-        public static final int SPQueryGap=0x7f0a0066;
-        public static final int SPSearchKeyList=0x7f0a0062;
+        public static final int SPItemList=0x7f0a0061;
+        public static final int SPItemSelectHistorySec=0x7f0a0065;
+        public static final int SPItemSelectHistoryTop=0x7f0a0064;
+        public static final int SPPoolDateDict=0x7f0a0068;
+        public static final int SPPoolDateSearchDict=0x7f0a0069;
+        public static final int SPPoolSearchDict=0x7f0a0062;
+        public static final int SPQueryGap=0x7f0a0067;
+        public static final int SPSearchKeyList=0x7f0a0063;
         public static final int Username_will_not_be_nil=0x7f0a0026;
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
          */
@@ -2076,7 +2076,7 @@ containing a value of this type.
         public static final int home_item_grid8=0x7f0a004a;
         /**  key
          */
-        public static final int host=0x7f0a005f;
+        public static final int host=0x7f0a0060;
         public static final int loading=0x7f0a0053;
         public static final int loadingandwait=0x7f0a0054;
         public static final int login_login_btn=0x7f0a0012;
@@ -2111,6 +2111,7 @@ login
         public static final int nocontenttip_detail_imagenote=0x7f0a005b;
         public static final int nocontenttip_detail_textnote=0x7f0a005a;
         public static final int nocontenttip_list=0x7f0a0058;
+        public static final int nocontenttip_noRight=0x7f0a005f;
         public static final int nocontenttip_search=0x7f0a005d;
         public static final int record=0x7f0a003f;
         public static final int search_field_hit=0x7f0a004f;
@@ -2129,7 +2130,7 @@ login
         public static final int tabbar_item_news=0x7f0a002b;
         public static final int tabbar_item_setting=0x7f0a002c;
         public static final int toplist_nav_title=0x7f0a004b;
-        public static final int viewpager_indicator=0x7f0a0065;
+        public static final int viewpager_indicator=0x7f0a0066;
         public static final int wait=0x7f0a0057;
     }
     public static final class style {

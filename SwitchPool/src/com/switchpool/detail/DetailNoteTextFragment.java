@@ -100,8 +100,6 @@ public class DetailNoteTextFragment extends Fragment {
 					public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
 						Log.v("sp", "" + jsonObject);
 						if (statusCode == 200) {
-							ctx.noteFragment.textNoteDate = Utility.shareInstance().paserTimeToYMDHMS(System.currentTimeMillis()/1000);
-							ctx.noteFragment.refreshActionButton();
 							try {
 								Note curNote;
 								JSONArray fileJsonArray = jsonObject.getJSONArray("notes");
@@ -118,6 +116,10 @@ public class DetailNoteTextFragment extends Fragment {
 									
 									textNoteCacheMap.put(ctx.getItem().getId(), note);
 									Utility.shareInstance().saveObject(textNoteCachePath, textNoteCacheMap);
+								    if (curNote.getContent() != null) {
+								    	ctx.noteFragment.textNoteDate = Utility.shareInstance().paserTimeToYMDHMS(System.currentTimeMillis()/1000);
+								    	ctx.noteFragment.refreshActionButton();
+								    }
 								}
 								else {
 									if (cacheNote != null) {

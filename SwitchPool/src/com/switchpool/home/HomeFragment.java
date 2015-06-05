@@ -123,7 +123,12 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 			{
 //				Log.v("sp", ""+position);
 //				Log.v("sp", ""+curSubject.subjectid+"x"+(position+1));
-				if (position < 4) {
+				
+				if (curSubject.getHasRight() == 0) {
+					showAD(101, getString(R.string.nocontenttip_noRight));
+				}
+				
+				else if (position < 4) {
 					Intent onItemClickIntent = new Intent();
 					onItemClickIntent.putExtra("poolId", curSubject.subjectid+"x"+(position+1));
 					onItemClickIntent.putExtra("subjectId", curSubject.subjectid);
@@ -221,7 +226,7 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 					getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				}
 				else if (flag == 101) {
-					
+					//ÌøÍù¿ªÍ¨Ò³Ãæ
 				}
 			}
 		});

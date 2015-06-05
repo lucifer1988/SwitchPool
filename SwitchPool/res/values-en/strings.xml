@@ -103,5 +103,6 @@
     <string name="nocontenttip_detail_audionote">本节还没有音频笔记</string>
     <string name="nocontenttip_search">暂无您所搜索的内容</string>
     <string name="nocontenttip_audioplay">目前没有内容在播放，是否进入概览区选择播放的内容？</string>
+    <string name="nocontenttip_noRight">您没有访问该主题的权限，是否前往开通？</string>
     
 </resources>

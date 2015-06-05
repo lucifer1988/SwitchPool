@@ -8,10 +8,6 @@ public class Subject implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -1466776551039250613L;
-
-	public Subject() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	public String title;
 	public String subjectid;
@@ -19,6 +15,7 @@ public class Subject implements Serializable {
 	public String seq;
 	public String type;
 	public int bgImage;
+	public int hasRight;
 
 	public String getTitle() {
 		return title;
@@ -55,6 +52,13 @@ public class Subject implements Serializable {
 	}
 	public void setBgImage(int bgImage) {
 		this.bgImage = bgImage;
+	}
+	
+	public int getHasRight() {
+		return hasRight;
+	}
+	public void setHasRight(int hasRight) {
+		this.hasRight = hasRight;
 	}
 	
 }

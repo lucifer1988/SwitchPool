@@ -157,6 +157,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		    			                        subject.setSeq(subjectJsonObject.getString("seq"));
 		    			                        subject.setType(subjectJsonObject.getString("type"));
 		    			                        subject.setBgImage(R.drawable.home_bg_header);
+		    			                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
 		    			                        subjectArr.add(subject); 
 		    			                    }
 		    							 Log.v("sp", "" + Utility.shareInstance().resSubjectListFile());

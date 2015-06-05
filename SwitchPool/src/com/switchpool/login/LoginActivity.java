@@ -299,6 +299,7 @@ public class LoginActivity extends Activity {
 			                        subject.setSeq(subjectJsonObject.getString("seq"));
 			                        subject.setType(subjectJsonObject.getString("type"));
 			                        subject.setBgImage(R.drawable.home_bg_header);
+			                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
 			                        subjectArr.add(subject); 
 			                    }
 							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
