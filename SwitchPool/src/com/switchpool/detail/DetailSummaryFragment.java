@@ -53,8 +53,10 @@ public class DetailSummaryFragment extends Fragment implements OnClickListener {
 		model = resModel;
 		Utility.shareInstance().hideWaitingHUD();
 		if (model != null) {
+			Log.v("sp", "model"+model.getFileArr());
 			for (int i = 0; i < model.getFileArr().size(); i++) {
 				SPFile curFile = model.getFileArr().get(i);
+				Log.v("sp", "curFile:"+curFile.getSeq());
 				if (curFile.getSeq() == 1) {
 					file = curFile;
 					url = "file://"+file.getPath();

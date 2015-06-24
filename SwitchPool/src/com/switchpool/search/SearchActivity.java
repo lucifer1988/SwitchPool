@@ -2,6 +2,7 @@ package com.switchpool.search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -534,6 +535,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 				String key = searchKey.getKeywords()[j];
 				if (key.equals(searchStr)) {
 					itemidResultList.add(searchKey.getItemid());
+					break;
 				}
 			}
 		}
@@ -548,12 +550,16 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 							for (int k = 0; k < secItem.getItemArr().size(); k++) {
 								Item resultItem = secItem.getItemArr().get(k);
 								List<Item> tempItemArr = resultItem.getItemArr();
-								for (int l = 0; l < tempItemArr.size(); l++) {
-									Item forItem = tempItemArr.get(l);
+								
+								Iterator<Item> it = tempItemArr.iterator();
+								while (it.hasNext()) {
+									Item forItem = it.next(); 
 									if (!itemidResultList.contains(forItem.getId())) {
-										tempItemArr.remove(l);
+										it.remove();
 									}
 								}
+								
+								Log.v("sp", "tempItemArr.size()"+tempItemArr.size());
 								if (tempItemArr.size() > 0) {
 									resultItem.setItemArr(tempItemArr);
 									resultItemList.add(resultItem);

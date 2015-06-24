@@ -674,7 +674,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	private void handelModelFiles(final int index, final Model model, final String type) {
 		if (type.equals("30")) {
-			// TODO:文字笔记下载
 		}
 		else {
 			if (model!=null) {
@@ -788,7 +787,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	 * @throws Exception
 	 */
 	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
-		stopDownload();
+//		stopDownload();
 		if (downloadClient == null) {
 			 downloadClient = new AsyncHttpClient();
 			 downloadClient.setEnableRedirects(true, true, true);
