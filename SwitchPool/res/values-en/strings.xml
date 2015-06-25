@@ -59,7 +59,7 @@
     
     <string name="detail_note_tab">切换</string>
     <string name="detail_note_edit">编辑</string>
-    <string name="detail_note_complete">完成</string>
+    <string name="detail_note_complete">上传</string>
     <string name="detail_note_text_hint">请输入您的笔记</string>
     <string name="camera">拍&#160;&#160;&#160;照</string>
     <string name="record">录&#160;&#160;&#160;音</string>

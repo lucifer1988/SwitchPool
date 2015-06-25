@@ -51,7 +51,7 @@ public class LoginActivity extends Activity {
 		
 		preferences = getSharedPreferences("switchpool", 0x0001);
 		editor = preferences.edit();
-		if (preferences.getString(getString(R.string.SPQueryGap), null) == null) {
+		if (preferences.getLong("SPQueryGap", 0) == 0) {
 			editor.putLong(getString(R.string.SPQueryGap), 0);
 			editor.commit();
 		}

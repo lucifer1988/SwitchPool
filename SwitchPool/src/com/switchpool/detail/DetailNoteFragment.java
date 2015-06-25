@@ -384,6 +384,9 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 //		}
 		else if (v.getId() == R.id.button_detail_note_edit) {
 			if (editButton.getText().equals(getActivity().getString(R.string.detail_note_edit))) {
+				tabButton.setVisibility(View.INVISIBLE);
+				actionButton.setVisibility(View.INVISIBLE);
+				
 				editButton.setText(getActivity().getString(R.string.detail_note_complete));
 				switch (index) {
 				case 0:{
@@ -401,6 +404,9 @@ public class DetailNoteFragment extends Fragment implements OnClickListener, OnT
 				}
 			}
 			else {
+				tabButton.setVisibility(View.VISIBLE);
+				actionButton.setVisibility(View.VISIBLE);
+				
 				editButton.setText(getActivity().getString(R.string.detail_note_edit));
 				switch (index) {
 				case 0:{

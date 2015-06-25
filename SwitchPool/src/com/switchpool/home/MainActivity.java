@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.switchpool.login.LoginActivity;
 import com.switchpool.model.Subject;
 import com.switchpool.model.User;
 import com.switchpool.utility.Utility;
@@ -27,6 +28,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
@@ -44,6 +46,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	private RadioButton newsButton;
 	private RadioButton settingButton;
 	private RadioButton moreButton;
+	
+	private Button logoutButton;
 	
 	int[] normalTabItemIds = new int[] {
 			R.drawable.tabbar_home_normal , R.drawable.tabbar_news_normal , 
@@ -77,11 +81,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
         newsButton = (RadioButton)findViewById(R.id.radio_home_news);
         settingButton = (RadioButton)findViewById(R.id.radio_home_setting);
         moreButton = (RadioButton)findViewById(R.id.radio_home_more);
+        logoutButton = (Button)findViewById(R.id.button_logout);
         
         homeButton.setOnClickListener(this);
         newsButton.setOnClickListener(this);
         settingButton.setOnClickListener(this);
         moreButton.setOnClickListener(this);
+        logoutButton.setOnClickListener(this);
         
         initialize();
     }
@@ -220,6 +226,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	        case R.id.radio_home_more:
 	            setChioceItem(3);
 	            break;
+	        case R.id.button_logout:
+				Intent intent = new Intent(ctx, LoginActivity.class);    	
+				ctx.startActivity(intent);
+				finish();
+				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	            break;   
 	        default:
 	            break;
 	        }
