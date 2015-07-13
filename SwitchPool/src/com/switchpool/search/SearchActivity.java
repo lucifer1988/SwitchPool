@@ -391,6 +391,7 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 				Log.v("sp", "gap:"+gap);
 				if (lastDate != null && curDate-lastDate.longValue() < gap && curSearchKeyCacheList.size() > 0) {
 					searchResult(searchString, curSearchKeyCacheList);
+					return;
 				}
 				
 				AsyncHttpClient client = new AsyncHttpClient();

@@ -165,6 +165,10 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	}
 	
 	public void playAudioNote(String audioNotePath) {
+		if (isItemAudio) {
+			postAudioFinishIntent();
+		}
+		
 		player.stop();
 		isItemAudio = false;
         try {  
@@ -181,6 +185,12 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	}
 	
 	public void playFile(SPFile file) {
+		if (!isItemAudio) {
+    		Intent intent = new Intent("com.xiaoshuye.audioNoteFinished.broadcast");
+    		intent.putExtra("isAudioNoteFinished", true);
+    		sendBroadcast(intent);
+		}
+		
 		String fileParh = getString(R.string.SPAudioFilePrefix)+file.getFid();
 		isItemAudio = true;
 		for (int i = 0; i < data.size(); i++) {

@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -216,12 +217,15 @@ public class LoginActivity extends Activity {
 					}
                 }  
                 
-				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-					Utility.shareInstance().hideWaitingHUD();
-				}
-                  
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+					ctx.hideKeyboard();
+                	Utility.shareInstance().hideWaitingHUD();
+					Log.e("onFailureonResponse", responseString.toString());
+					Toast.makeText(ctx, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show();
+                } 
             });  
 		} catch (Exception e) {
+			ctx.hideKeyboard();
 			Utility.shareInstance().hideWaitingHUD();
 			Log.e("sp", "" + Log.getStackTraceString(e));
 			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
@@ -305,8 +309,10 @@ public class LoginActivity extends Activity {
 							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
 							 
 							 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+							 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
 							 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
 							 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
+							 final String modelDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateModelDict);
 							 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
 							 for (int i=0; i<subjectArr.size(); i++) {
 								 Subject subject = subjectArr.get(i);
@@ -320,6 +326,7 @@ public class LoginActivity extends Activity {
 							 editor.commit();
 							 Log.v("sp", "dateMap:"+poolDateMap);
 							 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+							 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
 							 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
 							
 							Intent intent = new Intent(ctx, MainActivity.class);    	
@@ -330,15 +337,27 @@ public class LoginActivity extends Activity {
 					}
                 }  
                 
-				public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-					Utility.shareInstance().hideWaitingHUD();
-				}
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+					ctx.hideKeyboard();
+                	Utility.shareInstance().hideWaitingHUD();
+					Log.e("onFailureonResponse", responseString.toString());
+					Toast.makeText(ctx, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+                } 
                   
             });  
 		} catch (Exception e) {
+			ctx.hideKeyboard();
 			Utility.shareInstance().hideWaitingHUD();
 			Log.e("sp", "" + Log.getStackTraceString(e));
 			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
 		}
     }
+	
+	private void hideKeyboard() {
+		InputMethodManager imm =  (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);   
+		if(imm != null) {   
+			imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),    
+		                       0);   
+		} 
+	}
 }

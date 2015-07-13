@@ -37,6 +37,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -67,6 +68,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 public class DetailActivity extends FragmentActivity implements DetailContentHandler, OnGestureListener  {
 
 	static DetailActivity mContext;
+	
+	SharedPreferences preferences;
+	SharedPreferences.Editor editor;
 	
 	public String poolId;
 	public String subjectId;
@@ -149,6 +153,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.detail);
+		
+		preferences = getSharedPreferences("switchpool", 0x0001);
+		editor = preferences.edit();
 		
 		DisplayImageOptions defaultOptions = new DisplayImageOptions
 				.Builder()
@@ -427,8 +434,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	}
 	
 	public void stopDownload() {
-		if (downloadRD != null) {
-			downloadRD.cancel(true);
+//		if (downloadRD != null) {
+//			downloadRD.cancel(true);
+//		}
+		if (downloadClient != null) {
+			downloadClient.cancelAllRequests(true);
 		}
 	}
 	
@@ -530,6 +540,9 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				requestModel("40", index);
 				isItemChanged = false;
 			}
+			else if (audioFragment.model != null && !this.musicPlayer.isItemAudio) {
+				audioFragment.reload(audioFragment.model);
+			}
 		}
 			break;
 		case R.id.button_detail_toptab_more:{
@@ -602,10 +615,30 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		}
 		else {
 			final Model cacheModel = modelMap.get(modelType);
+			
+			final String datePathString = Utility.shareInstance().resRootDir()+this.getString(R.string.SPPoolDateModelDict);
+			Log.v("sp", "datePathString:"+datePathString);
+			HashMap<String, Long> dateMap = (HashMap<String, Long>)Utility.shareInstance().getObject(datePathString);
+			Log.v("sp", "dateMap:"+dateMap);
+			Long lastDate = new Long(100);
+			if (dateMap.size() > 0 && dateMap.get(item.getId()+modelType) != null) {
+				lastDate = dateMap.get(item.getId()+modelType);
+			}
+			long gap = preferences.getLong("SPQueryGap", 0);
+			
 			if (Utility.shareInstance().isNetworkAvailable(this)) {
 				
 				if (modelType.equals("10") || modelType.equals("20") || modelType.equals("21") || modelType.equals("22")) {
 					Utility.shareInstance().showWaitingHUD(this);
+				}
+				
+				final long curDate = System.currentTimeMillis()/1000;
+				Log.v("sp", "lastDate:"+lastDate);
+				Log.v("sp", "curDate:"+curDate);
+				Log.v("sp", "gap:"+gap);
+				if (lastDate != null && curDate-lastDate.longValue() < gap && cacheModel != null) {
+					handelModelFiles(index, cacheModel, modelType);
+					return;
 				}
 				
 				AsyncHttpClient client = new AsyncHttpClient();
@@ -618,6 +651,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {   
 		                	Log.v("sp", "" + jsonObject); 
 		                	if (statusCode == 200) {
+		                		HashMap<String, Long> dateMap = (HashMap<String, Long>)Utility.shareInstance().getObject(datePathString);
+		                		dateMap.put(item.getId()+modelType, new Long(curDate));
+		                		Utility.shareInstance().saveObject(datePathString, dateMap);
+		                		
 		                		try {
 		                			Model curModel;
 		                			String curVer = jsonObject.getString("version");
@@ -787,7 +824,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	 * @throws Exception
 	 */
 	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
-//		stopDownload();
 		if (downloadClient == null) {
 			 downloadClient = new AsyncHttpClient();
 			 downloadClient.setEnableRedirects(true, true, true);
@@ -799,7 +835,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
 		String url = new String(this.getString(R.string.host) + paramString);
 		// 获取二进制数据如图片和其他文件
-		downloadRD = downloadClient.get(url, new BinaryHttpResponseHandler() {
+		downloadRD = downloadClient.get(this, url, new BinaryHttpResponseHandler() {
 	
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,

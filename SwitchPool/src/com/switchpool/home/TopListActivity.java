@@ -287,6 +287,7 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 				adapter = new ExpandableListViewaAdapter(TopListActivity.this);
 				topExpandableListView.setAdapter(adapter);
 				expendAllGroup();
+				return;
 			}
 			
 			Utility.shareInstance().showWaitingHUD(this);

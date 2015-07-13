@@ -59,13 +59,20 @@ public class DetailNoteAudioFragment extends Fragment {
 				Log.v("sp", ""+position);
 				Note note = noteAudioArr.get(position);
 				note.setIsPlaying(!note.getIsPlaying());
+				if (curPlayIndex < noteAudioArr.size() && curPlayIndex != position) {
+					Note curNotenote = noteAudioArr.get(curPlayIndex);
+					curNotenote.setIsPlaying(!curNotenote.getIsPlaying());
+				}
+				
 				audioGridAdapter.notifyDataSetChanged();
+				
 				if (note.getIsPlaying()) {
 					ctx.musicPlayer.playAudioNote(note.getPath());
 					curPlayIndex = position;
 				}
 				else {
 					ctx.musicPlayer.stop();
+					curPlayIndex = noteAudioArr.size();
 				}
 				
 			}
@@ -141,6 +148,7 @@ public class DetailNoteAudioFragment extends Fragment {
 		Note note = noteAudioArr.get(curPlayIndex);
 		note.setIsPlaying(false);
 		audioGridAdapter.notifyDataSetChanged();
+		curPlayIndex = noteAudioArr.size();
 //		noteGridView.setAdapter(new DetailNotePhotoGridAdapter(getActivity(), noteAudioArr, noteGridView));
 	}
 	

@@ -119,5 +119,6 @@
     <string name="SPQueryGap">SPQueryGap</string>
     <string name="SPPoolDateDict">SPPoolDateDict</string>
     <string name="SPPoolDateSearchDict">SPPoolDateSearchDict</string>
+    <string name="SPPoolDateModelDict">SPPoolDateModelDict</string>
     
 </resources>
