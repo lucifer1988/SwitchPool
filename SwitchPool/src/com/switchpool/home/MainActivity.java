@@ -96,6 +96,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	protected void onStart() {
 		super.onStart();
 		if (isLogin) {
+			ctx.homeFragment.refreshHeader();
 			return ;
 		}
 		Intent intent = getIntent();
@@ -227,6 +228,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	            setChioceItem(3);
 	            break;
 	        case R.id.button_logout:
+	        	Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), new User());
 				Intent intent = new Intent(ctx, LoginActivity.class);    	
 				ctx.startActivity(intent);
 				finish();

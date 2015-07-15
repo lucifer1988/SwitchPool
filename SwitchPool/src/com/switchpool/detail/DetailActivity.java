@@ -120,12 +120,13 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	FragmentManager fManager;
 	AsyncHttpClient downloadClient;
-	RequestHandle downloadRD;
+//	RequestHandle downloadRD;
 	NoContnetFragment ncFragment;
 	
 	public MusicPlayer musicPlayer; 
 	public static MusicPlayer staticMusicPlayer;
 	private Boolean isItemChanged = false; 
+	private Boolean isAudioDownloading = false; 
      
     //使用ServiceConnection来监听Service状态的变化  
     private ServiceConnection conn = new ServiceConnection() {  
@@ -536,7 +537,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			hideNoContent();
 			
-			if (audioFragment.model == null || isItemChanged) {
+			if ((audioFragment.model == null || isItemChanged) && !isAudioDownloading) {
 				requestModel("40", index);
 				isItemChanged = false;
 			}
@@ -826,16 +827,16 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	 private void downloadFile(final String modelType,final SPFile file,final downloadCallBack callBack) throws Exception {
 		if (downloadClient == null) {
 			 downloadClient = new AsyncHttpClient();
-			 downloadClient.setEnableRedirects(true, true, true);
 		} 
 		if (modelType.equals("40")) {
 			audioFragment.seekBar.setProgress(0); 
+			isAudioDownloading = true;
 		}
-		new String();
+		
 		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
 		String url = new String(this.getString(R.string.host) + paramString);
 		// 获取二进制数据如图片和其他文件
-		downloadRD = downloadClient.get(this, url, new BinaryHttpResponseHandler() {
+		downloadClient.get(this, url, new BinaryHttpResponseHandler() {
 	
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
@@ -846,6 +847,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				String filePath = new String();
 				if (modelType.equals("40")) {
 					filePath = Utility.shareInstance().cachAudioDir(poolId, subjectId)+getString(R.string.SPAudioFilePrefix)+file.getFid();
+					isAudioDownloading = false;
 				}
 				else {
 					filePath = Utility.shareInstance().cachResPoolDir(poolId, subjectId, modelType)+file.getFid();
@@ -864,13 +866,16 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			@Override
 			public void onFailure(int statusCode, Header[] headers,
 					byte[] binaryData, Throwable error) {
+				if (modelType.equals("40")) {
+					isAudioDownloading = false;
+				}
 				callBack.downloadFinished(file, error); 
 			}
 	
 			@Override
 			public void onProgress(int bytesWritten, int totalSize) {
 				super.onProgress(bytesWritten, totalSize);
-				if (modelType.equals("40")) {
+				if (modelType.equals("40") && !audioFragment.isHidden()) {
 					int count = (int) ((bytesWritten * 1.0 / totalSize) * 100);
 					audioFragment.seekBar.setMax(totalSize);
 					audioFragment.seekBar.setProgress(bytesWritten); 
@@ -1116,5 +1121,5 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
     protected void onResume() {  
         super.onResume();  
-    } 
+    }
 }
