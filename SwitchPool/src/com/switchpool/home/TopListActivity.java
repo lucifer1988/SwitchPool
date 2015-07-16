@@ -753,12 +753,14 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 		
 	}
 
-    private int verticalMinDistance = 100;
-    private int minVelocity         = 50;
+    private int verticalMinDistance = 50;
+    private int minVelocity        = 50;
+    private int horizonMinDistance  = 100;
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+    	Log.v("sp", "horizon:"+Math.abs(e1.getY() - e2.getY()));
+    	
+        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity && Math.abs(e1.getY() - e2.getY()) < horizonMinDistance) {
 			Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
 			if (item != null) {
             	Intent intent=new Intent();
@@ -773,10 +775,11 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 //          Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
-        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+        } 
+//        else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
 //          Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
-        }
+//        }
 
-        return false;
+        return true;
     }
 }

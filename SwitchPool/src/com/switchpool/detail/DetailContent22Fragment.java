@@ -66,6 +66,7 @@ public class DetailContent22Fragment extends Fragment {
 	        	SPFile file = model.getFileArr().get(i);
 	        	filePaths[i] = file.getPath();
 			}
+	        Log.v("sp", "filePaths:"+filePaths);
 	        
 			adapter = new Content22ListAdapter(getActivity(), mMemoryCache);
 			listView.setAdapter(adapter);

@@ -1,5 +1,6 @@
 package com.switchpool.detail;
 
+import com.switchpool.utility.Utility;
 import com.xiaoshuye.switchpool.R;
 
 import android.app.Activity;
@@ -64,6 +65,9 @@ public class DetailContentFragment extends Fragment implements OnClickListener {
 	
     @Override
     public void onClick(View v) {
+		if (Utility.shareInstance().isFastDoubleClick()) {  
+	        return;  
+	    } 
     	index++;
     	if (index > 2) {
 			index = 0;

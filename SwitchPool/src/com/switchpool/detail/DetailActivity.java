@@ -11,7 +11,6 @@ import java.util.Random;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BinaryHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestHandle;
 import com.loopj.android.http.RequestParams;
 import com.switchpool.detail.DetailContentFragment.DetailContentHandler;
 import com.switchpool.model.Item;
@@ -327,6 +326,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			        return;  
 			    } 
 				stopDownload();
+				
 				finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
@@ -435,11 +435,8 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	}
 	
 	public void stopDownload() {
-//		if (downloadRD != null) {
-//			downloadRD.cancel(true);
-//		}
 		if (downloadClient != null) {
-			downloadClient.cancelAllRequests(true);
+			downloadClient.cancelAllRequests(false);
 		}
 	}
 	
@@ -501,7 +498,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 		}
 			break;
-		case R.id.button_detail_toptab_note:{
+		case R.id.button_detail_toptab_note:{ 
 			noteButton.setTextColor(Color.WHITE);
 			noteButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
 			Drawable note_top_drawable = this.getResources().getDrawable(R.drawable.detailtab_note_hig);
@@ -852,6 +849,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				else {
 					filePath = Utility.shareInstance().cachResPoolDir(poolId, subjectId, modelType)+file.getFid();
 				}
+				Log.v("sp", "file.getFid():"+file.getFid());
 				if (file.getFid().endsWith("png")) {
 					Utility.shareInstance().savePicFile(filePath, binaryData);
 				}
@@ -1115,6 +1113,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
         unregisterReceiver(msgReceiver);
         unregisterReceiver(audioFinishedMsgReceiver);
         unregisterReceiver(audioChangeReceiver);
+        unbindService(conn);
         super.onDestroy();  
     }  
 	//BroadcastReceiver 

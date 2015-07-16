@@ -187,13 +187,16 @@ public class LoginActivity extends Activity {
 			                        subject.setSeq(subjectJsonObject.getString("seq"));
 			                        subject.setType(subjectJsonObject.getString("type"));
 			                        subject.setBgImage(R.drawable.home_bg_header);
+			                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
 			                        subjectArr.add(subject); 
 			                    }
 							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
 							 
 							 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+							 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
 							 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
 							 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
+							 final String modelDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateModelDict);
 							 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
 							 for (int i=0; i<subjectArr.size(); i++) {
 								 Subject subject = subjectArr.get(i);
@@ -207,6 +210,7 @@ public class LoginActivity extends Activity {
 							 editor.commit();
 							 Log.v("sp", "dateMap:"+poolDateMap);
 							 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+							 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
 							 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
 							
 							Intent intent = new Intent(ctx, MainActivity.class);    	

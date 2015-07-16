@@ -32,6 +32,7 @@ public class DetailContent20Fragment extends Fragment {
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setUseWideViewPort(true); 
         webView.getSettings().setLoadWithOverviewMode(true); 
+        webView.getSettings().setDefaultTextEncodingName("UTF -8");  
         
         if (url != null) {
 			webView.loadUrl(url);

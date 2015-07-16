@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.TimeZone;
 
 import com.switchpool.model.Item;
+import com.walnutlabs.android.ProgressHUD;
 import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -41,23 +43,29 @@ public class Utility extends Activity {
     	return singleton; 
 	}
 	
-	private ProgressDialog pd;
+//	private ProgressDialog pd;
+	private ProgressHUD mProgressHUD; 
 	
 	public void showWaitingHUD(Context ctx) {
-		pd = new ProgressDialog(ctx);
-		pd.setTitle(ctx.getString(R.string.loading));
-		pd.setMessage(ctx.getString(R.string.loadingandwait));
-		pd.setCancelable(false);
-		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		pd.setIndeterminate(true);
-		pd.show();
+		mProgressHUD = ProgressHUD.show(ctx,"Мгдижа", true, true, null);
+		
+//		pd = new ProgressDialog(ctx);
+//		pd.setTitle(ctx.getString(R.string.loading));
+//		pd.setMessage(ctx.getString(R.string.loadingandwait));
+//		pd.setCancelable(true);
+//		pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//		pd.setIndeterminate(true);
+//		pd.show();
 	}
 	
 	public void hideWaitingHUD() {
-		if (pd!=null) {
-			pd.dismiss();
-			pd = null;
+		if (mProgressHUD != null) {
+			mProgressHUD.dismiss();
 		}
+//		if (pd!=null) {
+//			pd.dismiss();
+//			pd = null;
+//		}
 	}
 	
 	

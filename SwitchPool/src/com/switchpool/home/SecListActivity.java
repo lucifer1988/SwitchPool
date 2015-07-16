@@ -6,7 +6,6 @@ import java.util.List;
 import com.switchpool.detail.DetailActivity;
 import com.switchpool.detail.DetailActivity.DeatilType;
 import com.switchpool.model.Item;
-import com.switchpool.search.SearchActivity;
 import com.switchpool.utility.NoContnetFragment;
 import com.switchpool.utility.ToolBar;
 import com.switchpool.utility.ToolBarCallBack;
@@ -393,12 +392,13 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 		
 	}
 
-    private int verticalMinDistance = 100;
+    private int verticalMinDistance = 50;
     private int minVelocity         = 50;
+    private int horizonMinDistance  = 100;
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity && Math.abs(e1.getY() - e2.getY()) < horizonMinDistance) {
 			Item item = Utility.shareInstance().secSelectItem(subjectId, poolId, SecListActivity.this);
 			if (item != null) {
             	Intent intent=new Intent();
@@ -414,13 +414,13 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 //          Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
-        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity && Math.abs(e1.getY() - e2.getY()) < horizonMinDistance) {
 //          Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
 			finish();
 			overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
 
-        return false;
+        return true;
     }
 
 }
