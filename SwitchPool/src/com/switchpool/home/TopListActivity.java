@@ -100,48 +100,14 @@ public class TopListActivity extends FragmentActivity implements OnGestureListen
 			
 			@Override
 			public void tapButton5() {
-//				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
-//					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
-//					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
-//					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
-//					
-//	            	Intent intent=new Intent();
-//	            	intent.setClass(TopListActivity.this, DetailActivity.class);
-//	            	Bundle bundle = new Bundle();
-//	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, TopListActivity.this));
-//	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
-//	            	intent.putExtras(bundle);
-//	            	intent.putExtra("poolId", curPoolid);
-//	            	intent.putExtra("subjectId", curSubjectid);
-//	            	TopListActivity.this.startActivity(intent); 
-//	            	TopListActivity.this.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//				}
 			}
 			
 			@Override
 			public void tapButton4() {
-//				Item item = Utility.shareInstance().topSelectItem(subjectId, poolId, TopListActivity.this);
-//				if (item != null) {
-//	            	Intent intent=new Intent();
-//	            	intent.setClass(TopListActivity.this, SecListActivity.class);
-//	            	Bundle bundle = new Bundle();
-//	            	bundle.putSerializable("item", item);
-//	            	intent.putExtras(bundle);
-//	            	intent.putExtra("poolId", poolId);
-//	            	intent.putExtra("subjectId", subjectId);
-//	            	intent.putExtra("poolName", poolName);
-//	            	startActivity(intent); 
-//	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//				}
 			}
 			
 			@Override
 			public void tapButton3() {
-//				Intent onItemClickIntent = new Intent();
-//				onItemClickIntent.putExtra("subjectId", subjectId);
-//				onItemClickIntent.setClass(TopListActivity.this, SearchActivity.class);
-//				startActivity(onItemClickIntent);
-//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override

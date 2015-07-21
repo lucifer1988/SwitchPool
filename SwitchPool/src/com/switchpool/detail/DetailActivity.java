@@ -97,6 +97,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	    } 
 	} 
 	public DeatilType deatilType;
+	public Boolean isForPlaying;
 	
 	//cache path
 	private String verPath;
@@ -141,8 +142,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
             //这里我们实例化audioService,通过binder来实现  
         	musicPlayer = ((MusicPlayer.AudioBinder)binder).getService();  
         	staticMusicPlayer = ((MusicPlayer.AudioBinder)binder).getService();
-        	if (deatilType == DeatilType.DeatilTypeAudio) {
+//        	if (deatilType == DeatilType.DeatilTypeAudio) {
+        	if (isForPlaying) {
         		audioFragment.reload(null);
+			}
+        	else if (musicPlayer.player.isPlaying()) {
+        		musicPlayer.player.stop();
 			}
         }  
     };
@@ -181,6 +186,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		poolId = intent.getStringExtra("poolId");
 		subjectId = intent.getStringExtra("subjectId");
 		deatilType = (DeatilType)intent.getSerializableExtra("type");
+		isForPlaying = (Boolean)intent.getBooleanExtra("isForPlaying", false);
 //		poolName = intent.getStringExtra("poolName");
 		
 		String splitArr[] = item.getCaption().split(" ");
@@ -234,7 +240,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				for (int i = 0; i < modelTypeStrings.length; i++) {
 					resVerMap.put(modelTypeStrings[i], "0");
 				}
-				allVerMap = new HashMap<String, HashMap<String, String>>();
 				allVerMap.put(item.getId(), resVerMap);
 				Utility.shareInstance().saveObject(verPath, allVerMap);
 			}
@@ -293,35 +298,14 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			@Override
 			public void tapButton4() {
-//            	Intent intent=new Intent();
-//            	intent.setClass(DetailActivity.this, SecListActivity.class);
-//            	Bundle bundle = new Bundle();
-//            	bundle.putSerializable("item", Utility.shareInstance().findSecItem(subjectId, poolId, item.getId(), DetailActivity.this));
-//            	intent.putExtras(bundle);
-//            	intent.putExtra("poolId", poolId);
-//            	intent.putExtra("subjectId", subjectId);
-//            	intent.putExtra("poolName", poolName);
-//            	startActivity(intent); 
-//            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-//				Intent onItemClickIntent = new Intent();
-//				onItemClickIntent.putExtra("subjectId", subjectId);
-//				onItemClickIntent.setClass(DetailActivity.this, SearchActivity.class);
-//				startActivity(onItemClickIntent);
-//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton2() {
-//	            Intent myIntent = new Intent();
-//	            myIntent.setClass(DetailActivity.this, MainActivity.class);
-//	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//	            startActivity(myIntent);
-//	            DetailActivity.this.finish();
-//	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				if (Utility.shareInstance().isFastDoubleClick()) {  
 			        return;  
 			    } 
@@ -342,7 +326,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 					tabTopBar(button);
 				}
 				else {
-					if (deatilType == DeatilType.DeatilTypeOrigin || deatilType == DeatilType.DeatilTypeSearch) {
+					if (!isForPlaying) {
 						stopDownload();
 						finish();
 						overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -379,10 +363,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
         audioChangeIntentFilter.addAction("com.xiaoshuye.audioFileChanged.broadcast");  
         registerReceiver(audioChangeReceiver, audioChangeIntentFilter); 
         
-		if (deatilType == DeatilType.DeatilTypeOrigin) {
-			if (musicPlayer != null && musicPlayer.player.isPlaying()) {
-				musicPlayer.player.stop();
-			}
+		if (!isForPlaying) {
+//			if (musicPlayer != null && musicPlayer.player.isPlaying()) {
+//				musicPlayer.player.stop();
+//			}
 			
 			summaryButton.setTextColor(Color.WHITE);
 			summaryButton.setBackgroundResource(R.drawable.detailtab_bg_hig);
@@ -436,7 +420,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	public void stopDownload() {
 		if (downloadClient != null) {
-			downloadClient.cancelAllRequests(false);
+			downloadClient.cancelAllRequests(true);
 		}
 	}
 	
@@ -634,6 +618,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				Log.v("sp", "lastDate:"+lastDate);
 				Log.v("sp", "curDate:"+curDate);
 				Log.v("sp", "gap:"+gap);
+				Log.v("sp", "cacheModel:"+cacheModel);
 				if (lastDate != null && curDate-lastDate.longValue() < gap && cacheModel != null) {
 					handelModelFiles(index, cacheModel, modelType);
 					return;
@@ -656,8 +641,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		                		try {
 		                			Model curModel;
 		                			String curVer = jsonObject.getString("version");
-		                			if (resVerMap.get(modelType).equals(curVer) && cacheModel != null) {
-		                				handelModelFiles(index, cacheModel, modelType);
+		                			Log.v("sp", "resVerMap.get(modelType):"+resVerMap.get(modelType));
+		                			Log.v("sp", "curVer:"+curVer);
+		                			if (resVerMap.get(modelType).equals(curVer)) {
+		                				if (cacheModel != null) {
+		                					handelModelFiles(index, cacheModel, modelType);
+										}
 									}
 		                			else {
 		                				curModel = new Model();
@@ -723,6 +712,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 						SPFile file = modelFileArr.get(i);
 						Log.v("sp", ""+"fileid:"+file.getFid());
 						Log.v("sp", ""+"sq:"+file.getSeq());
+						Log.v("sp", "file.getPath():"+file.getPath());
 						downloadCount++;
 						if (file.getPath() !=null && Utility.shareInstance().isFileExist(file.getPath())) {
 							resultFileArrFiles.add(file);
@@ -1077,19 +1067,20 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		
 	}
 
-    private int verticalMinDistance = 100;
+    private int verticalMinDistance = 50;
     private int minVelocity         = 50;
+    private int horizonMinDistance  = 100;
 
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+        if (e1.getX() - e2.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity && Math.abs(e1.getY() - e2.getY()) < horizonMinDistance) {
 			if (curTabIndex < topTabBtnArr.size()) {
 				int index = curTabIndex+1;
 				Button button = topTabBtnArr.get(index);
 				tabTopBar(button);
 			}
 //          Toast.makeText(this, "向左手势", Toast.LENGTH_SHORT).show();
-        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity) {
+        } else if (e2.getX() - e1.getX() > verticalMinDistance && Math.abs(velocityX) > minVelocity && Math.abs(e1.getY() - e2.getY()) < horizonMinDistance) {
 //          Toast.makeText(this, "向右手势", Toast.LENGTH_SHORT).show();
         	if (curTabIndex > 0) {
 				int index = curTabIndex-1;
@@ -1097,7 +1088,8 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				tabTopBar(button);
 			}
 			else {
-				if (deatilType == DeatilType.DeatilTypeOrigin || deatilType == DeatilType.DeatilTypeSearch) {
+				if (!isForPlaying) {
+					stopDownload();
 					finish();
 					overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				}

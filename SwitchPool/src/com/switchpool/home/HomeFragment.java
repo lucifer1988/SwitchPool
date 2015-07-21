@@ -156,8 +156,9 @@ public class HomeFragment extends Fragment implements OnPageChangeListener {
 		            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, getActivity()));
 		            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
 		            	intent.putExtras(bundle);
-		            	intent.putExtra("poolId", curPoolid);
 		            	intent.putExtra("subjectId", curSubjectid);
+		            	intent.putExtra("poolId", curPoolid);
+		            	intent.putExtra("isForPlaying", true);
 		            	getActivity().startActivity(intent); 
 		            	getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 					}

@@ -71,6 +71,10 @@ public class DetailNoteTextFragment extends Fragment {
 		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);  
 		imm.hideSoftInputFromWindow(textView.getWindowToken(), 0);
 		
+		if (note == null) {
+			note = new Note();
+		}
+		
 		note.setContent(textView.getText().toString());
 		note.setTime(System.currentTimeMillis()/1000);
 		note.setSize(note.getContent().length());

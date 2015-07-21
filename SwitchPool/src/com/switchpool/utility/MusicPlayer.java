@@ -133,6 +133,13 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
     } 
 	
 	public void prepareFile(SPFile file) {
+		if (!isItemAudio && player.isPlaying()) {
+			player.stop();
+    		Intent intent = new Intent("com.xiaoshuye.audioNoteFinished.broadcast");
+    		intent.putExtra("isAudioNoteFinished", true);
+    		sendBroadcast(intent);
+		}
+		
 		String fileParh = getString(R.string.SPAudioFilePrefix)+file.getFid();
 		for (int i = 0; i < data.size(); i++) {
 			String pathString = data.get(i);
@@ -165,7 +172,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	}
 	
 	public void playAudioNote(String audioNotePath) {
-		if (isItemAudio) {
+		if (isItemAudio && player.isPlaying()) {
 			postAudioFinishIntent();
 		}
 		
@@ -185,7 +192,7 @@ public class MusicPlayer extends Service implements MediaPlayer.OnCompletionList
 	}
 	
 	public void playFile(SPFile file) {
-		if (!isItemAudio) {
+		if (!isItemAudio && player.isPlaying()) {
     		Intent intent = new Intent("com.xiaoshuye.audioNoteFinished.broadcast");
     		intent.putExtra("isAudioNoteFinished", true);
     		sendBroadcast(intent);

@@ -17,9 +17,7 @@ import com.switchpool.model.Item;
 import com.walnutlabs.android.ProgressHUD;
 import com.xiaoshuye.switchpool.R;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -47,7 +45,7 @@ public class Utility extends Activity {
 	private ProgressHUD mProgressHUD; 
 	
 	public void showWaitingHUD(Context ctx) {
-		mProgressHUD = ProgressHUD.show(ctx,"加载中", true, true, null);
+		mProgressHUD = ProgressHUD.show(ctx,"加载中", false, false, null);
 		
 //		pd = new ProgressDialog(ctx);
 //		pd.setTitle(ctx.getString(R.string.loading));
@@ -73,7 +71,7 @@ public class Utility extends Activity {
     public boolean isFastDoubleClick() {  
         long time = System.currentTimeMillis();  
         long timeD = time - lastClickTime;  
-        if ( 0 < timeD && timeD < 3000) {     
+        if ( 0 < timeD && timeD < 1000) {     
             return true;     
         }     
         lastClickTime = time;     
@@ -265,7 +263,7 @@ public class Utility extends Activity {
 		System.setProperty("user.timezone", "Asia/Shanghai");
 		TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
 		TimeZone.setDefault(tz);
-		SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
 		return format.format(new Date(time * 1000L));
 	}
 	

@@ -100,7 +100,7 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
 				        curTimeTextView.setVisibility(View.VISIBLE);
 				        totalTimeTextView.setVisibility(View.VISIBLE);
 				        downloadProgressTextView.setVisibility(View.INVISIBLE);
-						ctx.musicPlayer.prepareFile(file);
+				        ctx.musicPlayer.prepareFile(file);
 						curTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getCurrentPosition()));
 						totalTimeTextView.setText(Utility.shareInstance().paserTimeToHMS(ctx.musicPlayer.player.getDuration()));
 						seekBar.setMax(ctx.musicPlayer.player.getDuration());
@@ -202,7 +202,7 @@ public class DetailAudioFragment extends Fragment implements OnClickListener {
   
         //½áÊø´¥·¢   
         public void onStopTrackingTouch(SeekBar seekBar) {  
-            ctx.musicPlayer.player.seekTo(seekBar.getProgress());  
+        	ctx.musicPlayer.player.seekTo(seekBar.getProgress());  
             isStartTrackingTouch = false;  
         }  
     }

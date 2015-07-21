@@ -108,6 +108,7 @@ public class DetailNoteAudioFragment extends Fragment {
 		}
 		audioGridAdapter = new DetailNoteAudioGridAdapter(getActivity(), noteAudioArr, noteGridView);
 		noteGridView.setAdapter(audioGridAdapter);
+		curPlayIndex = noteAudioArr.size();
 	}
 	
 	public void addNewAudio(String path, int length) {

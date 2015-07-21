@@ -185,34 +185,10 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
 			
 			@Override
 			public void tapButton5() {
-//				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
-//					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
-//					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
-//					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
-//					
-//	            	Intent intent=new Intent();
-//	            	intent.setClass(SearchActivity.this, DetailActivity.class);
-//	            	Bundle bundle = new Bundle();
-//	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, SearchActivity.this));
-//	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
-//	            	intent.putExtras(bundle);
-//	            	intent.putExtra("poolId", curPoolid);
-//	            	intent.putExtra("subjectId", curSubjectid);
-//	            	intent.putExtra("poolName", getString(itemNameIds[curIndex]));
-//	            	startActivity(intent); 
-//	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//				}
 			}
 			
 			@Override
 			public void tapButton4() {
-//				Intent onItemClickIntent = new Intent();
-//				onItemClickIntent.putExtra("poolId", curPoolid);
-//				onItemClickIntent.putExtra("subjectId", subjectid);
-//				onItemClickIntent.putExtra("poolName",getString(itemNameIds[curIndex]));
-//				onItemClickIntent.setClass(SearchActivity.this, TopListActivity.class);
-//				startActivity(onItemClickIntent);
-//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
@@ -242,15 +218,24 @@ public class SearchActivity extends FragmentActivity implements OnClickListener 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
                     int groupPosition, int childPosition, long id) {
+            	Item curItem = adapter.getChild(groupPosition, childPosition);
             	
             	Intent intent=new Intent();
             	intent.setClass(SearchActivity.this, DetailActivity.class);
             	Bundle bundle = new Bundle();
-            	bundle.putSerializable("item", adapter.getChild(groupPosition, childPosition));
+            	bundle.putSerializable("item", curItem);
             	bundle.putSerializable("type", DeatilType.DeatilTypeSearch);
             	intent.putExtras(bundle);
             	intent.putExtra("poolId", curPoolid);
             	intent.putExtra("subjectId", subjectid);
+            	
+            	if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying() && DetailActivity.staticMusicPlayer.isItemAudio && DetailActivity.staticMusicPlayer.curPoolid().equals(curPoolid) && DetailActivity.staticMusicPlayer.curItemid().equals(curItem.getId())) {
+            		intent.putExtra("isForPlaying", true);
+				}
+            	else {
+            		intent.putExtra("isForPlaying", false);
+				}
+            	
             	startActivity(intent); 
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;

@@ -75,6 +75,14 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 	            	intent.putExtra("poolId", poolId);
 	            	intent.putExtra("subjectId", subjectId);
 	            	intent.putExtra("poolName", poolName);
+	            	
+	            	if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying() && DetailActivity.staticMusicPlayer.isItemAudio && DetailActivity.staticMusicPlayer.curItemid().equals(item.getId())) {
+	            		intent.putExtra("isForPlaying", true);
+					}
+	            	else {
+	            		intent.putExtra("isForPlaying", false);
+					}
+	            	
 	            	startActivityForResult(intent, 0); 
 	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				}
@@ -82,53 +90,18 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 			
 			@Override
 			public void tapButton5() {
-//				if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying()) {
-//					String curSubjectid = DetailActivity.staticMusicPlayer.curSubjectid();
-//					String curPoolid = DetailActivity.staticMusicPlayer.curPoolid();
-//					String curItemid = DetailActivity.staticMusicPlayer.curItemid();
-//					
-//	            	Intent intent=new Intent();
-//	            	intent.setClass(SecListActivity.this, DetailActivity.class);
-//	            	Bundle bundle = new Bundle();
-//	            	bundle.putSerializable("item", Utility.shareInstance().findItem(curSubjectid, curPoolid, curItemid, SecListActivity.this));
-//	            	bundle.putSerializable("type", DeatilType.DeatilTypeAudio);
-//	            	intent.putExtras(bundle);
-//	            	intent.putExtra("poolId", curPoolid);
-//	            	intent.putExtra("subjectId", curSubjectid);
-//	            	intent.putExtra("poolName", poolName);
-//	            	startActivity(intent); 
-//	            	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-//				}
 			}
 			
 			@Override
 			public void tapButton4() {
-//				Intent onItemClickIntent = new Intent();
-//				onItemClickIntent.putExtra("poolId", poolId);
-//				onItemClickIntent.putExtra("subjectId", subjectId);
-//				onItemClickIntent.putExtra("poolName", poolName);
-//				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
-//				startActivity(onItemClickIntent);
-//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton3() {
-//				Intent onItemClickIntent = new Intent();
-//				onItemClickIntent.putExtra("subjectId", subjectId);
-//				onItemClickIntent.setClass(SecListActivity.this, SearchActivity.class);
-//				startActivity(onItemClickIntent);
-//				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}
 			
 			@Override
 			public void tapButton2() {
-//	            Intent myIntent = new Intent();
-//	            myIntent.setClass(SecListActivity.this, MainActivity.class);
-//	            myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//	            startActivity(myIntent);
-//	            SecListActivity.this.finish();
-//	            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 				finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
 			}
@@ -137,14 +110,6 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
 			public void tapButton1() {
 				finish();
 				overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-//				Intent onItemClickIntent = new Intent();
-//				onItemClickIntent.putExtra("poolId", poolId);
-//				onItemClickIntent.putExtra("subjectId", subjectId);
-//				onItemClickIntent.putExtra("poolName", poolName);
-//				onItemClickIntent.setClass(SecListActivity.this, TopListActivity.class);
-//				startActivity(onItemClickIntent);
-//				finish();
-//				overridePendingTransition(R.anim.slide_out_left, R.anim.slide_out_right);
 			}
 		});
 		
@@ -190,6 +155,14 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
             	intent.putExtra("poolId", poolId);
             	intent.putExtra("subjectId", subjectId);
             	intent.putExtra("poolName", poolName);
+            	
+            	if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying() && DetailActivity.staticMusicPlayer.isItemAudio && DetailActivity.staticMusicPlayer.curItemid().equals(item.getId())) {
+            		intent.putExtra("isForPlaying", true);
+				}
+            	else {
+            		intent.putExtra("isForPlaying", false);
+				}
+            	
             	startActivityForResult(intent, 0);  
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 return true;
@@ -410,6 +383,14 @@ public class SecListActivity extends FragmentActivity implements OnGestureListen
             	intent.putExtra("poolId", poolId);
             	intent.putExtra("subjectId", subjectId);
             	intent.putExtra("poolName", poolName);
+            	
+            	if (DetailActivity.staticMusicPlayer != null && DetailActivity.staticMusicPlayer.player.isPlaying() && DetailActivity.staticMusicPlayer.isItemAudio && DetailActivity.staticMusicPlayer.curItemid().equals(item.getId())) {
+            		intent.putExtra("isForPlaying", true);
+				}
+            	else {
+            		intent.putExtra("isForPlaying", false);
+				}
+            	
             	startActivityForResult(intent, 0); 
             	overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 			}

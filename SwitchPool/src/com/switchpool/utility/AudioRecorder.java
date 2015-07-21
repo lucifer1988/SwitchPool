@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import android.media.MediaRecorder;
-import android.os.Environment;
 
 public class AudioRecorder {
     private static int SAMPLE_RATE_IN_HZ = 8000; // ²ÉÑùÂÊ
