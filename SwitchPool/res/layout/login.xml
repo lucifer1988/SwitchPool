@@ -47,7 +47,7 @@
                     android:focusableInTouchMode="true"
                     android:hint="@string/login_username_hint"
                     android:inputType="phone"
-                    android:text="1003001000" >
+                    android:text="1003001002" >
 
                     <requestFocus />
                 </EditText>

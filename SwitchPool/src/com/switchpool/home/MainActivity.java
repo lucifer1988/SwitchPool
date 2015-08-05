@@ -190,7 +190,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		    		}
 				}
 	        	else {
-	        		Toast.makeText(this, "登录失败", Toast.LENGTH_LONG).show();
+	        		Toast.makeText(this, "手机网络已关闭，无法登录", Toast.LENGTH_LONG).show();
 	        		ctx.homeFragment.refreshHeader();
 				}
 			}

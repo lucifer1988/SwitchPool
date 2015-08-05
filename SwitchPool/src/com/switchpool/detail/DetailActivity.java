@@ -584,6 +584,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		}
 	}
 	
+	private void showMsg(String msg) {
+		Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+	}
+	
 	private void requestModel(final String modelType, final int index) {
 		params.put("modetype", modelType);
 		Log.v("sp", "ver"+resVerMap.get(modelType));
@@ -610,10 +614,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			
 			if (Utility.shareInstance().isNetworkAvailable(this)) {
 				
-				if (modelType.equals("10") || modelType.equals("20") || modelType.equals("21") || modelType.equals("22")) {
-					Utility.shareInstance().showWaitingHUD(this);
-				}
-				
 				final long curDate = System.currentTimeMillis()/1000;
 				Log.v("sp", "lastDate:"+lastDate);
 				Log.v("sp", "curDate:"+curDate);
@@ -622,6 +622,10 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				if (lastDate != null && curDate-lastDate.longValue() < gap && cacheModel != null) {
 					handelModelFiles(index, cacheModel, modelType);
 					return;
+				}
+				
+				if (modelType.equals("10") || modelType.equals("20") || modelType.equals("21") || modelType.equals("22")) {
+					Utility.shareInstance().showWaitingHUD(this);
 				}
 				
 				AsyncHttpClient client = new AsyncHttpClient();
@@ -639,6 +643,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		                		Utility.shareInstance().saveObject(datePathString, dateMap);
 		                		
 		                		try {
+		                			if (jsonObject.has("error")) {
+		                				handelModelFiles(index, cacheModel, modelType);
+		                				showMsg(jsonObject.getString("error"));
+		                				return;
+									}
+		                			
 		                			Model curModel;
 		                			String curVer = jsonObject.getString("version");
 		                			Log.v("sp", "resVerMap.get(modelType):"+resVerMap.get(modelType));
@@ -681,7 +691,8 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		                }  
 		                
 		                public void onFailure(int statusCode, Header[] headers,String responseString, Throwable throwable) {
-							handelModelFiles(index, cacheModel, modelType);
+		                	Log.e("sp", throwable.getLocalizedMessage());
+		                	handelModelFiles(index, cacheModel, modelType);
 		                }
 		                   
 		            });  
@@ -692,6 +703,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 			else {
 				handelModelFiles(index, cacheModel, modelType);
+				Toast.makeText(this, "手机网络已关闭，无法加载数据", Toast.LENGTH_LONG).show();
 			}
 		}
 	}
@@ -702,7 +714,14 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		else {
 			if (model!=null) {
 				final List<SPFile> modelFileArr = model.getFileArr();
-				final List<SPFile> resultFileArrFiles = new ArrayList<SPFile>();
+//				Log.v("sp", "modelFileArr count:"+modelFileArr.size());
+				int initialSize = modelFileArr.size();
+				final List<SPFile> resultFileArrFiles = new ArrayList<SPFile>(initialSize);
+				for (int i = 0; i < initialSize; i++) {
+					//数组初始化
+					resultFileArrFiles.add(null);
+				}
+//				Log.v("sp", "resultFileArrFiles count:"+resultFileArrFiles.size());
 				if (!modelFileArr.isEmpty()) {
 					modelMap.put(type, model);
 					saveModel();
@@ -715,7 +734,7 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 						Log.v("sp", "file.getPath():"+file.getPath());
 						downloadCount++;
 						if (file.getPath() !=null && Utility.shareInstance().isFileExist(file.getPath())) {
-							resultFileArrFiles.add(file);
+							resultFileArrFiles.set(file.getSeq()-1, file);
 							Log.v("sp", "downloadCount:"+downloadCount);
 							if (downloadCount == modelFileArr.size()) {
 								model.setFileArr(resultFileArrFiles);
@@ -731,15 +750,16 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 								downloadFile(type, file, new downloadCallBack(){
 									public void downloadFinished(SPFile file, Throwable error) {
 										if (error != null) {
+											Log.v("sp", "error"+error);
 											if (finalDownloadCount == modelFileArr.size()) {
 												reloadChildFragment(index, null, type);
 											}
 										}
 										else {
-											resultFileArrFiles.add(file);
+											resultFileArrFiles.set(file.getSeq()-1, file);
 											Log.v("sp", "finalDownloadCount:"+finalDownloadCount);
 											Log.v("sp", "modelFileArr.size:"+modelFileArr.size());
-											if (finalDownloadCount == modelFileArr.size()) {
+											if (!resultFileArrFiles.contains(null)) {
 												model.setFileArr(resultFileArrFiles);
 												modelMap.put(type, model);
 												saveModel();
@@ -781,14 +801,18 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			break;	
 		case 3:{ 
 			String fidString = null;
-			for (int i = 0; i < model.getFileArr().size(); i++) {
-				SPFile file = model.getFileArr().get(i);
-				if (file.getSeq() == 1) {
-					fidString = file.getFid();
-					break;
+//			Log.v("sp","model.getFileArr():"+model.getFileArr());
+			if (model != null && model.getFileArr().size() > 0) {
+				for (int i = 0; i < model.getFileArr().size(); i++) {
+					SPFile file = model.getFileArr().get(i);
+					if (file.getSeq() == 1) {
+						fidString = file.getFid();
+						break;
+					}
 				}
+				musicPlayer.loadMusicList(poolId, subjectId, fidString);
 			}
-			musicPlayer.loadMusicList(poolId, subjectId, fidString);
+
 			audioFragment.reload(model);
 		}
 			break;
@@ -823,14 +847,14 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 		String paramString = String.format("model/getFile?poolid=%s&modetype=%s&fid=%s", poolId, modelType, file.getFid());
 		String url = new String(this.getString(R.string.host) + paramString);
 		// 获取二进制数据如图片和其他文件
-		downloadClient.get(this, url, new BinaryHttpResponseHandler() {
-	
+		String[] mAllowedContentTypes = { "application/octet-stream", "image/jpeg", "image/png", "image/gif", "application/octet-stream;charset=utf-8"};
+		
+		downloadClient.get(this, url, new BinaryHttpResponseHandler(mAllowedContentTypes){
 			@Override
-			public void onSuccess(int statusCode, Header[] headers,
-					byte[] binaryData) {
+			public void onSuccess(int statusCode, Header[] headers, byte[] responseBytes) {
 				// 下载成功后需要做的工作
 //					progress.setProgress(0);
-				Log.e("binaryData:", "共下载了：" + binaryData.length);
+				Log.e("binaryData:", "共下载了：" + responseBytes.length);
 				String filePath = new String();
 				if (modelType.equals("40")) {
 					filePath = Utility.shareInstance().cachAudioDir(poolId, subjectId)+getString(R.string.SPAudioFilePrefix)+file.getFid();
@@ -841,10 +865,12 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				}
 				Log.v("sp", "file.getFid():"+file.getFid());
 				if (file.getFid().endsWith("png")) {
-					Utility.shareInstance().savePicFile(filePath, binaryData);
+					Utility.shareInstance().savePicFile(filePath, responseBytes);
 				}
 				else {
-					Utility.shareInstance().saveObject(filePath, binaryData);
+//					String value = new String(responseBytes);
+//					Log.v("sp", "value:"+value);
+					Utility.shareInstance().saveFile(filePath, responseBytes);
 				}
 				SPFile tempFile = file;
 				tempFile.setPath(filePath);
@@ -852,12 +878,11 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 			}
 	
 			@Override
-			public void onFailure(int statusCode, Header[] headers,
-					byte[] binaryData, Throwable error) {
+			public void onFailure(int statusCode, Header[] headers, byte[] responseBytes, Throwable throwable) {
 				if (modelType.equals("40")) {
 					isAudioDownloading = false;
 				}
-				callBack.downloadFinished(file, error); 
+				callBack.downloadFinished(file, throwable); 
 			}
 	
 			@Override
@@ -910,7 +935,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 	
 	//photo note
 	private static final int TAKE_PICTURE = 100;
-//	private static final int CHOOSE_PICTURE = 1;
 	private static final int SCALE = 5;
 	
 	public void takePhoto() {
@@ -946,24 +970,6 @@ public class DetailActivity extends FragmentActivity implements DetailContentHan
 				noteFragment.notePhotoFragment.addNewPhoto(imgPath);
 				
 				break;
-
-//			case CHOOSE_PICTURE:
-//				ContentResolver resolver = getContentResolver();				
-//				Uri originalUri = data.getData(); 
-//	            try {
-//					Bitmap photo = MediaStore.Images.Media.getBitmap(resolver, originalUri);
-//					if (photo != null) {						
-//						Bitmap smallBitmap = ImageTools.zoomBitmap(photo, photo.getWidth() / SCALE, photo.getHeight() / SCALE);
-//						photo.recycle();
-//						
-//						iv_image.setImageBitmap(smallBitmap);
-//					}
-//				} catch (FileNotFoundException e) {
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}  
-//				break;
 			
 			default:
 				break;

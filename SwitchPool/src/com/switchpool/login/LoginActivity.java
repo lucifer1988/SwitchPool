@@ -115,245 +115,263 @@ public class LoginActivity extends Activity {
 	}
 	
 	public void loginPost(String userName, String userPass) { 
-		Utility.shareInstance().showWaitingHUD(this);
 		
-		AsyncHttpClient client = new AsyncHttpClient();
-		String url = new String(this.getString(R.string.host) + "login/index");
-		Log.v("sp", "" + url);
-		
-		final User user = new User();
-		user.setCellphone(userName);
-		user.setPassword(userPass);
-		user.setBrand(null);
-		user.setIp(null);
-		user.setMod(null);
-		user.setOs(null);
-		user.setOsver(null);
-		user.setPrefix(null);
-		user.setToken(null);
-		user.setUeid(null);
-		user.setUename(null);
-		user.setUetype(null);
-		user.setUid(null);
-		user.setVender(null);
-		user.setVer(null);
-		
-		RequestParams params = new RequestParams();  
-		params.put("cellphone", userName);  
-		params.put("passwd", userPass); 
-		params.put("ver", user.getVer());
-		params.put("prefix", user.getPrefix());
-		params.put("uetype", user.getUetype());
-		params.put("ueid", user.getUeid());
-		params.put("uename", user.getUename());
-		params.put("os", user.getOs());
-		params.put("osver", user.getOsver());
-		params.put("vender", user.getVender());
-		params.put("brand", user.getBrand());
-		params.put("ip", user.getIp());
-		params.put("mod", user.getMod());
-		params.put("token", user.getToken());
-		
-		Log.v("sp", "" + params);
-		
-		
-		try {  
-			client.post(url, params, new JsonHttpResponseHandler() {  
+		if (Utility.shareInstance().isNetworkAvailable(this)) {
+			Utility.shareInstance().showWaitingHUD(this);
+			
+			AsyncHttpClient client = new AsyncHttpClient();
+			String url = new String(this.getString(R.string.host) + "login/index");
+			Log.v("sp", "" + url);
+			
+			final User user = new User();
+			user.setCellphone(userName);
+			user.setPassword(userPass);
+			user.setBrand(null);
+			user.setIp(null);
+			user.setMod(null);
+			user.setOs(null);
+			user.setOsver(null);
+			user.setPrefix(null);
+			user.setToken(null);
+			user.setUeid(null);
+			user.setUename(null);
+			user.setUetype(null);
+			user.setUid(null);
+			user.setVender(null);
+			user.setVer(null);
+			
+			RequestParams params = new RequestParams();  
+			params.put("cellphone", userName);  
+			params.put("passwd", userPass); 
+			params.put("ver", user.getVer());
+			params.put("prefix", user.getPrefix());
+			params.put("uetype", user.getUetype());
+			params.put("ueid", user.getUeid());
+			params.put("uename", user.getUename());
+			params.put("os", user.getOs());
+			params.put("osver", user.getOsver());
+			params.put("vender", user.getVender());
+			params.put("brand", user.getBrand());
+			params.put("ip", user.getIp());
+			params.put("mod", user.getMod());
+			params.put("token", user.getToken());
+			
+			Log.v("sp", "" + params);
+			
+			
+			try {  
+				client.post(url, params, new JsonHttpResponseHandler() {  
 
-                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-                	Utility.shareInstance().hideWaitingHUD();
-                	Log.v("sp", "" + jsonObject); 
-                	if (statusCode == 200) {
-                		try {
-							user.setUid(jsonObject.getString("uid"));
-							user.setToken(jsonObject.getString("token"));
-							user.setBuglog(jsonObject.getInt("buglog"));
-							user.setChannel(jsonObject.getInt("channel"));
-							user.setInreg(jsonObject.getInt("inreg"));
-							user.setTopic(jsonObject.getInt("topic"));  
-							
-							editor.putLong(getString(R.string.SPQueryGap), (long)jsonObject.getInt("querygap"));
-							
-							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
-							
-							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
-							List<Subject> subjectArr = new ArrayList<Subject>();
-							 for(int i=0; i<resultSubjectList.length(); i++){ 
-			                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
-			                        Subject subject = new Subject(); 
-			                        subject.setTitle(subjectJsonObject.getString("title"));
-			                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
-			                        subject.setDesc(subjectJsonObject.getString("desc"));
-			                        subject.setSeq(subjectJsonObject.getString("seq"));
-			                        subject.setType(subjectJsonObject.getString("type"));
-			                        subject.setBgImage(R.drawable.home_bg_header);
-			                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
-			                        subjectArr.add(subject); 
-			                    }
-							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
-							 
-							 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
-							 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
-							 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
-							 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
-							 final String modelDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateModelDict);
-							 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
-							 for (int i=0; i<subjectArr.size(); i++) {
-								 Subject subject = subjectArr.get(i);
-								 for (int j = 1; j < 9; j++) {
-									 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
-									 editor.putString(poolID, "0");
-									 poolDateMap.put(poolID, new Long(100));
-									 searchDateMap.put(poolID, new Long(100));
-								}
-							 }
-							 editor.commit();
-							 Log.v("sp", "dateMap:"+poolDateMap);
-							 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
-							 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
-							 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
-							
-							Intent intent = new Intent(ctx, MainActivity.class);    	
-							ctx.startActivity(intent);
-						} catch (JSONException e) {
-							Log.e("sp", "" + Log.getStackTraceString(e));
+	                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+	                	Utility.shareInstance().hideWaitingHUD();
+	                	Log.v("sp", "" + jsonObject); 
+	                	if (statusCode == 200) {
+	                		try {
+								user.setUid(jsonObject.getString("uid"));
+								user.setToken(jsonObject.getString("token"));
+								user.setBuglog(jsonObject.getInt("buglog"));
+								user.setChannel(jsonObject.getInt("channel"));
+								user.setInreg(jsonObject.getInt("inreg"));
+								user.setTopic(jsonObject.getInt("topic"));  
+								
+								editor.putLong(getString(R.string.SPQueryGap), (long)jsonObject.getInt("querygap"));
+								
+								Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
+								
+								JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
+								List<Subject> subjectArr = new ArrayList<Subject>();
+								 for(int i=0; i<resultSubjectList.length(); i++){ 
+				                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
+				                        Subject subject = new Subject(); 
+				                        subject.setTitle(subjectJsonObject.getString("title"));
+				                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
+				                        subject.setDesc(subjectJsonObject.getString("desc"));
+				                        subject.setSeq(subjectJsonObject.getString("seq"));
+				                        subject.setType(subjectJsonObject.getString("type"));
+				                        subject.setBgImage(R.drawable.home_bg_header);
+				                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
+				                        subjectArr.add(subject); 
+				                    }
+								 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
+								 
+								 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+								 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
+								 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
+								 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
+								 final String modelDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateModelDict);
+								 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
+								 for (int i=0; i<subjectArr.size(); i++) {
+									 Subject subject = subjectArr.get(i);
+									 for (int j = 1; j < 9; j++) {
+										 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
+										 editor.putString(poolID, "0");
+										 poolDateMap.put(poolID, new Long(100));
+										 searchDateMap.put(poolID, new Long(100));
+									}
+								 }
+								 editor.commit();
+								 Log.v("sp", "dateMap:"+poolDateMap);
+								 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+								 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
+								 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
+								
+								Intent intent = new Intent(ctx, MainActivity.class);    	
+								ctx.startActivity(intent);
+							} catch (JSONException e) {
+								Log.e("sp", "" + Log.getStackTraceString(e));
+							}
 						}
-					}
-                }  
-                
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-					ctx.hideKeyboard();
-                	Utility.shareInstance().hideWaitingHUD();
-					Log.e("onFailureonResponse", responseString.toString());
-					Toast.makeText(ctx, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show();
-                } 
-            });  
-		} catch (Exception e) {
-			ctx.hideKeyboard();
-			Utility.shareInstance().hideWaitingHUD();
-			Log.e("sp", "" + Log.getStackTraceString(e));
-			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+	                }  
+	                
+	                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+						ctx.hideKeyboard();
+	                	Utility.shareInstance().hideWaitingHUD();
+						Log.e("onFailureonResponse", responseString.toString());
+						Toast.makeText(ctx, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show();
+	                } 
+	            });  
+			} catch (Exception e) {
+				ctx.hideKeyboard();
+				Utility.shareInstance().hideWaitingHUD();
+				Log.e("sp", "" + Log.getStackTraceString(e));
+				Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+			}
 		}
+		else {
+			ctx.hideKeyboard();
+			Toast.makeText(this, "ÊÖ»úÍøÂçÒÑ¹Ø±Õ£¬ÎÞ·¨µÇÂ¼", Toast.LENGTH_LONG).show(); 
+		}
+		
+
     }
 	
 	public void loginPostForUid(String userName, String userPass) { 
-		Utility.shareInstance().showWaitingHUD(this);
-		
-		AsyncHttpClient client = new AsyncHttpClient();
-		String url = new String(this.getString(R.string.host) + "login/index");
-		Log.v("sp", "" + url);
-		
-		final User user = new User();
-		user.setCellphone("0");
-		user.setPassword(userPass);
-		user.setBrand(null);
-		user.setIp(null);
-		user.setMod(null);
-		user.setOs(null);
-		user.setOsver(null);
-		user.setPrefix(null);
-		user.setToken(null);
-		user.setUeid(null);
-		user.setUename(null);
-		user.setUetype(null);
-		user.setUid(userName);
-		user.setVender(null);
-		user.setVer(null);
-		
-		RequestParams params = new RequestParams();  
-		params.put("cellphone", "0");  
-		params.put("passwd", userPass); 
-		params.put("uid", userName);
-		params.put("ver", user.getVer());
-		params.put("prefix", user.getPrefix());
-		params.put("uetype", user.getUetype());
-		params.put("ueid", user.getUeid());
-		params.put("uename", user.getUename());
-		params.put("os", user.getOs());
-		params.put("osver", user.getOsver());
-		params.put("vender", user.getVender());
-		params.put("brand", user.getBrand());
-		params.put("ip", user.getIp());
-		params.put("mod", user.getMod());
-		params.put("token", user.getToken());
-		
-		Log.v("sp", "" + params);
-		
-		try {  
-			client.post(url, params, new JsonHttpResponseHandler() {  
+		if (Utility.shareInstance().isNetworkAvailable(this)) {
+			Utility.shareInstance().showWaitingHUD(this);
+			
+			AsyncHttpClient client = new AsyncHttpClient();
+			String url = new String(this.getString(R.string.host) + "login/index");
+			Log.v("sp", "" + url);
+			
+			final User user = new User();
+			user.setCellphone("0");
+			user.setPassword(userPass);
+			user.setBrand(null);
+			user.setIp(null);
+			user.setMod(null);
+			user.setOs(null);
+			user.setOsver(null);
+			user.setPrefix(null);
+			user.setToken(null);
+			user.setUeid(null);
+			user.setUename(null);
+			user.setUetype(null);
+			user.setUid(userName);
+			user.setVender(null);
+			user.setVer(null);
+			
+			RequestParams params = new RequestParams();  
+			params.put("cellphone", "0");  
+			params.put("passwd", userPass); 
+			params.put("uid", userName);
+			params.put("ver", user.getVer());
+			params.put("prefix", user.getPrefix());
+			params.put("uetype", user.getUetype());
+			params.put("ueid", user.getUeid());
+			params.put("uename", user.getUename());
+			params.put("os", user.getOs());
+			params.put("osver", user.getOsver());
+			params.put("vender", user.getVender());
+			params.put("brand", user.getBrand());
+			params.put("ip", user.getIp());
+			params.put("mod", user.getMod());
+			params.put("token", user.getToken());
+			
+			Log.v("sp", "" + params);
+			
+			try {  
+				client.post(url, params, new JsonHttpResponseHandler() {  
 
-                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
-                	Utility.shareInstance().hideWaitingHUD();
-                	Log.v("sp", "" + jsonObject); 
-                	if (statusCode == 200) {
-                		try {
-                			user.setCellphone(jsonObject.getString("phone"));
-							user.setToken(jsonObject.getString("token"));
-							user.setBuglog(jsonObject.getInt("buglog"));
-							user.setChannel(jsonObject.getInt("channel"));
-							user.setInreg(jsonObject.getInt("inreg"));
-							user.setTopic(jsonObject.getInt("topic"));  
-							
-							Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
-							
-							JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
-							List<Subject> subjectArr = new ArrayList<Subject>();
-							 for(int i=0; i<resultSubjectList.length(); i++){ 
-			                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
-			                        Subject subject = new Subject(); 
-			                        subject.setTitle(subjectJsonObject.getString("title"));
-			                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
-			                        subject.setDesc(subjectJsonObject.getString("desc"));
-			                        subject.setSeq(subjectJsonObject.getString("seq"));
-			                        subject.setType(subjectJsonObject.getString("type"));
-			                        subject.setBgImage(R.drawable.home_bg_header);
-			                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
-			                        subjectArr.add(subject); 
-			                    }
-							 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
-							 
-							 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
-							 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
-							 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
-							 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
-							 final String modelDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateModelDict);
-							 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
-							 for (int i=0; i<subjectArr.size(); i++) {
-								 Subject subject = subjectArr.get(i);
-								 for (int j = 1; j < 9; j++) {
-									 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
-									 editor.putString(poolID, "0");
-									 poolDateMap.put(poolID, new Long(100));
-									 searchDateMap.put(poolID, new Long(100));
-								}
-							 }
-							 editor.commit();
-							 Log.v("sp", "dateMap:"+poolDateMap);
-							 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
-							 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
-							 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
-							
-							Intent intent = new Intent(ctx, MainActivity.class);    	
-							ctx.startActivity(intent);
-						} catch (JSONException e) {
-							Log.e("sp", "" + Log.getStackTraceString(e));
+	                public void onSuccess(int statusCode, Header[] headers, JSONObject jsonObject) {
+	                	Utility.shareInstance().hideWaitingHUD();
+	                	Log.v("sp", "" + jsonObject); 
+	                	if (statusCode == 200) {
+	                		try {
+	                			user.setCellphone(jsonObject.getString("phone"));
+								user.setToken(jsonObject.getString("token"));
+								user.setBuglog(jsonObject.getInt("buglog"));
+								user.setChannel(jsonObject.getInt("channel"));
+								user.setInreg(jsonObject.getInt("inreg"));
+								user.setTopic(jsonObject.getInt("topic"));  
+								
+    							editor.putLong(getString(R.string.SPQueryGap), (long)jsonObject.getInt("querygap"));
+    							editor.commit();
+    							
+								Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
+								
+								JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
+								List<Subject> subjectArr = new ArrayList<Subject>();
+								 for(int i=0; i<resultSubjectList.length(); i++){ 
+				                        JSONObject subjectJsonObject = (JSONObject)resultSubjectList.opt(i); 
+				                        Subject subject = new Subject(); 
+				                        subject.setTitle(subjectJsonObject.getString("title"));
+				                        subject.setSubjectid(subjectJsonObject.getString("subjectid"));
+				                        subject.setDesc(subjectJsonObject.getString("desc"));
+				                        subject.setSeq(subjectJsonObject.getString("seq"));
+				                        subject.setType(subjectJsonObject.getString("type"));
+				                        subject.setBgImage(R.drawable.home_bg_header);
+				                        subject.setHasRight(subjectJsonObject.getInt("hasRight"));
+				                        subjectArr.add(subject); 
+				                    }
+								 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
+								 
+								 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+								 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
+								 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
+								 final String poolDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateDict);
+								 final String modelDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateModelDict);
+								 final String searchDatePath = Utility.shareInstance().resRootDir()+ctx.getString(R.string.SPPoolDateSearchDict);
+								 for (int i=0; i<subjectArr.size(); i++) {
+									 Subject subject = subjectArr.get(i);
+									 for (int j = 1; j < 9; j++) {
+										 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
+										 editor.putString(poolID, "0");
+										 poolDateMap.put(poolID, new Long(100));
+										 searchDateMap.put(poolID, new Long(100));
+									}
+								 }
+								 editor.commit();
+								 Log.v("sp", "dateMap:"+poolDateMap);
+								 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+								 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
+								 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
+								
+								Intent intent = new Intent(ctx, MainActivity.class);    	
+								ctx.startActivity(intent);
+							} catch (JSONException e) {
+								Log.e("sp", "" + Log.getStackTraceString(e));
+							}
 						}
-					}
-                }  
-                
-                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-					ctx.hideKeyboard();
-                	Utility.shareInstance().hideWaitingHUD();
-					Log.e("onFailureonResponse", responseString.toString());
-					Toast.makeText(ctx, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
-                } 
-                  
-            });  
-		} catch (Exception e) {
+	                }  
+	                
+	                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+						ctx.hideKeyboard();
+	                	Utility.shareInstance().hideWaitingHUD();
+						Log.e("onFailureonResponse", responseString.toString());
+						Toast.makeText(ctx, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+	                } 
+	                  
+	            });  
+			} catch (Exception e) {
+				ctx.hideKeyboard();
+				Utility.shareInstance().hideWaitingHUD();
+				Log.e("sp", "" + Log.getStackTraceString(e));
+				Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+			}
+		}
+		else {
 			ctx.hideKeyboard();
-			Utility.shareInstance().hideWaitingHUD();
-			Log.e("sp", "" + Log.getStackTraceString(e));
-			Toast.makeText(this, "µÇÂ¼Ê§°Ü", Toast.LENGTH_LONG).show(); 
+			Toast.makeText(this, "ÊÖ»úÍøÂçÒÑ¹Ø±Õ£¬ÎÞ·¨µÇÂ¼", Toast.LENGTH_LONG).show(); 
 		}
     }
 	

@@ -1,6 +1,7 @@
 package com.switchpool.login;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -337,6 +338,9 @@ public class VerifyActivity extends Activity {
 										user.setInreg(jsonObject.getInt("inreg"));
 										user.setTopic(jsonObject.getInt("topic"));  
 										
+		    							editor.putLong(getString(R.string.SPQueryGap), (long)jsonObject.getInt("querygap"));
+		    							editor.commit();
+		    							
 										Utility.shareInstance().saveObject(Utility.shareInstance().userInfoFile(), user);
 										
 										JSONArray resultSubjectList = jsonObject.getJSONArray("subjectList");
@@ -354,14 +358,26 @@ public class VerifyActivity extends Activity {
 						                    }
 										 Utility.shareInstance().saveObject(Utility.shareInstance().resSubjectListFile(), subjectArr);
 										 
+										 HashMap<String, Long> poolDateMap = new HashMap<String, Long>();
+										 HashMap<String, Long> modelDateMap = new HashMap<String, Long>();
+										 HashMap<String, Long> searchDateMap = new HashMap<String, Long>();
+										 final String poolDatePath = Utility.shareInstance().resRootDir()+VerifyActivity.this.getString(R.string.SPPoolDateDict);
+										 final String modelDatePath = Utility.shareInstance().resRootDir()+VerifyActivity.this.getString(R.string.SPPoolDateModelDict);
+										 final String searchDatePath = Utility.shareInstance().resRootDir()+VerifyActivity.this.getString(R.string.SPPoolDateSearchDict);
 										 for (int i=0; i<subjectArr.size(); i++) {
 											 Subject subject = subjectArr.get(i);
 											 for (int j = 1; j < 9; j++) {
 												 String poolID = subject.getSubjectid() + "x" + String.valueOf(j);
 												 editor.putString(poolID, "0");
+												 poolDateMap.put(poolID, new Long(100));
+												 searchDateMap.put(poolID, new Long(100));
 											}
-										}
+										 }
 										 editor.commit();
+										 Log.v("sp", "dateMap:"+poolDateMap);
+										 Utility.shareInstance().saveObject(poolDatePath, poolDateMap);
+										 Utility.shareInstance().saveObject(modelDatePath, modelDateMap);
+										 Utility.shareInstance().saveObject(searchDatePath, searchDateMap);
 										
 										Intent intent = new Intent(VerifyActivity.this, MainActivity.class);    	
 										VerifyActivity.this.startActivity(intent);

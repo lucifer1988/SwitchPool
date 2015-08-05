@@ -172,6 +172,22 @@ public class Utility extends Activity {
         }  
     } 
 	
+	public void saveFile(String name, byte[] data) {
+		File file = new File(name);
+        FileOutputStream fos = null;
+		if (!file.getParentFile().exists()) {
+//			file.getParentFile().mkdirs();
+		}
+		
+    	try {
+    		fos = new FileOutputStream(file);
+			fos.write(data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void savePicFile(String name, byte[] data) {
 		Bitmap mBitmap = BitmapFactory.decodeByteArray(data, 0, data.length); 
         File bitmapFile = new File(name);  

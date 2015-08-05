@@ -172,13 +172,18 @@ public class DetailContent22Fragment extends Fragment {
 	    public Bitmap decodeSampledBitmapFromResource(String url, int reqWidth, int reqHeight) {  
 	        // 第一次解析将inJustDecodeBounds设置为true，来获取图片大小  
 	    	Log.v("sp", "url:"+url);
-	        final BitmapFactory.Options options = new BitmapFactory.Options();  
-	        options.inJustDecodeBounds = true;
+	        final BitmapFactory.Options options = new BitmapFactory.Options();
+	        options.inJustDecodeBounds =  true;
 			BitmapFactory.decodeFile(url, options);  
+			
 	        // 调用上面定义的方法计算inSampleSize值  
 	        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);  
 	        // 使用获取到的inSampleSize值再次解析图片  
 	        options.inJustDecodeBounds = false;  
+	        options.inPreferredConfig = Bitmap.Config.RGB_565;
+	        options.inPurgeable = true;
+	        options.inInputShareable = true;
+	        
 	        return BitmapFactory.decodeFile(url, options); 
 	    }  
 	  
@@ -199,7 +204,8 @@ public class DetailContent22Fragment extends Fragment {
 	        }  
 	  
 	        @Override  
-	        protected void onPostExecute(Bitmap result) {  
+	        protected void onPostExecute(Bitmap result) { 
+	        	
 	            mImageView.setImageBitmap(result);  
 	            super.onPostExecute(result);  
 	        }  
